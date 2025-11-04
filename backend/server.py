@@ -1,12 +1,12 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
-from typing import List
+from pydantic import BaseModel, Field, ConfigDict, EmailStr
+from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
 
@@ -37,10 +37,62 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
+
+# Diagnostico Models
+class DiagnosticoSubmission(BaseModel):
+    # Contacto
+    nombre_completo: str
+    email: EmailStr
+    telefono: Optional[str] = None
+    organizacion: str
+    puesto: str
+    
+    # Contexto
+    sector: str
+    tamano: str
+    motivacion: str
+    plazo: str
+    
+    # Madurez (P5-P9)
+    p5_divulgacion_actual: str
+    p6_nivel_datos: str
+    p7_metodologia_carbono: str
+    p8_materialidad: str
+    p9_equipo_dedicado: str
+    
+    # Gobernanza (P10-P13)
+    p10_sponsor_ejecutivo: str
+    p11_apetito_inversion: str
+    p12_experiencia_reporteo: str
+    p13_asesor_externo: str
+    
+    # Datos (P14-P17)
+    p14_sistemas_datos: str
+    p15_calidad_datos: str
+    p16_cadena_valor: str
+    p17_capacidad_tecnica: str
+    
+    # Necesidades (P18-P20)
+    p18_mayor_obstaculo: str
+    p19_apoyo_valioso: List[str]
+    p20_inversion_dispuesta: str
+    
+    # Metadata
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+
+class DiagnosticoResponse(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str
+    mensaje: str
+    timestamp: str
+
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Clarisa API - Implementación NIIF S1/S2"}
 
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
@@ -65,6 +117,42 @@ async def get_status_checks():
             check['timestamp'] = datetime.fromisoformat(check['timestamp'])
     
     return status_checks
+
+
+# Diagnostico endpoints
+@api_router.post("/diagnostico", response_model=DiagnosticoResponse)
+async def submit_diagnostico(diagnostico: DiagnosticoSubmission):
+    try:
+        # Convert to dict and serialize datetime to ISO string for MongoDB
+        doc = diagnostico.model_dump()
+        doc['timestamp'] = doc['timestamp'].isoformat()
+        
+        # Save to MongoDB
+        result = await db.diagnosticos.insert_one(doc)
+        
+        logger.info(f"Diagnóstico guardado: {diagnostico.email} - {diagnostico.organizacion}")
+        
+        return DiagnosticoResponse(
+            id=diagnostico.id,
+            mensaje="Diagnóstico recibido exitosamente. Recibirás tu informe en 48 horas.",
+            timestamp=diagnostico.timestamp.isoformat()
+        )
+    except Exception as e:
+        logger.error(f"Error guardando diagnóstico: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error procesando diagnóstico")
+
+@api_router.get("/diagnostico/{diagnostico_id}")
+async def get_diagnostico(diagnostico_id: str):
+    diagnostico = await db.diagnosticos.find_one({"id": diagnostico_id}, {"_id": 0})
+    if not diagnostico:
+        raise HTTPException(status_code=404, detail="Diagnóstico no encontrado")
+    return diagnostico
+
+@api_router.get("/diagnosticos", response_model=List[dict])
+async def get_all_diagnosticos():
+    diagnosticos = await db.diagnosticos.find({}, {"_id": 0}).to_list(1000)
+    return diagnosticos
+
 
 # Include the router in the main app
 app.include_router(api_router)

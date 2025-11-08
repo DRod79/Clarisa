@@ -125,7 +125,7 @@ const ContextStep = ({ form }) => {
       {/* P3: Motivación */}
       <div>
         <Label className="text-base font-semibold text-gray-900 mb-3 block">
-          3. ¿Cuál es tu principal motivación para implementar NIIF S1/S2?
+          3. ¿Cuál es tu principal motivación para implementar NIIF S1 y S2?
           <span className="text-red-500">*</span>
         </Label>
         <RadioGroup

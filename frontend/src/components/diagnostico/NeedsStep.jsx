@@ -61,7 +61,7 @@ const NeedsStep = ({ form }) => {
       {/* P18: Obstáculo */}
       <div>
         <Label className="text-base font-semibold text-gray-900 mb-3 block">
-          18. ¿Cuál es tu mayor obstáculo para implementar NIIF S1/S2?
+          18. ¿Cuál es tu mayor obstáculo para implementar NIIF S1 y S2?
           <span className="text-red-500">*</span>
         </Label>
         <RadioGroup

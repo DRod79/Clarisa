@@ -257,7 +257,7 @@ const ConfirmationPage = ({ email, nombre, scoring }) => {
                   <Users className="h-6 w-6 text-purple-600" />
                 </div>
                 <h4 className="font-semibold text-gray-900">Únete a la Comunidad</h4>
-                <p className="text-sm text-gray-600">+500 profesionales implementando</p>
+                <p className="text-sm text-gray-600">+500 profesionales implementando NIIF S1 y S2</p>
                 <Button 
                   variant="outline" 
                   className="w-full"

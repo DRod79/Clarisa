@@ -402,7 +402,11 @@ const FormWizard = () => {
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8" data-testid="form-wizard">
       <div className="bg-white rounded-2xl shadow-xl p-8 sm:p-12">
-        <StepIndicator currentStep={currentStep} totalSteps={TOTAL_STEPS} />
+        <StepIndicator 
+          currentStep={currentStep} 
+          totalSteps={TOTAL_STEPS} 
+          onStepClick={handleStepClick}
+        />
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
           {renderStep()}

@@ -25,16 +25,30 @@ const TOTAL_STEPS = 6;
 // Validación de email corporativo (excluir dominios públicos)
 const emailCorporativoRegex = /^[^\s@]+@(?!gmail\.|yahoo\.|hotmail\.|outlook\.|live\.|aol\.|icloud\.|protonmail\.|zoho\.|mail\.com|gmx\.|yandex\.|inbox\.|me\.com)[^\s@]+\.[^\s@]+$/i;
 
+// Validación de nombres (solo letras, espacios, acentos, longitud razonable)
+const nombreRegex = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]{2,25}$/;
+
+// Validación de teléfono (solo números, formato ####-####)
+const telefonoRegex = /^\d{4}-\d{4}$/;
+
 // Validation schema
 const formSchema = z.object({
-  // Contacto - campos actualizados
-  nombre: z.string().min(2, 'Nombre requerido'),
-  apellidos: z.string().min(2, 'Apellidos requeridos'),
+  // Contacto - campos actualizados con validaciones estrictas
+  nombre: z.string()
+    .min(2, 'Nombre requerido')
+    .max(25, 'Nombre muy largo')
+    .regex(nombreRegex, 'Solo letras y espacios permitidos'),
+  apellidos: z.string()
+    .min(2, 'Apellidos requeridos')
+    .max(35, 'Apellidos muy largos')
+    .regex(nombreRegex, 'Solo letras y espacios permitidos'),
   email: z.string()
     .email('Email inválido')
     .regex(emailCorporativoRegex, 'Usa tu email corporativo (no gmail, yahoo, hotmail, outlook)'),
   pais_telefono: z.string().min(1, 'Selecciona el país del teléfono'),
-  telefono: z.string().min(4, 'Teléfono requerido'),
+  telefono: z.string()
+    .regex(telefonoRegex, 'Formato requerido: ####-####')
+    .refine((val) => val.replace('-', '').length === 8, 'Debe tener 8 dígitos'),
   organizacion: z.string().min(2, 'Organización requerida'),
   puesto: z.string().min(2, 'Puesto requerido'),
   pais: z.string().min(1, 'Selecciona tu país'),

@@ -352,6 +352,9 @@ const FormWizard = () => {
                 data-testid="submit-button"
                 disabled={isSubmitting}
                 className="bg-[#4CAF50] hover:bg-[#45a049]"
+                onClick={() => {
+                  console.log('Submit button clicked');
+                }}
               >
                 {isSubmitting ? 'Enviando...' : 'Enviar Diagnóstico'}
               </Button>

@@ -227,6 +227,18 @@ const FormWizard = () => {
     setIsSubmitting(true);
 
     try {
+      // Verificar si ya existe un diagnóstico con este email
+      console.log('Checking for duplicate email...');
+      const checkResponse = await axios.get(`${API}/diagnosticos`);
+      const existingDiagnostico = checkResponse.data.find(d => d.email === data.email);
+      
+      if (existingDiagnostico) {
+        console.log('Duplicate email found');
+        setShowDuplicateMessage(true);
+        setIsSubmitting(false);
+        return;
+      }
+
       // Calcular scoring AQUÍ (primera vez)
       console.log('Calculating scoring...');
       const scoring = calcularScoringCompleto(data);
@@ -280,7 +292,7 @@ const FormWizard = () => {
         setUserName(`${data.nombre} ${data.apellidos}`);
         setIsSubmitted(true);
         
-        toast.success('¡Diagnóstico enviado exitosamente!');
+        toast.success('¡Diagnóstico NIIF S1 y S2 enviado exitosamente!');
         console.log('Form submission completed successfully');
       }
     } catch (error) {

@@ -182,7 +182,7 @@ const ConfirmationPage = ({ email, nombre, scoring }) => {
               {email}
             </div>
             <div className="text-left bg-white p-6 rounded-lg border max-w-2xl mx-auto">
-              <h4 className="font-semibold text-gray-900 mb-3">Tu informe completo con:</h4>
+              <h4 className="font-semibold text-gray-900 mb-3">Tu informe completo NIIF S1 y S2 con:</h4>
               <ul className="space-y-2 text-gray-700">
                 <li className="flex items-start gap-2">
                   <span className="text-green-500 font-bold">→</span>

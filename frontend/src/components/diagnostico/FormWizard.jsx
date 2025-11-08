@@ -212,8 +212,8 @@ const FormWizard = () => {
     }
   };
 
-  const handlePrevious = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 1));
+  const handleStepClick = (stepNumber) => {
+    setCurrentStep(stepNumber);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

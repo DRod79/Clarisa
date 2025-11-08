@@ -136,10 +136,14 @@ const FormWizard = () => {
 
   const { handleSubmit, watch, trigger } = form;
 
-  // Save to localStorage on change
+  // Save to localStorage on change (con timestamp)
   useEffect(() => {
     const subscription = watch((data) => {
-      localStorage.setItem('clarisa_diagnostico_draft', JSON.stringify(data));
+      const dataWithTimestamp = {
+        ...data,
+        _savedAt: new Date().toISOString()
+      };
+      localStorage.setItem('clarisa_diagnostico_draft', JSON.stringify(dataWithTimestamp));
     });
     return () => subscription.unsubscribe();
   }, [watch]);

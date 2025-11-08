@@ -348,12 +348,32 @@ const FormWizard = () => {
               </Button>
             ) : (
               <Button
-                type="submit"
+                type="button"
                 data-testid="submit-button"
                 disabled={isSubmitting}
                 className="bg-[#4CAF50] hover:bg-[#45a049]"
-                onClick={() => {
-                  console.log('Submit button clicked');
+                onClick={async () => {
+                  console.log('Submit button clicked - manual trigger');
+                  
+                  // Validar todos los campos manualmente
+                  const allFields = [...getStepFields(1), ...getStepFields(2), ...getStepFields(3), 
+                                     ...getStepFields(4), ...getStepFields(5), ...getStepFields(6)];
+                  
+                  console.log('Validating fields:', allFields);
+                  const isValid = await trigger(allFields);
+                  console.log('Validation result:', isValid);
+                  
+                  if (!isValid) {
+                    const errors = form.formState.errors;
+                    console.log('Validation errors:', errors);
+                    toast.error('Por favor completa todos los campos requeridos');
+                    return;
+                  }
+                  
+                  // Si la validación pasa, ejecutar submit manualmente
+                  const data = form.getValues();
+                  console.log('Form data:', data);
+                  await onSubmit(data);
                 }}
               >
                 {isSubmitting ? 'Enviando...' : 'Enviar Diagnóstico'}

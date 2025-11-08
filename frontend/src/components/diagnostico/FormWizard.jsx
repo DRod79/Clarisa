@@ -199,6 +199,16 @@ const FormWizard = () => {
     setIsSubmitting(true);
 
     try {
+      // Verificar si ya existe un diagnóstico con este email
+      const checkResponse = await axios.get(`${API}/diagnosticos`);
+      const existingDiagnostico = checkResponse.data.find(d => d.email === data.email);
+      
+      if (existingDiagnostico) {
+        toast.error('Ya existe un diagnóstico con este email. Para generar un nuevo diagnóstico, utiliza el módulo de seguimiento.');
+        setIsSubmitting(false);
+        return;
+      }
+
       // Calcular scoring AQUÍ (primera vez)
       const scoring = calcularScoringCompleto(data);
       
@@ -238,8 +248,9 @@ const FormWizard = () => {
       const response = await axios.post(`${API}/diagnostico`, submitData);
 
       if (response.data) {
-        // Clear localStorage
+        // LIMPIAR COMPLETAMENTE localStorage para próximas sesiones
         localStorage.removeItem('clarisa_diagnostico_draft');
+        localStorage.clear(); // Limpiar todo para evitar data prellenada
         
         // Guardar datos para página de confirmación
         setScoringResult(scoring);

@@ -19,7 +19,7 @@ const MaturityStep = ({ form }) => {
     },
     {
       id: 'p6_materialidad',
-      question: '6. ¿Han realizado un análisis de doble materialidad?',
+      question: '6. ¿Han realizado un análisis de doble materialidad (impacto & financiera)?',
       options: [
         'Sí, tenemos materialidad definida, documentada y aprobada',
         'Lo hicimos hace más de 2 años (necesita actualización)',

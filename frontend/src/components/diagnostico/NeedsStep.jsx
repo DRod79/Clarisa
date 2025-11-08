@@ -120,7 +120,7 @@ const NeedsStep = ({ form }) => {
       {/* P20: Inversión */}
       <div>
         <Label className="text-base font-semibold text-gray-900 mb-3 block">
-          20. ¿Cuánto estarías dispuesto a invertir en implementar NIIF S1/S2?
+          20. ¿Cuánto estarías dispuesto a invertir en implementar NIIF S1 y S2?
           <span className="text-red-500">*</span>
         </Label>
         <RadioGroup

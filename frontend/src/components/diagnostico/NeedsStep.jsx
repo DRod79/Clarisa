@@ -141,8 +141,8 @@ const NeedsStep = ({ form }) => {
             </div>
           ))}
         </RadioGroup>
-        {errors.p20_inversion_dispuesta && (
-          <p className="text-red-500 text-sm mt-1">{errors.p20_inversion_dispuesta.message}</p>
+        {errors.p20_inversion && (
+          <p className="text-red-500 text-sm mt-1">{errors.p20_inversion.message}</p>
         )}
       </div>
     </div>

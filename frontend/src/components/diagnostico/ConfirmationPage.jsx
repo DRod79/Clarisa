@@ -239,7 +239,7 @@ const ConfirmationPage = ({ email, nombre, scoring }) => {
                 <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto">
                   <BookOpen className="h-6 w-6 text-green-600" />
                 </div>
-                <h4 className="font-semibold text-gray-900">Guía de Inicio Rápido</h4>
+                <h4 className="font-semibold text-gray-900">Guía de Inicio Rápido NIIF S1 y S2</h4>
                 <p className="text-sm text-gray-600">Primeros pasos en S1/S2</p>
                 <Button 
                   variant="outline" 

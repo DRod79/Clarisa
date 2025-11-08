@@ -124,8 +124,8 @@ const NeedsStep = ({ form }) => {
           <span className="text-red-500">*</span>
         </Label>
         <RadioGroup
-          value={watch('p20_inversion_dispuesta')}
-          onValueChange={(value) => setValue('p20_inversion_dispuesta', value, { shouldValidate: true })}
+          value={watch('p20_inversion')}
+          onValueChange={(value) => setValue('p20_inversion', value, { shouldValidate: true })}
           className="space-y-2"
         >
           {inversiones.map((inversion, index) => (

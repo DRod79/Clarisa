@@ -144,17 +144,30 @@ const FormWizard = () => {
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount (solo si no hay datos previos)
   useEffect(() => {
     const saved = localStorage.getItem('clarisa_diagnostico_draft');
     if (saved) {
       try {
         const data = JSON.parse(saved);
-        Object.keys(data).forEach((key) => {
-          form.setValue(key, data[key]);
-        });
+        // Solo cargar si es de la sesión actual (menos de 1 hora)
+        const savedTime = new Date(data._savedAt || 0);
+        const now = new Date();
+        const hoursDiff = (now - savedTime) / (1000 * 60 * 60);
+        
+        if (hoursDiff < 1) {
+          Object.keys(data).forEach((key) => {
+            if (key !== '_savedAt') {
+              form.setValue(key, data[key]);
+            }
+          });
+        } else {
+          // Si es muy viejo, limpiar
+          localStorage.removeItem('clarisa_diagnostico_draft');
+        }
       } catch (e) {
         console.error('Error loading saved data', e);
+        localStorage.removeItem('clarisa_diagnostico_draft');
       }
     }
   }, [form]);

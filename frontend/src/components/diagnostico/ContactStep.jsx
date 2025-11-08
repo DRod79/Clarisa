@@ -13,12 +13,34 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 const ContactStep = ({ form }) => {
   const { register, formState: { errors }, setValue, watch } = form;
 
-  const paises = [
-    'Argentina', 'Belice', 'Bolivia', 'Brasil', 'Chile', 'Colombia',
-    'Costa Rica', 'Cuba', 'Ecuador', 'El Salvador', 'Guatemala',
-    'Guyana', 'Haití', 'Honduras', 'Jamaica', 'México', 'Nicaragua',
-    'Panamá', 'Paraguay', 'Perú', 'Puerto Rico', 'República Dominicana',
-    'Surinam', 'Trinidad y Tobago', 'Uruguay', 'Venezuela', 'Otro'
+  const paisesConCodigo = [
+    { pais: 'Argentina', codigo: '+54' },
+    { pais: 'Belice', codigo: '+501' },
+    { pais: 'Bolivia', codigo: '+591' },
+    { pais: 'Brasil', codigo: '+55' },
+    { pais: 'Chile', codigo: '+56' },
+    { pais: 'Colombia', codigo: '+57' },
+    { pais: 'Costa Rica', codigo: '+506' },
+    { pais: 'Cuba', codigo: '+53' },
+    { pais: 'Ecuador', codigo: '+593' },
+    { pais: 'El Salvador', codigo: '+503' },
+    { pais: 'Guatemala', codigo: '+502' },
+    { pais: 'Guyana', codigo: '+592' },
+    { pais: 'Haití', codigo: '+509' },
+    { pais: 'Honduras', codigo: '+504' },
+    { pais: 'Jamaica', codigo: '+876' },
+    { pais: 'México', codigo: '+52' },
+    { pais: 'Nicaragua', codigo: '+505' },
+    { pais: 'Panamá', codigo: '+507' },
+    { pais: 'Paraguay', codigo: '+595' },
+    { pais: 'Perú', codigo: '+51' },
+    { pais: 'Puerto Rico', codigo: '+1' },
+    { pais: 'República Dominicana', codigo: '+1' },
+    { pais: 'Surinam', codigo: '+597' },
+    { pais: 'Trinidad y Tobago', codigo: '+868' },
+    { pais: 'Uruguay', codigo: '+598' },
+    { pais: 'Venezuela', codigo: '+58' },
+    { pais: 'Otro', codigo: '+' }
   ];
 
   const departamentos = [
@@ -45,6 +67,9 @@ const ContactStep = ({ form }) => {
     'Más de 7 años'
   ];
 
+  const paisTelefono = watch('pais_telefono');
+  const codigoArea = paisesConCodigo.find(p => p.pais === paisTelefono)?.codigo || '+';
+
   return (
     <div data-testid="contact-step" className="space-y-8">
       <div className="text-center mb-8">
@@ -56,27 +81,49 @@ const ContactStep = ({ form }) => {
 
       {/* Sección A: Información de Contacto */}
       <div className="space-y-4">
-        <div>
-          <Label htmlFor="nombre_completo">
-            Nombre completo <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="nombre_completo"
-            data-testid="nombre-completo-input"
-            {...register('nombre_completo')}
-            placeholder="Ej: María González Rodríguez"
-            className="mt-1"
-          />
-          {errors.nombre_completo && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.nombre_completo.message}
-            </p>
-          )}
+        {/* Nombre y Apellidos en dos campos */}
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="nombre">
+              Nombre <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="nombre"
+              data-testid="nombre-input"
+              {...register('nombre')}
+              placeholder="Ej: María"
+              className="mt-1"
+            />
+            {errors.nombre && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.nombre.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <Label htmlFor="apellidos">
+              Apellidos <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="apellidos"
+              data-testid="apellidos-input"
+              {...register('apellidos')}
+              placeholder="Ej: González Rodríguez"
+              className="mt-1"
+            />
+            {errors.apellidos && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.apellidos.message}
+              </p>
+            )}
+          </div>
         </div>
 
+        {/* Email corporativo */}
         <div>
           <Label htmlFor="email">
-            Email <span className="text-red-500">*</span>
+            Email corporativo <span className="text-red-500">*</span>
           </Label>
           <Input
             id="email"
@@ -86,21 +133,53 @@ const ContactStep = ({ form }) => {
             placeholder="tu.email@empresa.com"
             className="mt-1"
           />
+          <p className="text-sm text-gray-500 mt-1">
+            Solo dominios corporativos (no se aceptan gmail, yahoo, hotmail, outlook)
+          </p>
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
           )}
         </div>
 
+        {/* Teléfono con selector de país */}
         <div>
-          <Label htmlFor="telefono">Teléfono (opcional)</Label>
-          <Input
-            id="telefono"
-            data-testid="telefono-input"
-            {...register('telefono')}
-            placeholder="+506 8888-9999"
-            className="mt-1"
-          />
-          <p className="text-sm text-gray-500 mt-1">Opcional - formato internacional</p>
+          <Label htmlFor="telefono">
+            Teléfono <span className="text-red-500">*</span>
+          </Label>
+          <div className="flex gap-2 mt-1">
+            <Select
+              onValueChange={(value) => setValue('pais_telefono', value, { shouldValidate: true })}
+              value={watch('pais_telefono')}
+            >
+              <SelectTrigger className="w-[200px]" data-testid="pais-telefono-select">
+                <SelectValue placeholder="País" />
+              </SelectTrigger>
+              <SelectContent>
+                {paisesConCodigo.map((item) => (
+                  <SelectItem key={item.pais} value={item.pais}>
+                    {item.pais} ({item.codigo})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <div className="flex-1 flex items-center gap-2">
+              <span className="text-gray-600 font-mono">{codigoArea}</span>
+              <Input
+                id="telefono"
+                data-testid="telefono-input"
+                {...register('telefono')}
+                placeholder="8888-9999"
+                className="flex-1"
+              />
+            </div>
+          </div>
+          {errors.pais_telefono && (
+            <p className="text-red-500 text-sm mt-1">{errors.pais_telefono.message}</p>
+          )}
+          {errors.telefono && (
+            <p className="text-red-500 text-sm mt-1">{errors.telefono.message}</p>
+          )}
         </div>
 
         <div>
@@ -155,9 +234,9 @@ const ContactStep = ({ form }) => {
               <SelectValue placeholder="Selecciona tu país" />
             </SelectTrigger>
             <SelectContent>
-              {paises.map((pais) => (
-                <SelectItem key={pais} value={pais}>
-                  {pais}
+              {paisesConCodigo.map((item) => (
+                <SelectItem key={item.pais} value={item.pais}>
+                  {item.pais}
                 </SelectItem>
               ))}
             </SelectContent>

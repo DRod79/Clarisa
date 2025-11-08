@@ -15,46 +15,62 @@ import NeedsStep from './NeedsStep';
 import ConfirmationPage from './ConfirmationPage';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { calcularScoringCompleto } from '@/utils/scoring';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const TOTAL_STEPS = 6;
 
+// Validación de email corporativo (excluir dominios públicos)
+const emailCorporativoRegex = /^[^\s@]+@(?!gmail\.|yahoo\.|hotmail\.|outlook\.|live\.|aol\.|icloud\.|protonmail\.|zoho\.|mail\.com|gmx\.|yandex\.|inbox\.|me\.com)[^\s@]+\.[^\s@]+$/i;
+
 // Validation schema
 const formSchema = z.object({
-  // Contacto
-  nombre_completo: z.string().min(2, 'Nombre requerido'),
-  email: z.string().email('Email inválido'),
-  telefono: z.string().optional(),
+  // Contacto - campos actualizados
+  nombre: z.string().min(2, 'Nombre requerido'),
+  apellidos: z.string().min(2, 'Apellidos requeridos'),
+  email: z.string()
+    .email('Email inválido')
+    .regex(emailCorporativoRegex, 'Usa tu email corporativo (no gmail, yahoo, hotmail, outlook)'),
+  pais_telefono: z.string().min(1, 'Selecciona el país del teléfono'),
+  telefono: z.string().min(4, 'Teléfono requerido'),
   organizacion: z.string().min(2, 'Organización requerida'),
   puesto: z.string().min(2, 'Puesto requerido'),
+  pais: z.string().min(1, 'Selecciona tu país'),
+  departamento: z.string().min(1, 'Selecciona tu departamento'),
+  anios_experiencia: z.string().min(1, 'Selecciona años de experiencia'),
+  
   // Contexto
-  sector: z.string().min(1, 'Selecciona un sector'),
+  p1_sector: z.string().min(1, 'Selecciona un sector'),
   sector_otro: z.string().optional(),
-  tamano: z.string().min(1, 'Selecciona el tamaño'),
-  motivacion: z.string().min(1, 'Selecciona una motivación'),
-  plazo: z.string().min(1, 'Selecciona un plazo'),
+  p2_tamano: z.string().min(1, 'Selecciona el tamaño'),
+  p3_motivacion: z.string().min(1, 'Selecciona una motivación'),
+  p4_plazo: z.string().min(1, 'Selecciona un plazo'),
+  
   // Madurez
-  p5_divulgacion_actual: z.string().min(1, 'Respuesta requerida'),
-  p6_nivel_datos: z.string().min(1, 'Respuesta requerida'),
-  p7_metodologia_carbono: z.string().min(1, 'Respuesta requerida'),
-  p8_materialidad: z.string().min(1, 'Respuesta requerida'),
-  p9_equipo_dedicado: z.string().min(1, 'Respuesta requerida'),
+  p5_publica_info: z.string().min(1, 'Respuesta requerida'),
+  p6_materialidad: z.string().min(1, 'Respuesta requerida'),
+  p7_familiaridad: z.string().min(1, 'Respuesta requerida'),
+  p8_riesgos_clima: z.string().min(1, 'Respuesta requerida'),
+  p9_huella_carbono: z.string().min(1, 'Respuesta requerida'),
+  
   // Gobernanza
-  p10_sponsor_ejecutivo: z.string().min(1, 'Respuesta requerida'),
-  p11_apetito_inversion: z.string().min(1, 'Respuesta requerida'),
-  p12_experiencia_reporteo: z.string().min(1, 'Respuesta requerida'),
-  p13_asesor_externo: z.string().min(1, 'Respuesta requerida'),
+  p10_liderazgo: z.string().min(1, 'Respuesta requerida'),
+  p11_junta: z.string().min(1, 'Respuesta requerida'),
+  p12_personas_dedicadas: z.string().min(1, 'Respuesta requerida'),
+  p13_presupuesto: z.string().min(1, 'Respuesta requerida'),
+  
   // Datos
-  p14_sistemas_datos: z.string().min(1, 'Respuesta requerida'),
-  p15_calidad_datos: z.string().min(1, 'Respuesta requerida'),
-  p16_cadena_valor: z.string().min(1, 'Respuesta requerida'),
-  p17_capacidad_tecnica: z.string().min(1, 'Respuesta requerida'),
+  p14_recopilacion: z.string().min(1, 'Respuesta requerida'),
+  p15_control_interno: z.string().min(1, 'Respuesta requerida'),
+  p16_datos_auditables: z.string().min(1, 'Respuesta requerida'),
+  p17_rastreo_impacto: z.string().min(1, 'Respuesta requerida'),
+  
   // Necesidades
-  p18_mayor_obstaculo: z.string().min(1, 'Respuesta requerida'),
+  p18_obstaculo: z.string().min(1, 'Respuesta requerida'),
   p19_apoyo_valioso: z.array(z.string()).min(1, 'Selecciona al menos una opción').max(2, 'Máximo 2 opciones'),
-  p20_inversion_dispuesta: z.string().min(1, 'Respuesta requerida'),
+  p20_inversion: z.string().min(1, 'Respuesta requerida'),
 });
 
 const FormWizard = () => {
@@ -62,37 +78,45 @@ const FormWizard = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [scoringResult, setScoringResult] = useState(null);
+  const [userEmail, setUserEmail] = useState('');
+  const [userName, setUserName] = useState('');
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
     defaultValues: {
-      nombre_completo: '',
+      nombre: '',
+      apellidos: '',
       email: '',
+      pais_telefono: '',
       telefono: '',
       organizacion: '',
       puesto: '',
-      sector: '',
+      pais: '',
+      departamento: '',
+      anios_experiencia: '',
+      p1_sector: '',
       sector_otro: '',
-      tamano: '',
-      motivacion: '',
-      plazo: '',
-      p5_divulgacion_actual: '',
-      p6_nivel_datos: '',
-      p7_metodologia_carbono: '',
-      p8_materialidad: '',
-      p9_equipo_dedicado: '',
-      p10_sponsor_ejecutivo: '',
-      p11_apetito_inversion: '',
-      p12_experiencia_reporteo: '',
-      p13_asesor_externo: '',
-      p14_sistemas_datos: '',
-      p15_calidad_datos: '',
-      p16_cadena_valor: '',
-      p17_capacidad_tecnica: '',
-      p18_mayor_obstaculo: '',
+      p2_tamano: '',
+      p3_motivacion: '',
+      p4_plazo: '',
+      p5_publica_info: '',
+      p6_materialidad: '',
+      p7_familiaridad: '',
+      p8_riesgos_clima: '',
+      p9_huella_carbono: '',
+      p10_liderazgo: '',
+      p11_junta: '',
+      p12_personas_dedicadas: '',
+      p13_presupuesto: '',
+      p14_recopilacion: '',
+      p15_control_interno: '',
+      p16_datos_auditables: '',
+      p17_rastreo_impacto: '',
+      p18_obstaculo: '',
       p19_apoyo_valioso: [],
-      p20_inversion_dispuesta: '',
+      p20_inversion: '',
     },
   });
 
@@ -124,17 +148,17 @@ const FormWizard = () => {
   const getStepFields = (step) => {
     switch (step) {
       case 1:
-        return ['nombre_completo', 'email', 'telefono', 'organizacion', 'puesto'];
+        return ['nombre', 'apellidos', 'email', 'pais_telefono', 'telefono', 'organizacion', 'puesto', 'pais', 'departamento', 'anios_experiencia'];
       case 2:
-        return ['sector', 'tamano', 'motivacion', 'plazo'];
+        return ['p1_sector', 'p2_tamano', 'p3_motivacion', 'p4_plazo'];
       case 3:
-        return ['p5_divulgacion_actual', 'p6_nivel_datos', 'p7_metodologia_carbono', 'p8_materialidad', 'p9_equipo_dedicado'];
+        return ['p5_publica_info', 'p6_materialidad', 'p7_familiaridad', 'p8_riesgos_clima', 'p9_huella_carbono'];
       case 4:
-        return ['p10_sponsor_ejecutivo', 'p11_apetito_inversion', 'p12_experiencia_reporteo', 'p13_asesor_externo'];
+        return ['p10_liderazgo', 'p11_junta', 'p12_personas_dedicadas', 'p13_presupuesto'];
       case 5:
-        return ['p14_sistemas_datos', 'p15_calidad_datos', 'p16_cadena_valor', 'p17_capacidad_tecnica'];
+        return ['p14_recopilacion', 'p15_control_interno', 'p16_datos_auditables', 'p17_rastreo_impacto'];
       case 6:
-        return ['p18_mayor_obstaculo', 'p19_apoyo_valioso', 'p20_inversion_dispuesta'];
+        return ['p18_obstaculo', 'p19_apoyo_valioso', 'p20_inversion'];
       default:
         return [];
     }
@@ -161,19 +185,54 @@ const FormWizard = () => {
     setIsSubmitting(true);
 
     try {
-      // If sector is 'otro', use sector_otro value
+      // Calcular scoring AQUÍ (primera vez)
+      const scoring = calcularScoringCompleto(data);
+      
+      // Preparar datos para enviar
       const submitData = {
-        ...data,
-        sector: data.sector === 'otro' ? data.sector_otro : data.sector,
+        nombre_completo: `${data.nombre} ${data.apellidos}`,
+        email: data.email,
+        telefono: data.telefono,
+        organizacion: data.organizacion,
+        puesto: data.puesto,
+        pais: data.pais,
+        departamento: data.departamento,
+        anios_experiencia: data.anios_experiencia,
+        p1_sector: data.p1_sector === 'Otro' ? data.sector_otro : data.p1_sector,
+        p2_tamano: data.p2_tamano,
+        p3_motivacion: data.p3_motivacion,
+        p4_plazo: data.p4_plazo,
+        p5_publica_info: data.p5_publica_info,
+        p6_materialidad: data.p6_materialidad,
+        p7_familiaridad: data.p7_familiaridad,
+        p8_riesgos_clima: data.p8_riesgos_clima,
+        p9_huella_carbono: data.p9_huella_carbono,
+        p10_liderazgo: data.p10_liderazgo,
+        p11_junta: data.p11_junta,
+        p12_personas_dedicadas: data.p12_personas_dedicadas,
+        p13_presupuesto: data.p13_presupuesto,
+        p14_recopilacion: data.p14_recopilacion,
+        p15_control_interno: data.p15_control_interno,
+        p16_datos_auditables: data.p16_datos_auditables,
+        p17_rastreo_impacto: data.p17_rastreo_impacto,
+        p18_obstaculo: data.p18_obstaculo,
+        p19_apoyo_valioso: data.p19_apoyo_valioso,
+        p20_inversion: data.p20_inversion,
+        scoring: scoring,
       };
-      delete submitData.sector_otro;
 
       const response = await axios.post(`${API}/diagnostico`, submitData);
 
       if (response.data) {
         // Clear localStorage
         localStorage.removeItem('clarisa_diagnostico_draft');
+        
+        // Guardar datos para página de confirmación
+        setScoringResult(scoring);
+        setUserEmail(data.email);
+        setUserName(`${data.nombre} ${data.apellidos}`);
         setIsSubmitted(true);
+        
         toast.success('¡Diagnóstico enviado exitosamente!');
       }
     } catch (error) {
@@ -184,8 +243,14 @@ const FormWizard = () => {
     }
   };
 
-  if (isSubmitted) {
-    return <ConfirmationPage email={form.getValues('email')} nombre={form.getValues('nombre_completo')} />;
+  if (isSubmitted && scoringResult) {
+    return (
+      <ConfirmationPage 
+        email={userEmail} 
+        nombre={userName}
+        scoring={scoringResult}
+      />
+    );
   }
 
   const renderStep = () => {

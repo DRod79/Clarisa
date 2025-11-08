@@ -67,9 +67,6 @@ const ContactStep = ({ form }) => {
     'Más de 7 años'
   ];
 
-  const paisTelefono = watch('pais_telefono');
-  const codigoArea = paisesConCodigo.find(p => p.pais === paisTelefono)?.codigo || '+';
-
   return (
     <div data-testid="contact-step" className="space-y-8">
       <div className="text-center mb-8">

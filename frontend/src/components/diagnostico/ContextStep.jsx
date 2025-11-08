@@ -5,10 +5,10 @@ import { Input } from '@/components/ui/input';
 
 const ContextStep = ({ form }) => {
   const { register, formState: { errors }, watch, setValue } = form;
-  const selectedSector = watch('sector');
+  const selectedSector = watch('p1_sector');
 
   const sectores = [
-    'Servicios financieros',
+    'Servicios financieros (bancos, aseguradoras, cooperativas)',
     'Manufactura y producción industrial',
     'Energía y servicios públicos',
     'Comercio y retail',
@@ -17,14 +17,14 @@ const ContextStep = ({ form }) => {
     'Agroindustria y alimentos',
     'Turismo y hospitalidad',
     'Transporte y logística',
-    'otro',
+    'Otro'
   ];
 
   const tamanos = [
-    '50-200 empleados | Ingresos <$10M anuales',
-    '200-500 empleados | Ingresos $10M-$50M anuales',
-    '500-1000 empleados | Ingresos $50M-$200M anuales',
-    'Más de 1000 empleados | Ingresos >$200M anuales',
+    '50-200 empleados | Ingresos anuales <$10M USD',
+    '200-500 empleados | Ingresos $10M-$50M USD',
+    '500-1000 empleados | Ingresos $50M-$200M USD',
+    'Más de 1000 empleados | Ingresos >$200M USD'
   ];
 
   const motivaciones = [
@@ -34,7 +34,7 @@ const ContextStep = ({ form }) => {
     'Ventaja competitiva y reputación corporativa',
     'Cadena de suministro lo está solicitando',
     'Convicción propia de la dirección',
-    'Aún estamos explorando',
+    'Aún estamos explorando'
   ];
 
   const plazos = [
@@ -42,7 +42,7 @@ const ContextStep = ({ form }) => {
     'Próximos 3-6 meses',
     '6-12 meses',
     'Más de 12 meses',
-    'Aún no tenemos plazo definido',
+    'Aún no tenemos plazo definido'
   ];
 
   return (
@@ -52,7 +52,7 @@ const ContextStep = ({ form }) => {
           Contexto y urgencia
         </h2>
         <p className="text-gray-600">
-          Entender tu situación actual y necesidades
+          Ayúdanos a entender tu situación actual
         </p>
       </div>
 
@@ -63,24 +63,24 @@ const ContextStep = ({ form }) => {
           <span className="text-red-500">*</span>
         </Label>
         <RadioGroup
-          value={watch('sector')}
-          onValueChange={(value) => setValue('sector', value, { shouldValidate: true })}
+          value={watch('p1_sector')}
+          onValueChange={(value) => setValue('p1_sector', value, { shouldValidate: true })}
           className="space-y-2"
         >
           {sectores.map((sector, index) => (
             <div key={index} className="flex items-center space-x-2">
               <RadioGroupItem
-                value={sector === 'otro' ? 'otro' : sector}
+                value={sector}
                 id={`sector-${index}`}
                 data-testid={`sector-option-${index}`}
               />
               <Label htmlFor={`sector-${index}`} className="font-normal cursor-pointer">
-                {sector === 'otro' ? 'Otro' : sector}
+                {sector}
               </Label>
             </div>
           ))}
         </RadioGroup>
-        {selectedSector === 'otro' && (
+        {selectedSector === 'Otro' && (
           <Input
             {...register('sector_otro')}
             placeholder="Especifica tu sector"
@@ -88,8 +88,8 @@ const ContextStep = ({ form }) => {
             data-testid="sector-otro-input"
           />
         )}
-        {errors.sector && (
-          <p className="text-red-500 text-sm mt-1">{errors.sector.message}</p>
+        {errors.p1_sector && (
+          <p className="text-red-500 text-sm mt-1">{errors.p1_sector.message}</p>
         )}
       </div>
 
@@ -100,8 +100,8 @@ const ContextStep = ({ form }) => {
           <span className="text-red-500">*</span>
         </Label>
         <RadioGroup
-          value={watch('tamano')}
-          onValueChange={(value) => setValue('tamano', value, { shouldValidate: true })}
+          value={watch('p2_tamano')}
+          onValueChange={(value) => setValue('p2_tamano', value, { shouldValidate: true })}
           className="space-y-2"
         >
           {tamanos.map((tamano, index) => (
@@ -117,8 +117,8 @@ const ContextStep = ({ form }) => {
             </div>
           ))}
         </RadioGroup>
-        {errors.tamano && (
-          <p className="text-red-500 text-sm mt-1">{errors.tamano.message}</p>
+        {errors.p2_tamano && (
+          <p className="text-red-500 text-sm mt-1">{errors.p2_tamano.message}</p>
         )}
       </div>
 
@@ -129,8 +129,8 @@ const ContextStep = ({ form }) => {
           <span className="text-red-500">*</span>
         </Label>
         <RadioGroup
-          value={watch('motivacion')}
-          onValueChange={(value) => setValue('motivacion', value, { shouldValidate: true })}
+          value={watch('p3_motivacion')}
+          onValueChange={(value) => setValue('p3_motivacion', value, { shouldValidate: true })}
           className="space-y-2"
         >
           {motivaciones.map((motivacion, index) => (
@@ -146,8 +146,8 @@ const ContextStep = ({ form }) => {
             </div>
           ))}
         </RadioGroup>
-        {errors.motivacion && (
-          <p className="text-red-500 text-sm mt-1">{errors.motivacion.message}</p>
+        {errors.p3_motivacion && (
+          <p className="text-red-500 text-sm mt-1">{errors.p3_motivacion.message}</p>
         )}
       </div>
 
@@ -158,8 +158,8 @@ const ContextStep = ({ form }) => {
           <span className="text-red-500">*</span>
         </Label>
         <RadioGroup
-          value={watch('plazo')}
-          onValueChange={(value) => setValue('plazo', value, { shouldValidate: true })}
+          value={watch('p4_plazo')}
+          onValueChange={(value) => setValue('p4_plazo', value, { shouldValidate: true })}
           className="space-y-2"
         >
           {plazos.map((plazo, index) => (
@@ -175,8 +175,8 @@ const ContextStep = ({ form }) => {
             </div>
           ))}
         </RadioGroup>
-        {errors.plazo && (
-          <p className="text-red-500 text-sm mt-1">{errors.plazo.message}</p>
+        {errors.p4_plazo && (
+          <p className="text-red-500 text-sm mt-1">{errors.p4_plazo.message}</p>
         )}
       </div>
     </div>

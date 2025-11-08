@@ -93,6 +93,11 @@ const ContactStep = ({ form }) => {
               {...register('nombre')}
               placeholder="Ej: María"
               className="mt-1"
+              maxLength={25}
+              onInput={(e) => {
+                // Solo permitir letras, espacios y acentos
+                e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1\s]/g, '');
+              }}
             />
             {errors.nombre && (
               <p className="text-red-500 text-sm mt-1">

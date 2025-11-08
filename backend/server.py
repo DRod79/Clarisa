@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -26,56 +27,68 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
 
-# Define Models
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
-    
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+# Scoring Models
+class ScoringDimension(BaseModel):
+    puntos: int
+    nivel: str
+    categoria: str
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
+class Arquetipo(BaseModel):
+    codigo: str
+    nombre: str
+    descripcion: str
+    recomendacion: str
 
+class Scoring(BaseModel):
+    urgencia: ScoringDimension
+    madurez: ScoringDimension
+    capacidad: ScoringDimension
+    arquetipo: Arquetipo
 
 # Diagnostico Models
 class DiagnosticoSubmission(BaseModel):
-    # Contacto
+    # Contacto y Perfil
     nombre_completo: str
     email: EmailStr
     telefono: Optional[str] = None
     organizacion: str
     puesto: str
+    pais: str
+    departamento: str
+    anios_experiencia: str
     
-    # Contexto
-    sector: str
-    tamano: str
-    motivacion: str
-    plazo: str
+    # Contexto (P1-P4)
+    p1_sector: str
+    p2_tamano: str
+    p3_motivacion: str
+    p4_plazo: str
     
     # Madurez (P5-P9)
-    p5_divulgacion_actual: str
-    p6_nivel_datos: str
-    p7_metodologia_carbono: str
-    p8_materialidad: str
-    p9_equipo_dedicado: str
+    p5_publica_info: str
+    p6_materialidad: str
+    p7_familiaridad: str
+    p8_riesgos_clima: str
+    p9_huella_carbono: str
     
     # Gobernanza (P10-P13)
-    p10_sponsor_ejecutivo: str
-    p11_apetito_inversion: str
-    p12_experiencia_reporteo: str
-    p13_asesor_externo: str
+    p10_liderazgo: str
+    p11_junta: str
+    p12_personas_dedicadas: str
+    p13_presupuesto: str
     
     # Datos (P14-P17)
-    p14_sistemas_datos: str
-    p15_calidad_datos: str
-    p16_cadena_valor: str
-    p17_capacidad_tecnica: str
+    p14_recopilacion: str
+    p15_control_interno: str
+    p16_datos_auditables: str
+    p17_rastreo_impacto: str
     
     # Necesidades (P18-P20)
-    p18_mayor_obstaculo: str
+    p18_obstaculo: str
     p19_apoyo_valioso: List[str]
-    p20_inversion_dispuesta: str
+    p20_inversion: str
+    
+    # Scoring (calculado en frontend)
+    scoring: Scoring
     
     # Metadata
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -87,39 +100,15 @@ class DiagnosticoResponse(BaseModel):
     id: str
     mensaje: str
     timestamp: str
+    scoring: Scoring
 
 
-# Add your routes to the router instead of directly to app
+# Routes
 @api_router.get("/")
 async def root():
     return {"message": "Clarisa API - Implementación NIIF S1/S2"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    
-    # Convert to dict and serialize datetime to ISO string for MongoDB
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
 
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    
-    # Convert ISO string timestamps back to datetime objects
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-    
-    return status_checks
-
-
-# Diagnostico endpoints
 @api_router.post("/diagnostico", response_model=DiagnosticoResponse)
 async def submit_diagnostico(diagnostico: DiagnosticoSubmission):
     try:
@@ -127,19 +116,29 @@ async def submit_diagnostico(diagnostico: DiagnosticoSubmission):
         doc = diagnostico.model_dump()
         doc['timestamp'] = doc['timestamp'].isoformat()
         
+        # Convert scoring to dict for MongoDB
+        doc['scoring'] = {
+            'urgencia': diagnostico.scoring.urgencia.model_dump(),
+            'madurez': diagnostico.scoring.madurez.model_dump(),
+            'capacidad': diagnostico.scoring.capacidad.model_dump(),
+            'arquetipo': diagnostico.scoring.arquetipo.model_dump()
+        }
+        
         # Save to MongoDB
         result = await db.diagnosticos.insert_one(doc)
         
-        logger.info(f"Diagnóstico guardado: {diagnostico.email} - {diagnostico.organizacion}")
+        logger.info(f"Diagnóstico guardado: {diagnostico.email} - {diagnostico.organizacion} - Arquetipo: {diagnostico.scoring.arquetipo.codigo}")
         
         return DiagnosticoResponse(
             id=diagnostico.id,
             mensaje="Diagnóstico recibido exitosamente. Recibirás tu informe en 48 horas.",
-            timestamp=diagnostico.timestamp.isoformat()
+            timestamp=diagnostico.timestamp.isoformat(),
+            scoring=diagnostico.scoring
         )
     except Exception as e:
         logger.error(f"Error guardando diagnóstico: {str(e)}")
         raise HTTPException(status_code=500, detail="Error procesando diagnóstico")
+
 
 @api_router.get("/diagnostico/{diagnostico_id}")
 async def get_diagnostico(diagnostico_id: str):
@@ -148,7 +147,8 @@ async def get_diagnostico(diagnostico_id: str):
         raise HTTPException(status_code=404, detail="Diagnóstico no encontrado")
     return diagnostico
 
-@api_router.get("/diagnosticos", response_model=List[dict])
+
+@api_router.get("/diagnosticos")
 async def get_all_diagnosticos():
     diagnosticos = await db.diagnosticos.find({}, {"_id": 0}).to_list(1000)
     return diagnosticos

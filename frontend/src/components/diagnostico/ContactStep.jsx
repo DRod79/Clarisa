@@ -116,6 +116,11 @@ const ContactStep = ({ form }) => {
               {...register('apellidos')}
               placeholder="Ej: González Rodríguez"
               className="mt-1"
+              maxLength={35}
+              onInput={(e) => {
+                // Solo permitir letras, espacios y acentos
+                e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\u00f1\u00d1\s]/g, '');
+              }}
             />
             {errors.apellidos && (
               <p className="text-red-500 text-sm mt-1">

@@ -304,6 +304,72 @@ const FormWizard = () => {
     }
   };
 
+  if (showDuplicateMessage) {
+    return (
+      <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8" data-testid="duplicate-message">
+        <div className="bg-white rounded-2xl shadow-xl p-8 sm:p-12 text-center">
+          {/* Icon */}
+          <div className="flex justify-center mb-6">
+            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+            ¡Gracias por tu interés en NIIF S1 y S2!
+          </h1>
+
+          {/* Message */}
+          <div className="space-y-4 text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+            <p>
+              Según nuestros registros, ya has completado un diagnóstico NIIF S1 y S2 previamente con este email.
+            </p>
+            <p>
+              <span className="font-semibold text-gray-900">¿Conoces a alguien más que pueda beneficiarse?</span>
+              {' '}Te invitamos a compartir este acceso con otro usuario de tu organización que pueda requerir de este conocimiento para implementar las normas NIIF S1 y S2.
+            </p>
+          </div>
+
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              onClick={() => {
+                // Reset form and states
+                form.reset();
+                localStorage.clear();
+                setShowDuplicateMessage(false);
+                setCurrentStep(1);
+              }}
+              className="bg-[#4CAF50] hover:bg-[#45a049] text-white"
+            >
+              Usar un email diferente
+            </Button>
+            <Button
+              onClick={() => navigate('/')}
+              variant="outline"
+            >
+              Volver al inicio
+            </Button>
+          </div>
+
+          {/* Additional info */}
+          <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+            <p className="text-sm text-gray-600">
+              Si tienes preguntas sobre tu diagnóstico previo o necesitas soporte adicional, 
+              contáctanos en{' '}
+              <a href="mailto:hola@clarisa.com" className="text-[#4CAF50] font-semibold hover:text-[#2D5F3F]">
+                hola@clarisa.com
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (isSubmitted && scoringResult) {
     return (
       <ConfirmationPage 

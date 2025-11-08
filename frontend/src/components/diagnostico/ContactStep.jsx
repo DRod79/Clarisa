@@ -163,16 +163,25 @@ const ContactStep = ({ form }) => {
               </SelectContent>
             </Select>
 
-            <div className="flex-1 flex items-center gap-2">
-              <span className="text-gray-600 font-mono">{codigoArea}</span>
-              <Input
-                id="telefono"
-                data-testid="telefono-input"
-                {...register('telefono')}
-                placeholder="8888-9999"
-                className="flex-1"
-              />
-            </div>
+            <Input
+              id="telefono"
+              data-testid="telefono-input"
+              {...register('telefono')}
+              placeholder="8888-9999"
+              className="flex-1"
+              maxLength={9}
+              onInput={(e) => {
+                // Solo permitir números y guión en formato ####-####
+                let value = e.target.value.replace(/[^\d-]/g, '');
+                if (value.length === 4 && !value.includes('-')) {
+                  value = value + '-';
+                } else if (value.length > 9) {
+                  value = value.substring(0, 9);
+                }
+                e.target.value = value;
+                setValue('telefono', value, { shouldValidate: true });
+              }}
+            />
           </div>
           {errors.pais_telefono && (
             <p className="text-red-500 text-sm mt-1">{errors.pais_telefono.message}</p>

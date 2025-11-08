@@ -95,6 +95,7 @@ const FormWizard = () => {
   const [scoringResult, setScoringResult] = useState(null);
   const [userEmail, setUserEmail] = useState('');
   const [userName, setUserName] = useState('');
+  const [showDuplicateMessage, setShowDuplicateMessage] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),

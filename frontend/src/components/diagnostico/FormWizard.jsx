@@ -213,21 +213,14 @@ const FormWizard = () => {
   };
 
   const onSubmit = async (data) => {
+    console.log('Form onSubmit triggered with data:', data);
     setIsSubmitting(true);
 
     try {
-      // Verificar si ya existe un diagnóstico con este email
-      const checkResponse = await axios.get(`${API}/diagnosticos`);
-      const existingDiagnostico = checkResponse.data.find(d => d.email === data.email);
-      
-      if (existingDiagnostico) {
-        toast.error('Ya existe un diagnóstico con este email. Para generar un nuevo diagnóstico, utiliza el módulo de seguimiento.');
-        setIsSubmitting(false);
-        return;
-      }
-
       // Calcular scoring AQUÍ (primera vez)
+      console.log('Calculating scoring...');
       const scoring = calcularScoringCompleto(data);
+      console.log('Scoring calculated:', scoring);
       
       // Preparar datos para enviar
       const submitData = {
@@ -262,7 +255,9 @@ const FormWizard = () => {
         scoring: scoring,
       };
 
+      console.log('Sending data to API...');
       const response = await axios.post(`${API}/diagnostico`, submitData);
+      console.log('API response:', response.data);
 
       if (response.data) {
         // LIMPIAR COMPLETAMENTE localStorage para próximas sesiones
@@ -276,9 +271,11 @@ const FormWizard = () => {
         setIsSubmitted(true);
         
         toast.success('¡Diagnóstico enviado exitosamente!');
+        console.log('Form submission completed successfully');
       }
     } catch (error) {
       console.error('Error submitting form:', error);
+      console.error('Error details:', error.response?.data);
       toast.error('Error al enviar el diagnóstico. Inténtalo de nuevo.');
     } finally {
       setIsSubmitting(false);

@@ -82,8 +82,8 @@ const NeedsStep = ({ form }) => {
             </div>
           ))}
         </RadioGroup>
-        {errors.p18_mayor_obstaculo && (
-          <p className="text-red-500 text-sm mt-1">{errors.p18_mayor_obstaculo.message}</p>
+        {errors.p18_obstaculo && (
+          <p className="text-red-500 text-sm mt-1">{errors.p18_obstaculo.message}</p>
         )}
       </div>
 

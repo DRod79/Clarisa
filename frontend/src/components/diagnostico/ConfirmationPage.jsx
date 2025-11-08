@@ -240,7 +240,7 @@ const ConfirmationPage = ({ email, nombre, scoring }) => {
                   <BookOpen className="h-6 w-6 text-green-600" />
                 </div>
                 <h4 className="font-semibold text-gray-900">Guía de Inicio Rápido NIIF S1 y S2</h4>
-                <p className="text-sm text-gray-600">Primeros pasos en S1/S2</p>
+                <p className="text-sm text-gray-600">Primeros pasos en NIIF S1 y S2</p>
                 <Button 
                   variant="outline" 
                   className="w-full"

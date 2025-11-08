@@ -7,31 +7,29 @@ const NeedsStep = ({ form }) => {
   const { formState: { errors }, watch, setValue } = form;
 
   const obstaculos = [
-    'No sabemos por dónde empezar',
-    'Falta de tiempo y recursos internos',
+    'No sabemos por dónde empezar o cómo priorizar',
+    'Falta de recursos humanos o presupuesto',
     'Complejidad técnica de las normas',
-    'Falta de datos o sistemas inadecuados',
-    'Falta de compromiso de la dirección',
-    'Presupuesto insuficiente',
-    'No tenemos expertise interno',
+    'Falta de datos, sistemas o herramientas',
+    'Falta de compromiso interno o prioridad de la dirección',
+    'Falta de conocimiento técnico en el equipo',
   ];
 
   const apoyos = [
-    'Guías y plantillas paso a paso',
-    'Capacitación práctica del equipo',
-    'Comunidad de practicantes',
-    'Calculadoras y herramientas digitales',
-    'Revisión experta de mi trabajo',
-    'Acompañamiento estratégico',
+    'Diagnóstico de brechas y hoja de ruta clara',
+    'Capacitación práctica del equipo interno',
+    'Plantillas, formatos y herramientas listas para usar',
+    'Consultoría uno a uno para casos específicos',
+    'Comunidad de pares para compartir experiencias',
+    'Plataforma digital que facilite el proceso completo',
   ];
 
   const inversiones = [
-    'Menos de $1,000',
-    '$1,000 - $5,000',
-    '$5,000 - $10,000',
-    '$10,000 - $25,000',
-    'Más de $25,000',
-    'Aún no lo sé',
+    '$5,000 - $15,000',
+    '$15,000 - $30,000',
+    '$30,000 - $50,000',
+    'Más de $50,000',
+    'Prefiero no responder o necesito más información',
   ];
 
   const selectedApoyos = watch('p19_apoyo_valioso') || [];

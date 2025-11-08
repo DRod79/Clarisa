@@ -178,13 +178,13 @@ const ContactStep = ({ form }) => {
               className="flex-1"
               maxLength={9}
               onInput={(e) => {
-                // Solo permitir números y guión en formato ####-####
-                let value = e.target.value.replace(/[^\d-]/g, '');
-                if (value.length === 4 && !value.includes('-')) {
-                  value = value + '-';
-                } else if (value.length > 9) {
-                  value = value.substring(0, 9);
+                // Solo permitir números y aplicar formato ####-####
+                let value = e.target.value.replace(/\D/g, ''); // Solo números
+                
+                if (value.length >= 5) {
+                  value = value.substring(0, 4) + '-' + value.substring(4, 8);
                 }
+                
                 e.target.value = value;
                 setValue('telefono', value, { shouldValidate: true });
               }}

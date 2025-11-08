@@ -175,6 +175,10 @@ const FormWizard = () => {
         localStorage.removeItem('clarisa_diagnostico_draft');
       }
     }
+    
+    // SIEMPRE limpiar campos específicos que causan problemas
+    form.setValue('pais', '');
+    form.setValue('pais_telefono', '');
   }, [form]);
 
   const getStepFields = (step) => {

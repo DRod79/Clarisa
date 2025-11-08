@@ -50,7 +50,7 @@ class DiagnosticoSubmission(BaseModel):
     # Contacto y Perfil
     nombre_completo: str
     email: EmailStr
-    telefono: Optional[str] = None
+    telefono: str
     organizacion: str
     puesto: str
     pais: str

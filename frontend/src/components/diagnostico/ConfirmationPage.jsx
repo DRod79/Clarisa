@@ -116,7 +116,7 @@ const ConfirmationPage = ({ email, nombre, scoring }) => {
           </h1>
           <p className="text-lg text-gray-600">
             Excelente, <span className="font-semibold text-gray-900">{nombre}</span>. 
-            Aquí está tu perfil preliminar de preparación S1/S2:
+            Aquí está tu perfil preliminar de preparación NIIF S1 y S2:
           </p>
         </div>
 

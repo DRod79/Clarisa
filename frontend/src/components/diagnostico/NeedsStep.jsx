@@ -65,8 +65,8 @@ const NeedsStep = ({ form }) => {
           <span className="text-red-500">*</span>
         </Label>
         <RadioGroup
-          value={watch('p18_mayor_obstaculo')}
-          onValueChange={(value) => setValue('p18_mayor_obstaculo', value, { shouldValidate: true })}
+          value={watch('p18_obstaculo')}
+          onValueChange={(value) => setValue('p18_obstaculo', value, { shouldValidate: true })}
           className="space-y-2"
         >
           {obstaculos.map((obstaculo, index) => (

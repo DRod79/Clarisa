@@ -67,16 +67,7 @@ const TestDuplicateMessage = () => {
         </div>
 
         {/* Alternative Actions */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4 border-t border-gray-200">
-          <Button
-            onClick={() => {
-              alert('Se resetearía el formulario para usar un email diferente');
-            }}
-            variant="outline"
-            className="text-gray-700"
-          >
-            Usar un email diferente
-          </Button>
+        <div className="flex justify-center pt-4 border-t border-gray-200">
           <Button
             onClick={() => navigate('/')}
             variant="outline"

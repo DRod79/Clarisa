@@ -368,20 +368,7 @@ const FormWizard = () => {
           </div>
 
           {/* Alternative Actions */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4 border-t border-gray-200">
-            <Button
-              onClick={() => {
-                // Reset form and states
-                form.reset();
-                localStorage.clear();
-                setShowDuplicateMessage(false);
-                setCurrentStep(1);
-              }}
-              variant="outline"
-              className="text-gray-700"
-            >
-              Usar un email diferente
-            </Button>
+          <div className="flex justify-center pt-4 border-t border-gray-200">
             <Button
               onClick={() => navigate('/')}
               variant="outline"

@@ -101,3 +101,83 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Probar el endpoint POST /api/diagnostico con datos de prueba completos para verificar que el diagnóstico se guarda correctamente en MongoDB. Se acaba de corregir un error donde el logger no estaba definido antes de usarse."
+
+backend:
+  - task: "POST /api/diagnostico endpoint"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "COMPREHENSIVE TESTING COMPLETED - All tests passed successfully. POST /api/diagnostico endpoint working correctly with complete test data. Status 200 returned, response includes id and timestamp, scoring structure preserved, data saved to MongoDB verified via GET /api/diagnosticos and GET /api/diagnostico/{id}. Logger issue has been resolved. Backend logs show successful diagnostic save: 'Diagnóstico guardado: test@empresa.com - Test Empresa S.A. - Arquetipo: UH-MN-CB'"
+
+  - task: "GET /api/diagnosticos endpoint"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "Verified working - Successfully retrieves all diagnosticos from MongoDB. Tested as part of POST endpoint verification."
+
+  - task: "GET /api/diagnostico/{id} endpoint"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "Verified working - Successfully retrieves specific diagnostic by ID from MongoDB. Tested with ID: 633401d7-babb-4523-a962-c0f7a5cd18a6"
+
+  - task: "MongoDB data persistence"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "Verified working - Data is correctly saved to MongoDB with proper structure. Scoring data, contact information, and all diagnostic responses preserved correctly."
+
+  - task: "Logger configuration fix"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "Verified working - Logger is properly configured at line 19-23 and working correctly. Backend logs show successful diagnostic logging: 'Diagnóstico guardado: test@empresa.com - Test Empresa S.A. - Arquetipo: UH-MN-CB'"
+
+metadata:
+  created_by: "testing_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "POST /api/diagnostico endpoint"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+    - agent: "testing"
+      message: "TESTING COMPLETE - All backend endpoints for NIIF S1/S2 diagnostic tool are working correctly. POST /api/diagnostico successfully saves complete diagnostic data to MongoDB with proper scoring structure. Logger issue has been resolved. All API endpoints (POST, GET all, GET by ID) tested and verified working. Created comprehensive backend_test.py for future testing."

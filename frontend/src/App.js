@@ -11,8 +11,8 @@ import RegistroPage from "@/pages/RegistroPage";
 import TestScoringPage from "@/pages/TestScoringPage";
 import TestDuplicateMessage from "@/pages/TestDuplicateMessage";
 
-// App pages (will be created next)
-// import ClientDashboard from "@/pages/app/Dashboard";
+// App pages
+import ClientDashboard from "@/pages/app/Dashboard";
 
 // Admin pages (will be created later)
 // import AdminHome from "@/pages/admin/Home";

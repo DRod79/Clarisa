@@ -91,6 +91,7 @@ const formSchema = z.object({
 
 const FormWizard = () => {
   const navigate = useNavigate();
+  const { user, userData } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);

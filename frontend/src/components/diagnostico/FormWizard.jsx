@@ -295,17 +295,35 @@ const FormWizard = () => {
       console.log('Step 4: DiagnosticoData prepared successfully');
       console.log('DiagnosticoData:', diagnosticoData);
       console.log('Step 5: Saving to Supabase...');
-      const { data: savedDiag, error } = await supabase
+      
+      // Try with timeout
+      const insertPromise = supabase
         .from('diagnosticos')
         .insert([diagnosticoData])
         .select();
 
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Supabase insert timeout after 10 seconds')), 10000)
+      );
+
+      let savedDiag, error;
+      try {
+        const result = await Promise.race([insertPromise, timeoutPromise]);
+        savedDiag = result.data;
+        error = result.error;
+      } catch (timeoutError) {
+        console.error('Timeout or error during insert:', timeoutError);
+        throw timeoutError;
+      }
+
       if (error) {
         console.error('Supabase error:', error);
+        console.error('Error details:', JSON.stringify(error, null, 2));
         throw error;
       }
 
-      console.log('Diagnostico saved:', savedDiag);
+      console.log('Step 6: Diagnostico saved successfully!');
+      console.log('Saved data:', savedDiag);
 
       // Si el usuario está autenticado, actualizar su información
       if (user) {

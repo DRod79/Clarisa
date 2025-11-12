@@ -306,7 +306,9 @@ const FormWizard = () => {
         capacidad_puntos: scoring.capacidad.puntos,
       };
 
-      console.log('Saving to Supabase...');
+      console.log('Step 4: DiagnosticoData prepared successfully');
+      console.log('DiagnosticoData:', diagnosticoData);
+      console.log('Step 5: Saving to Supabase...');
       const { data: savedDiag, error } = await supabase
         .from('diagnosticos')
         .insert([diagnosticoData])

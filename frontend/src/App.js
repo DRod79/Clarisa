@@ -15,8 +15,9 @@ import TestSupabase from "@/pages/TestSupabase";
 // App pages
 import ClientDashboard from "@/pages/app/Dashboard";
 
-// Admin pages (will be created later)
-// import AdminHome from "@/pages/admin/Home";
+// Admin pages
+import AdminHome from "@/pages/admin/AdminHome";
+import AdminContenido from "@/pages/admin/ContenidoPage";
 
 import { Toaster } from "@/components/ui/sonner";
 

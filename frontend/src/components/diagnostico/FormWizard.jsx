@@ -325,22 +325,34 @@ const FormWizard = () => {
 
       // Si el usuario está autenticado, actualizar su información
       if (user) {
-        const { error: updateError } = await supabase
-          .from('users')
-          .update({
-            nombre_completo: `${data.nombre} ${data.apellidos}`,
-            organizacion: data.organizacion,
-            puesto: data.puesto,
-            pais: data.pais,
-            departamento: data.departamento,
-            telefono: data.telefono,
-            pais_telefono: data.pais_telefono,
-            anios_experiencia: data.anios_experiencia,
-          })
-          .eq('id', user.id);
+        console.log('Step 7: Updating user information...');
         
-        if (updateError) {
-          console.error('Error updating user:', updateError);
+        const updateData = {
+          nombre_completo: `${data.nombre} ${data.apellidos}`,
+          organizacion: data.organizacion,
+          puesto: data.puesto,
+          pais: data.pais,
+          departamento: data.departamento,
+          telefono: data.telefono,
+          pais_telefono: data.pais_telefono,
+          anios_experiencia: data.anios_experiencia,
+        };
+
+        const updateResponse = await fetch(`${supabaseUrl}/rest/v1/users?id=eq.${user.id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify(updateData)
+        });
+
+        if (updateResponse.ok) {
+          console.log('User information updated successfully');
+        } else {
+          console.error('Error updating user:', await updateResponse.text());
         }
       }
 

@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const AuthContext = createContext({});
 

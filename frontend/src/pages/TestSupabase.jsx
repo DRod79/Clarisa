@@ -35,7 +35,10 @@ const TestSupabase = () => {
   const testInsert = async () => {
     setLoading(true);
     try {
-      console.log('Testing simple insert...');
+      console.log('Testing simple insert with direct REST API...');
+      
+      const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+      const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
       
       const testData = {
         user_id: null,
@@ -47,18 +50,30 @@ const TestSupabase = () => {
         capacidad_puntos: 50,
       };
 
-      const { data, error } = await supabase
-        .from('diagnosticos')
-        .insert([testData])
-        .select();
+      console.log('Making direct fetch to:', `${supabaseUrl}/rest/v1/diagnosticos`);
+      
+      const response = await fetch(`${supabaseUrl}/rest/v1/diagnosticos`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify(testData)
+      });
 
-      if (error) {
-        console.error('Insert Error:', error);
-        setResult({ success: false, error: error.message });
-      } else {
-        console.log('Insert Success:', data);
-        setResult({ success: true, data });
+      console.log('Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Response error:', errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
+
+      const data = await response.json();
+      console.log('Insert Success via REST:', data);
+      setResult({ success: true, data, method: 'Direct REST API' });
     } catch (err) {
       console.error('Exception:', err);
       setResult({ success: false, error: err.message });

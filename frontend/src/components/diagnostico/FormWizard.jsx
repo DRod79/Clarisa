@@ -230,28 +230,31 @@ const FormWizard = () => {
     setIsSubmitting(true);
 
     try {
-      // Verificar si ya existe un diagnóstico con este email
-      console.log('Checking for duplicate email...');
-      const checkResponse = await axios.get(`${API}/diagnosticos`);
-      const existingDiagnostico = checkResponse.data.find(d => d.email === data.email);
-      
-      if (existingDiagnostico) {
-        console.log('Duplicate email found');
-        setShowDuplicateMessage(true);
-        setIsSubmitting(false);
-        return;
-      }
-
-      // Calcular scoring AQUÍ (primera vez)
+      // Calcular scoring
       console.log('Calculating scoring...');
       const scoring = calcularScoringCompleto(data);
       console.log('Scoring calculated:', scoring);
+
+      // Si el usuario está autenticado, verificar si ya tiene un diagnóstico
+      if (user) {
+        const { data: existingDiag } = await supabase
+          .from('diagnosticos')
+          .select('id')
+          .eq('user_id', user.id)
+          .single();
+
+        if (existingDiag) {
+          toast.info('Ya tienes un diagnóstico registrado. Actualizando...');
+        }
+      }
       
-      // Preparar datos para enviar
-      const submitData = {
-        nombre_completo: `${data.nombre} ${data.apellidos}`,
+      // Preparar respuestas
+      const respuestas = {
+        nombre: data.nombre,
+        apellidos: data.apellidos,
         email: data.email,
         telefono: data.telefono,
+        pais_telefono: data.pais_telefono,
         organizacion: data.organizacion,
         puesto: data.puesto,
         pais: data.pais,
@@ -277,30 +280,71 @@ const FormWizard = () => {
         p18_obstaculo: data.p18_obstaculo,
         p19_apoyo_valioso: data.p19_apoyo_valioso,
         p20_inversion: data.p20_inversion,
-        scoring: scoring,
       };
 
-      console.log('Sending data to API...');
-      const response = await axios.post(`${API}/diagnostico`, submitData);
-      console.log('API response:', response.data);
+      // Guardar en Supabase
+      const diagnosticoData = {
+        user_id: user?.id || null,
+        respuestas: respuestas,
+        scoring: scoring,
+        arquetipo: scoring.arquetipo.codigo,
+        urgencia_puntos: scoring.urgencia.puntos,
+        madurez_puntos: scoring.madurez.puntos,
+        capacidad_puntos: scoring.capacidad.puntos,
+      };
 
-      if (response.data) {
-        // LIMPIAR COMPLETAMENTE localStorage para próximas sesiones
-        localStorage.removeItem('clarisa_diagnostico_draft');
-        localStorage.clear(); // Limpiar todo para evitar data prellenada
-        
-        // Guardar datos para página de confirmación
-        setScoringResult(scoring);
-        setUserEmail(data.email);
-        setUserName(`${data.nombre} ${data.apellidos}`);
-        setIsSubmitted(true);
-        
-        toast.success('¡Diagnóstico NIIF S1 y S2 enviado exitosamente!');
-        console.log('Form submission completed successfully');
+      console.log('Saving to Supabase...');
+      const { data: savedDiag, error } = await supabase
+        .from('diagnosticos')
+        .insert([diagnosticoData])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
       }
+
+      console.log('Diagnostico saved:', savedDiag);
+
+      // Si el usuario está autenticado, actualizar su información
+      if (user && userData) {
+        await supabase
+          .from('users')
+          .update({
+            nombre_completo: `${data.nombre} ${data.apellidos}`,
+            organizacion: data.organizacion,
+            puesto: data.puesto,
+            pais: data.pais,
+            departamento: data.departamento,
+            telefono: data.telefono,
+            pais_telefono: data.pais_telefono,
+            anios_experiencia: data.anios_experiencia,
+          })
+          .eq('id', user.id);
+      }
+
+      // LIMPIAR localStorage
+      localStorage.removeItem('clarisa_diagnostico_draft');
+      
+      // Guardar datos para página de confirmación
+      setScoringResult(scoring);
+      setUserEmail(data.email);
+      setUserName(`${data.nombre} ${data.apellidos}`);
+      setIsSubmitted(true);
+      
+      toast.success('¡Diagnóstico NIIF S1 y S2 enviado exitosamente!');
+
+      // Si el usuario está autenticado, redirigir al dashboard después de 3 segundos
+      if (user) {
+        setTimeout(() => {
+          navigate('/app/dashboard');
+        }, 3000);
+      }
+
+      console.log('Form submission completed successfully');
     } catch (error) {
       console.error('Error submitting form:', error);
-      console.error('Error details:', error.response?.data);
       toast.error('Error al enviar el diagnóstico. Inténtalo de nuevo.');
     } finally {
       setIsSubmitting(false);

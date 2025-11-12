@@ -297,8 +297,7 @@ const FormWizard = () => {
       const { data: savedDiag, error } = await supabase
         .from('diagnosticos')
         .insert([diagnosticoData])
-        .select()
-        .single();
+        .select();
 
       if (error) {
         console.error('Supabase error:', error);
@@ -308,8 +307,8 @@ const FormWizard = () => {
       console.log('Diagnostico saved:', savedDiag);
 
       // Si el usuario está autenticado, actualizar su información
-      if (user && userData) {
-        await supabase
+      if (user) {
+        const { error: updateError } = await supabase
           .from('users')
           .update({
             nombre_completo: `${data.nombre} ${data.apellidos}`,
@@ -322,6 +321,10 @@ const FormWizard = () => {
             anios_experiencia: data.anios_experiencia,
           })
           .eq('id', user.id);
+        
+        if (updateError) {
+          console.error('Error updating user:', updateError);
+        }
       }
 
       // LIMPIAR localStorage

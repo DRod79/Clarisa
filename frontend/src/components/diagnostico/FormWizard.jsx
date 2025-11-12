@@ -292,6 +292,9 @@ const FormWizard = () => {
         p20_inversion: data.p20_inversion,
       };
 
+      console.log('Step 2: Respuestas prepared successfully');
+      console.log('Step 3: Preparing diagnosticoData object...');
+
       // Guardar en Supabase
       const diagnosticoData = {
         user_id: user?.id || null,

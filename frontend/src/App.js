@@ -58,15 +58,23 @@ function App() {
               } 
             />
             
-            {/* Admin routes - will be protected */}
-            {/* <Route 
+            {/* Admin routes - protected */}
+            <Route 
               path="/admin/home" 
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <AdminHome />
                 </ProtectedRoute>
               } 
-            /> */}
+            />
+            <Route 
+              path="/admin/contenido" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminContenido />
+                </ProtectedRoute>
+              } 
+            />
             
             {/* Catch all - redirect to home */}
             <Route path="*" element={<Navigate to="/" replace />} />

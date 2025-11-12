@@ -13,7 +13,7 @@ import {
   FileText,
   BookOpen,
   Video,
-  Tool,
+  Wrench,
 } from 'lucide-react';
 import { toast } from 'sonner';
 

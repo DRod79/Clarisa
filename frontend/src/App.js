@@ -14,6 +14,7 @@ import TestSupabase from "@/pages/TestSupabase";
 
 // App pages
 import ClientDashboard from "@/pages/app/Dashboard";
+import RecursosPage from "@/pages/app/RecursosPage";
 
 // Admin pages
 import AdminHome from "@/pages/admin/AdminHome";

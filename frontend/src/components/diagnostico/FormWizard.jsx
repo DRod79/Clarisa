@@ -256,6 +256,8 @@ const FormWizard = () => {
         console.log('User is NOT authenticated (anonymous diagnostico)');
       }
       
+      console.log('Step 1: Preparing respuestas object...');
+      
       // Preparar respuestas
       const respuestas = {
         nombre: data.nombre,

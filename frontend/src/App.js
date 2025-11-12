@@ -1,6 +1,6 @@
 import "@/App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { AuthProvider } from "@/contexts/AuthContextNew";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 // Public pages

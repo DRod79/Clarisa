@@ -111,7 +111,7 @@ const ContenidoPage = () => {
       case 'plantilla': return FileText;
       case 'guia': return BookOpen;
       case 'video': return Video;
-      case 'herramienta': return Tool;
+      case 'herramienta': return Wrench;
       default: return FileText;
     }
   };

@@ -161,6 +161,144 @@ async def get_all_diagnosticos():
     return diagnosticos
 
 
+# ============================================
+# AUTH ENDPOINTS
+# ============================================
+
+from auth import (
+    hash_password, 
+    verify_password, 
+    generate_session_token,
+    create_user_in_supabase,
+    get_user_by_email,
+    get_user_by_id,
+    update_user_last_access
+)
+
+class RegisterRequest(BaseModel):
+    email: EmailStr
+    password: str
+    nombre_completo: str
+    organizacion: Optional[str] = None
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+class AuthResponse(BaseModel):
+    user: dict
+    session_token: str
+
+@api_router.post("/auth/register", response_model=AuthResponse)
+async def register(request: RegisterRequest):
+    """Register a new user"""
+    try:
+        # Check if user already exists
+        existing_user = await get_user_by_email(request.email)
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Email already registered")
+        
+        # Hash password
+        hashed_password = hash_password(request.password)
+        
+        # Create user data
+        user_id = str(uuid.uuid4())
+        user_data = {
+            'id': user_id,
+            'email': request.email,
+            'password_hash': hashed_password,
+            'nombre_completo': request.nombre_completo,
+            'organizacion': request.organizacion or '',
+            'rol': 'cliente_gratuito',
+            'plan_actual': 'gratuito',
+            'suscripcion_activa': False,
+            'onboarding_completado': False,
+            'progreso_general': 0,
+            'fecha_registro': datetime.now(timezone.utc).isoformat(),
+            'created_at': datetime.now(timezone.utc).isoformat(),
+            'updated_at': datetime.now(timezone.utc).isoformat()
+        }
+        
+        # Create user in Supabase
+        created_user, error = await create_user_in_supabase(user_data)
+        
+        if error:
+            logger.error(f"Error creating user in Supabase: {error}")
+            raise HTTPException(status_code=500, detail=f"Error creating user: {error}")
+        
+        # Generate session token
+        session_token = generate_session_token()
+        
+        # Remove password hash from response
+        created_user.pop('password_hash', None)
+        
+        logger.info(f"User registered successfully: {request.email}")
+        
+        return {
+            'user': created_user,
+            'session_token': session_token
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Unexpected error in register: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/auth/login", response_model=AuthResponse)
+async def login(request: LoginRequest):
+    """Login user"""
+    try:
+        # Get user by email
+        user = await get_user_by_email(request.email)
+        
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid email or password")
+        
+        # Verify password
+        if not verify_password(request.password, user.get('password_hash', '')):
+            raise HTTPException(status_code=401, detail="Invalid email or password")
+        
+        # Update last access
+        await update_user_last_access(user['id'])
+        
+        # Generate session token
+        session_token = generate_session_token()
+        
+        # Remove password hash from response
+        user.pop('password_hash', None)
+        
+        logger.info(f"User logged in successfully: {request.email}")
+        
+        return {
+            'user': user,
+            'session_token': session_token
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Unexpected error in login: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/auth/me")
+async def get_current_user(user_id: str):
+    """Get current user by ID"""
+    try:
+        user = await get_user_by_id(user_id)
+        
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Remove password hash
+        user.pop('password_hash', None)
+        
+        return user
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting current user: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # Include the router in the main app
 app.include_router(api_router)
 

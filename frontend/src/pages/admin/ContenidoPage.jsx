@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '@/layouts/AdminLayout';
+import CreateContenidoModal from '@/components/admin/CreateContenidoModal';
+import { useAuth } from '@/contexts/AuthContextNew';
 import { Button } from '@/components/ui/button';
 import { 
   Plus, 

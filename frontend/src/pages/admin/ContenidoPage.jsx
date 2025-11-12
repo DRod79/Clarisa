@@ -340,16 +340,13 @@ const ContenidoPage = () => {
         </table>
       </div>
 
-      {/* Create Modal - Placeholder */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full p-6">
-            <h2 className="text-2xl font-bold mb-4">Crear Nuevo Contenido</h2>
-            <p className="text-gray-600 mb-4">Modal de creación (implementando siguiente...)</p>
-            <Button onClick={() => setShowCreateModal(false)}>Cerrar</Button>
-          </div>
-        </div>
-      )}
+      {/* Create Modal */}
+      <CreateContenidoModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSuccess={fetchContenidos}
+        userData={userData}
+      />
     </AdminLayout>
   );
 };

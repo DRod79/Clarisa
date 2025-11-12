@@ -10,6 +10,7 @@ import LoginPage from "@/pages/LoginPage";
 import RegistroPage from "@/pages/RegistroPage";
 import TestScoringPage from "@/pages/TestScoringPage";
 import TestDuplicateMessage from "@/pages/TestDuplicateMessage";
+import TestSupabase from "@/pages/TestSupabase";
 
 // App pages
 import ClientDashboard from "@/pages/app/Dashboard";

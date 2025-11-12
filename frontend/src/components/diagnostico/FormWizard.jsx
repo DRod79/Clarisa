@@ -6,7 +6,7 @@ import * as z from 'zod';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { supabase } from '@/lib/supabaseClient';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContextNew';
 import StepIndicator from './StepIndicator';
 import ContactStep from './ContactStep';
 import ContextStep from './ContextStep';

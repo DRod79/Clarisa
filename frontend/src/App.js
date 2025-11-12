@@ -58,6 +58,14 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+            <Route 
+              path="/app/recursos" 
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'cliente_pagado', 'cliente_gratuito']}>
+                  <RecursosPage />
+                </ProtectedRoute>
+              } 
+            />
             
             {/* Admin routes - protected */}
             <Route 

@@ -237,15 +237,23 @@ const FormWizard = () => {
 
       // Si el usuario está autenticado, verificar si ya tiene un diagnóstico
       if (user) {
-        const { data: existingDiag } = await supabase
+        console.log('User is authenticated, checking for existing diagnostico...');
+        const { data: existingDiag, error: checkError } = await supabase
           .from('diagnosticos')
           .select('id')
           .eq('user_id', user.id)
-          .single();
+          .limit(1);
 
-        if (existingDiag) {
+        if (checkError) {
+          console.error('Error checking existing diagnostico:', checkError);
+        }
+
+        if (existingDiag && existingDiag.length > 0) {
+          console.log('User already has a diagnostico');
           toast.info('Ya tienes un diagnóstico registrado. Actualizando...');
         }
+      } else {
+        console.log('User is NOT authenticated (anonymous diagnostico)');
       }
       
       // Preparar respuestas

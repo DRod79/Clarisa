@@ -294,34 +294,32 @@ const FormWizard = () => {
 
       console.log('Step 4: DiagnosticoData prepared successfully');
       console.log('DiagnosticoData:', diagnosticoData);
-      console.log('Step 5: Saving to Supabase...');
+      console.log('Step 5: Saving to Supabase using REST API...');
       
-      // Try with timeout
-      const insertPromise = supabase
-        .from('diagnosticos')
-        .insert([diagnosticoData])
-        .select();
+      // Use direct REST API (same method as successful test)
+      const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+      const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+      
+      const response = await fetch(`${supabaseUrl}/rest/v1/diagnosticos`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify(diagnosticoData)
+      });
 
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Supabase insert timeout after 10 seconds')), 10000)
-      );
+      console.log('Response status:', response.status);
 
-      let savedDiag, error;
-      try {
-        const result = await Promise.race([insertPromise, timeoutPromise]);
-        savedDiag = result.data;
-        error = result.error;
-      } catch (timeoutError) {
-        console.error('Timeout or error during insert:', timeoutError);
-        throw timeoutError;
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Response error:', errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
 
-      if (error) {
-        console.error('Supabase error:', error);
-        console.error('Error details:', JSON.stringify(error, null, 2));
-        throw error;
-      }
-
+      const savedDiag = await response.json();
       console.log('Step 6: Diagnostico saved successfully!');
       console.log('Saved data:', savedDiag);
 

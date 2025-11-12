@@ -35,6 +35,7 @@ function App() {
             {/* Test routes (remove in production) */}
             <Route path="/test-scoring" element={<TestScoringPage />} />
             <Route path="/test-duplicate" element={<TestDuplicateMessage />} />
+            <Route path="/test-supabase" element={<TestSupabase />} />
             
             {/* Dashboard redirect */}
             <Route 

@@ -129,6 +129,19 @@ const Header = () => {
             >
               Preguntas
             </button>
+            <button
+              onClick={() => navigate('/login')}
+              className="block w-full text-left text-gray-700 hover:text-[#2D5F3F] transition-colors font-medium py-2"
+            >
+              Iniciar sesión
+            </button>
+            <Button
+              onClick={() => navigate('/registro')}
+              variant="outline"
+              className="w-full border-[#4CAF50] text-[#4CAF50] hover:bg-[#4CAF50] hover:text-white font-semibold py-2 rounded-lg mb-2"
+            >
+              Registrarse
+            </Button>
             <Button
               onClick={() => navigate('/diagnostico')}
               className="w-full bg-[#4CAF50] hover:bg-[#45a049] text-white font-semibold py-2 rounded-lg"

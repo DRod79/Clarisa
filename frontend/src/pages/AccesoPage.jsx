@@ -42,7 +42,13 @@ const AccesoPage = () => {
       }
 
       toast.success('¡Bienvenido de vuelta!');
-      navigate('/dashboard');
+      
+      // Redirect based on user role
+      if (data.user.rol === 'admin') {
+        navigate('/admin/home');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error) {
       console.error('Login error:', error);
       toast.error('Error al iniciar sesión');

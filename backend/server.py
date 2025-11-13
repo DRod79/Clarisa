@@ -298,6 +298,16 @@ async def get_current_user(user_id: str):
         logger.error(f"Error getting current user: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.get("/auth/check-email")
+async def check_email(email: EmailStr):
+    """Check if email exists"""
+    try:
+        user = await get_user_by_email(email)
+        return {"exists": user is not None, "email": email}
+    except Exception as e:
+        logger.error(f"Error checking email: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 # Include the router in the main app
 app.include_router(api_router)

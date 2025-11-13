@@ -117,7 +117,7 @@ async def root():
 
 
 @api_router.post("/diagnostico", response_model=DiagnosticoResponse)
-async def submit_diagnostico(diagnostico: DiagnosticoSubmission):
+async def submit_diagnostico(diagnostico: DiagnosticoSubmission, user_id: Optional[str] = None):
     try:
         # Convert to dict and serialize datetime to ISO string for MongoDB
         doc = diagnostico.model_dump()
@@ -131,10 +131,46 @@ async def submit_diagnostico(diagnostico: DiagnosticoSubmission):
             'arquetipo': diagnostico.scoring.arquetipo.model_dump()
         }
         
+        # Add user_id if provided
+        if user_id:
+            doc['user_id'] = user_id
+        
         # Save to MongoDB
         result = await db.diagnosticos.insert_one(doc)
         
         logger.info(f"Diagnóstico guardado: {diagnostico.email} - {diagnostico.organizacion} - Arquetipo: {diagnostico.scoring.arquetipo.codigo}")
+        
+        # If user is logged in, create sales opportunity automatically
+        if user_id:
+            try:
+                user = await get_user_by_id(user_id)
+                if user:
+                    # Prepare diagnostico data for opportunity creation
+                    diagnostico_dict = {
+                        'id': diagnostico.id,
+                        'empresa': diagnostico.organizacion,
+                        'scoring': {
+                            'urgencia': {'puntos': diagnostico.scoring.urgencia.puntos},
+                            'madurez': {'puntos': diagnostico.scoring.madurez.puntos},
+                            'capacidad': {'puntos': diagnostico.scoring.capacidad.puntos}
+                        },
+                        'scoring_total': (
+                            diagnostico.scoring.urgencia.puntos + 
+                            diagnostico.scoring.madurez.puntos + 
+                            diagnostico.scoring.capacidad.puntos
+                        ) // 3,
+                        'arquetipo': {
+                            'codigo': diagnostico.scoring.arquetipo.codigo,
+                            'nombre': diagnostico.scoring.arquetipo.nombre
+                        }
+                    }
+                    
+                    oportunidad = await crear_oportunidad_desde_diagnostico(diagnostico_dict, user)
+                    if oportunidad:
+                        logger.info(f"Oportunidad creada automáticamente: {oportunidad['id']} para user: {user_id}")
+            except Exception as e:
+                logger.error(f"Error creating opportunity from diagnostico: {e}")
+                # No detenemos el flujo si falla la creación de oportunidad
         
         return DiagnosticoResponse(
             id=diagnostico.id,

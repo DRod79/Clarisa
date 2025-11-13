@@ -68,7 +68,7 @@ def update_admin_password(email: str, new_password: str):
 if __name__ == "__main__":
     # Update admin password
     email = "admin@clarisa.com"
-    new_password = "Admin2024!"
+    new_password = "Test123*"
     
     print(f"Updating password for {email}...")
     update_admin_password(email, new_password)

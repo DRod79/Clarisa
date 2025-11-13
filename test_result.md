@@ -178,6 +178,55 @@ test_plan:
   test_all: false
   test_priority: "high_first"
 
+frontend:
+  - task: "Unified access page with login/register toggle"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/pages/AccesoPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Implemented unified access page at /acceso with manual toggle between login and registration forms. User can switch modes with a single click. Default view is login."
+
+  - task: "Password visibility toggle (eye icon)"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/pages/AccesoPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Added Eye/EyeOff icons from lucide-react to all password fields. Users can click to show/hide password text. Works for both login and registration password fields."
+
+  - task: "Single access button in header"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/landing/Header.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Removed separate 'Iniciar sesión' and 'Registrarse' buttons. Now there is only ONE button 'Iniciar sesión' that navigates to /acceso page. Updated both desktop and mobile menu."
+
+  - task: "Route configuration for /acceso"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Added /acceso route to App.js that loads the new AccesoPage component."
+
 agent_communication:
-    - agent: "testing"
-      message: "TESTING COMPLETE - All backend endpoints for NIIF S1/S2 diagnostic tool are working correctly. POST /api/diagnostico successfully saves complete diagnostic data to MongoDB with proper scoring structure. Logger issue has been resolved. All API endpoints (POST, GET all, GET by ID) tested and verified working. Created comprehensive backend_test.py for future testing."
+    - agent: "main"
+      message: "Implemented unified access system. Created AccesoPage with manual toggle between login/register. Added password visibility toggle using Eye/EyeOff icons. Updated header to show single 'Iniciar sesión' button instead of two separate buttons. All changes are visual and functional - needs E2E testing to verify login/register flows work correctly with existing auth backend."

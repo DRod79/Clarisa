@@ -211,6 +211,33 @@ def calcular_probabilidad_inicial(prioridad: str, etapa: str) -> int:
 # CRUD OPERATIONS - OPORTUNIDADES
 # ============================================
 
+async def guardar_diagnostico_supabase(diagnostico_data: dict) -> Optional[dict]:
+    """
+    Guarda diagnóstico en Supabase (tabla diagnosticos)
+    """
+    try:
+        response = requests.post(
+            f"{SUPABASE_URL}/rest/v1/diagnosticos",
+            headers={
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_KEY,
+                'Authorization': f'Bearer {SUPABASE_KEY}',
+                'Prefer': 'return=representation'
+            },
+            json=diagnostico_data,
+            timeout=10
+        )
+        
+        if response.status_code == 201:
+            return response.json()[0]
+        else:
+            print(f"Error saving diagnostico to Supabase: {response.status_code} - {response.text}")
+            return None
+            
+    except Exception as e:
+        print(f"Error in guardar_diagnostico_supabase: {e}")
+        return None
+
 async def crear_oportunidad_desde_diagnostico(diagnostico: dict, user: dict) -> Optional[dict]:
     """
     Crea una oportunidad automáticamente cuando se completa un diagnóstico

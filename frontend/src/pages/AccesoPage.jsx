@@ -124,155 +124,15 @@ const AccesoPage = () => {
           <h1 className="text-3xl font-bold text-[#2D5F3F]">Clarisa</h1>
         </Link>
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-          {step === 'email' && 'Accede a tu cuenta'}
-          {step === 'login' && 'Ingresa tu contraseña'}
-          {step === 'register' && 'Completa tu registro'}
+          {isLogin ? 'Iniciar sesión' : 'Crear cuenta'}
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          {step === 'email' && 'Ingresa tu email para continuar'}
-          {step === 'login' && (
-            <>
-              ¿No recuerdas tu contraseña?{' '}
-              <Link to="/recuperar-password" className="font-semibold text-[#4CAF50] hover:text-[#2D5F3F]">
-                Recupérala aquí
-              </Link>
-            </>
-          )}
-          {step === 'register' && 'Ya tienes cuenta? Vuelve atrás para iniciar sesión'}
-        </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          {/* STEP 1: Email Input */}
-          {step === 'email' && (
-            <form onSubmit={handleEmailSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#4CAF50] focus:border-[#4CAF50] sm:text-sm"
-                    placeholder="tu.email@empresa.com"
-                  />
-                </div>
-              </div>
-
-              <Button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-[#4CAF50] hover:bg-[#45a049] text-white"
-              >
-                {loading ? 'Verificando...' : 'Continuar'}
-              </Button>
-
-              <div className="mt-6">
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-300" />
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-gray-500">
-                      ¿Primera vez aquí?
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <Link to="/diagnostico">
-                    <Button
-                      variant="outline"
-                      className="w-full"
-                    >
-                      Hacer diagnóstico gratuito primero
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </form>
-          )}
-
-          {/* STEP 2: Login */}
-          {step === 'login' && (
-            <form onSubmit={handleLogin} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Email
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="email"
-                    value={email}
-                    disabled
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500 sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Contraseña
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#4CAF50] focus:border-[#4CAF50] sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <Button
-                  type="button"
-                  onClick={handleBack}
-                  variant="outline"
-                  className="flex-1"
-                  disabled={loading}
-                >
-                  Atrás
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="flex-1 bg-[#4CAF50] hover:bg-[#45a049] text-white"
-                >
-                  {loading ? 'Iniciando...' : 'Iniciar sesión'}
-                </Button>
-              </div>
-            </form>
-          )}
-
-          {/* STEP 3: Register */}
-          {step === 'register' && (
-            <form onSubmit={handleRegister} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Email
-                </label>
-                <div className="mt-1">
-                  <input
-                    type="email"
-                    value={email}
-                    disabled
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500 sm:text-sm"
-                  />
-                </div>
-              </div>
-
+          <form onSubmit={isLogin ? handleLogin : handleRegister} className="space-y-6">
+            {/* Nombre completo - Solo en registro */}
+            {!isLogin && (
               <div>
                 <label htmlFor="nombre_completo" className="block text-sm font-medium text-gray-700">
                   Nombre completo *
@@ -290,7 +150,30 @@ const AccesoPage = () => {
                   />
                 </div>
               </div>
+            )}
 
+            {/* Email */}
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email *
+              </label>
+              <div className="mt-1">
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#4CAF50] focus:border-[#4CAF50] sm:text-sm"
+                  placeholder="tu.email@empresa.com"
+                />
+              </div>
+            </div>
+
+            {/* Organización - Solo en registro */}
+            {!isLogin && (
               <div>
                 <label htmlFor="organizacion" className="block text-sm font-medium text-gray-700">
                   Organización
@@ -307,44 +190,75 @@ const AccesoPage = () => {
                   />
                 </div>
               </div>
+            )}
 
-              <div>
-                <label htmlFor="new-password" className="block text-sm font-medium text-gray-700">
-                  Contraseña *
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="new-password"
-                    name="password"
-                    type="password"
-                    autoComplete="new-password"
-                    required
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#4CAF50] focus:border-[#4CAF50] sm:text-sm"
-                  />
-                </div>
-                <p className="mt-1 text-xs text-gray-500">Mínimo 6 caracteres</p>
+            {/* Contraseña con toggle visible/oculta */}
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Contraseña *
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete={isLogin ? 'current-password' : 'new-password'}
+                  required
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className="appearance-none block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#4CAF50] focus:border-[#4CAF50] sm:text-sm"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
               </div>
+              {!isLogin && (
+                <p className="mt-1 text-xs text-gray-500">Mínimo 6 caracteres</p>
+              )}
+            </div>
 
+            {/* Confirmar contraseña - Solo en registro */}
+            {!isLogin && (
               <div>
                 <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
                   Confirmar contraseña *
                 </label>
-                <div className="mt-1">
+                <div className="mt-1 relative">
                   <input
                     id="confirmPassword"
                     name="confirmPassword"
-                    type="password"
+                    type={showConfirmPassword ? 'text' : 'password'}
                     autoComplete="new-password"
                     required
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#4CAF50] focus:border-[#4CAF50] sm:text-sm"
+                    className="appearance-none block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#4CAF50] focus:border-[#4CAF50] sm:text-sm"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
                 </div>
               </div>
+            )}
 
+            {/* Términos y condiciones - Solo en registro */}
+            {!isLogin && (
               <div className="flex items-start">
                 <div className="flex items-center h-5">
                   <input
@@ -362,27 +276,62 @@ const AccesoPage = () => {
                   </label>
                 </div>
               </div>
+            )}
 
-              <div className="flex gap-2">
-                <Button
-                  type="button"
-                  onClick={handleBack}
-                  variant="outline"
-                  className="flex-1"
-                  disabled={loading}
-                >
-                  Atrás
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="flex-1 bg-[#4CAF50] hover:bg-[#45a049] text-white"
-                >
-                  {loading ? 'Creando cuenta...' : 'Crear cuenta'}
-                </Button>
+            {/* Botón submit */}
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#4CAF50] hover:bg-[#45a049] text-white"
+            >
+              {loading 
+                ? (isLogin ? 'Iniciando...' : 'Creando cuenta...') 
+                : (isLogin ? 'Iniciar sesión' : 'Crear cuenta')
+              }
+            </Button>
+
+            {/* Toggle entre login y registro */}
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={toggleMode}
+                className="text-sm text-[#4CAF50] hover:text-[#2D5F3F] font-semibold"
+              >
+                {isLogin 
+                  ? '¿No tienes cuenta? Regístrate' 
+                  : '¿Ya tienes cuenta? Inicia sesión'
+                }
+              </button>
+            </div>
+
+            {/* Enlace al diagnóstico gratuito */}
+            {isLogin && (
+              <div className="mt-6">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-300" />
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-white text-gray-500">
+                      ¿Primera vez aquí?
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <Link to="/diagnostico">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full"
+                    >
+                      Hacer diagnóstico gratuito primero
+                    </Button>
+                  </Link>
+                </div>
               </div>
-            </form>
-          )}
+            )}
+          </form>
         </div>
       </div>
     </div>

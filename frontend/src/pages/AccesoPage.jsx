@@ -3,14 +3,18 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContextNew';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { Eye, EyeOff } from 'lucide-react';
 
 const AccesoPage = () => {
   const navigate = useNavigate();
   const { signIn, signUp } = useAuth();
-  const [step, setStep] = useState('email'); // 'email', 'login', 'register'
+  const [isLogin, setIsLogin] = useState(true); // true = login, false = registro
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
   const [formData, setFormData] = useState({
+    email: '',
     password: '',
     nombre_completo: '',
     organizacion: '',
@@ -18,60 +22,21 @@ const AccesoPage = () => {
     acceptTerms: false,
   });
 
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-  const API = `${BACKEND_URL}/api`;
-
-  const checkEmailExists = async (emailToCheck) => {
-    try {
-      const response = await fetch(`${API}/auth/check-email?email=${encodeURIComponent(emailToCheck)}`);
-      if (response.ok) {
-        const data = await response.json();
-        return data.exists;
-      }
-      return false;
-    } catch (error) {
-      console.error('Error checking email:', error);
-      return false;
-    }
-  };
-
-  const handleEmailSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     
-    if (!email.trim()) {
-      toast.error('Por favor ingresa tu email');
+    if (!formData.email.trim() || !formData.password) {
+      toast.error('Por favor completa todos los campos');
       return;
     }
 
     setLoading(true);
 
     try {
-      const exists = await checkEmailExists(email);
-      
-      if (exists) {
-        setStep('login');
-        toast.info('Bienvenido de vuelta! Ingresa tu contraseña');
-      } else {
-        setStep('register');
-        toast.info('Vamos a crear tu cuenta');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      toast.error('Error al verificar email');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const { data, error } = await signIn(email, formData.password);
+      const { data, error } = await signIn(formData.email, formData.password);
 
       if (error) {
-        toast.error('Contraseña incorrecta');
+        toast.error('Email o contraseña incorrectos');
         setLoading(false);
         return;
       }
@@ -89,8 +54,8 @@ const AccesoPage = () => {
     e.preventDefault();
 
     // Validations
-    if (!formData.nombre_completo.trim()) {
-      toast.error('Por favor ingresa tu nombre completo');
+    if (!formData.email.trim() || !formData.nombre_completo.trim() || !formData.password) {
+      toast.error('Por favor completa todos los campos obligatorios');
       return;
     }
 
@@ -113,7 +78,7 @@ const AccesoPage = () => {
 
     try {
       const { data, error } = await signUp(
-        email,
+        formData.email,
         formData.password,
         {
           nombre_completo: formData.nombre_completo,
@@ -137,15 +102,19 @@ const AccesoPage = () => {
     }
   };
 
-  const handleBack = () => {
-    setStep('email');
+  const toggleMode = () => {
+    setIsLogin(!isLogin);
+    // Reset form when switching
     setFormData({
+      email: '',
       password: '',
       nombre_completo: '',
       organizacion: '',
       confirmPassword: '',
       acceptTerms: false,
     });
+    setShowPassword(false);
+    setShowConfirmPassword(false);
   };
 
   return (

@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Probar el endpoint POST /api/diagnostico con datos de prueba completos para verificar que el diagnóstico se guarda correctamente en MongoDB. Se acaba de corregir un error donde el logger no estaba definido antes de usarse."
+user_problem_statement: "Implementar un sistema de acceso unificado donde los usuarios puedan iniciar sesión o registrarse desde una sola página con toggle manual. Los campos de contraseña deben tener funcionalidad de mostrar/ocultar. El header debe tener solo UN botón de acceso en lugar de dos botones separados."
 
 backend:
   - task: "POST /api/diagnostico endpoint"

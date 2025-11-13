@@ -100,7 +100,13 @@ const AccesoPage = () => {
       }
 
       toast.success('¡Cuenta creada exitosamente!');
-      navigate('/dashboard');
+      
+      // Redirect based on user role (usually clients, but check anyway)
+      if (data.user.rol === 'admin') {
+        navigate('/admin/home');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error) {
       console.error('Registration error:', error);
       toast.error('Error al crear la cuenta');

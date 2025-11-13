@@ -48,7 +48,7 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-6">
             <button
               onClick={() => scrollToSection('como-funciona')}
               className="text-gray-700 hover:text-[#2D5F3F] transition-colors font-medium"
@@ -67,6 +67,19 @@ const Header = () => {
             >
               Preguntas
             </button>
+            <button
+              onClick={() => navigate('/login')}
+              className="text-gray-700 hover:text-[#2D5F3F] transition-colors font-medium"
+            >
+              Iniciar sesión
+            </button>
+            <Button
+              onClick={() => navigate('/registro')}
+              variant="outline"
+              className="border-[#4CAF50] text-[#4CAF50] hover:bg-[#4CAF50] hover:text-white font-semibold px-4 py-2 rounded-lg transition-all"
+            >
+              Registrarse
+            </Button>
             <Button
               data-testid="cta-header-btn"
               onClick={() => navigate('/diagnostico')}

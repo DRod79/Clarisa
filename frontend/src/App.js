@@ -6,6 +6,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 // Public pages
 import LandingPage from "@/pages/LandingPage";
 import DiagnosticoPage from "@/pages/DiagnosticoPage";
+import AccesoPage from "@/pages/AccesoPage";
 import LoginPage from "@/pages/LoginPage";
 import RegistroPage from "@/pages/RegistroPage";
 import TestScoringPage from "@/pages/TestScoringPage";

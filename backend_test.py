@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 # Get backend URL from frontend .env
-BACKEND_URL = "https://esg-report-tool.preview.emergentagent.com"
+BACKEND_URL = "https://sustain-learn.preview.emergentagent.com"
 API_BASE = f"{BACKEND_URL}/api"
 
 def test_diagnostico_endpoint():

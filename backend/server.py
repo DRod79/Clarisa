@@ -325,6 +325,118 @@ async def check_email(email: EmailStr):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# ============================================
+# SALES MODULE ENDPOINTS
+# ============================================
+
+@api_router.get("/sales/oportunidades", response_model=List[dict])
+async def list_oportunidades(
+    prioridad: Optional[str] = None,
+    etapa: Optional[str] = None,
+    estado: Optional[str] = None
+):
+    """Lista todas las oportunidades con filtros opcionales"""
+    try:
+        oportunidades = await get_oportunidades(prioridad=prioridad, etapa=etapa, estado=estado)
+        return oportunidades
+    except Exception as e:
+        logger.error(f"Error getting oportunidades: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/sales/oportunidades/{oportunidad_id}", response_model=dict)
+async def get_oportunidad(oportunidad_id: str):
+    """Obtiene una oportunidad específica por ID"""
+    try:
+        oportunidad = await get_oportunidad_by_id(oportunidad_id)
+        if not oportunidad:
+            raise HTTPException(status_code=404, detail="Oportunidad not found")
+        return oportunidad
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting oportunidad: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.patch("/sales/oportunidades/{oportunidad_id}", response_model=dict)
+async def update_oportunidad_endpoint(oportunidad_id: str, update_data: OportunidadUpdate):
+    """Actualiza una oportunidad"""
+    try:
+        # Convert to dict and remove None values
+        update_dict = {k: v for k, v in update_data.dict().items() if v is not None}
+        
+        if not update_dict:
+            raise HTTPException(status_code=400, detail="No data to update")
+        
+        oportunidad = await update_oportunidad(oportunidad_id, update_dict)
+        if not oportunidad:
+            raise HTTPException(status_code=404, detail="Oportunidad not found")
+        
+        logger.info(f"Oportunidad updated: {oportunidad_id}")
+        return oportunidad
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating oportunidad: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/sales/oportunidades/{oportunidad_id}/actividades", response_model=List[dict])
+async def list_actividades(oportunidad_id: str):
+    """Lista todas las actividades de una oportunidad"""
+    try:
+        actividades = await get_actividades_by_oportunidad(oportunidad_id)
+        return actividades
+    except Exception as e:
+        logger.error(f"Error getting actividades: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/sales/actividades", response_model=dict)
+async def create_actividad(actividad: ActividadCreate):
+    """Crea una nueva actividad"""
+    try:
+        nueva_actividad = await crear_actividad(actividad.dict())
+        if not nueva_actividad:
+            raise HTTPException(status_code=500, detail="Failed to create actividad")
+        
+        logger.info(f"Actividad created for oportunidad: {actividad.oportunidad_id}")
+        return nueva_actividad
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating actividad: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.patch("/sales/actividades/{actividad_id}", response_model=dict)
+async def update_actividad_endpoint(actividad_id: str, update_data: ActividadUpdate):
+    """Actualiza una actividad"""
+    try:
+        # Convert to dict and remove None values
+        update_dict = {k: v for k, v in update_data.dict().items() if v is not None}
+        
+        if not update_dict:
+            raise HTTPException(status_code=400, detail="No data to update")
+        
+        actividad = await update_actividad(actividad_id, update_dict)
+        if not actividad:
+            raise HTTPException(status_code=404, detail="Actividad not found")
+        
+        logger.info(f"Actividad updated: {actividad_id}")
+        return actividad
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating actividad: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/sales/stats", response_model=dict)
+async def get_sales_stats():
+    """Obtiene estadísticas del pipeline de ventas"""
+    try:
+        stats = await get_pipeline_stats()
+        return stats
+    except Exception as e:
+        logger.error(f"Error getting sales stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include the router in the main app
 app.include_router(api_router)
 

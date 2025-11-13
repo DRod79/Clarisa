@@ -32,6 +32,7 @@ function App() {
             {/* Public routes */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/diagnostico" element={<DiagnosticoPage />} />
+            <Route path="/acceso" element={<AccesoPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/registro" element={<RegistroPage />} />
             

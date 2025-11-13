@@ -173,7 +173,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "POST /api/diagnostico endpoint"
+    - "Unified access system testing completed"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"

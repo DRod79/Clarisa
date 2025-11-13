@@ -174,6 +174,22 @@ from auth import (
     get_user_by_id,
     update_user_last_access
 )
+from sales import (
+    OportunidadCreate,
+    OportunidadUpdate,
+    Oportunidad,
+    ActividadCreate,
+    ActividadUpdate,
+    Actividad,
+    crear_oportunidad_desde_diagnostico,
+    get_oportunidades,
+    get_oportunidad_by_id,
+    update_oportunidad,
+    crear_actividad,
+    get_actividades_by_oportunidad,
+    update_actividad,
+    get_pipeline_stats
+)
 
 class RegisterRequest(BaseModel):
     email: EmailStr

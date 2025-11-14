@@ -177,7 +177,10 @@ const PipelineKanban = ({ oportunidades, onMoverOportunidad, onActualizar }) => 
               </div>
 
               {/* Contenedor de tarjetas */}
-              <div className="bg-gray-50 border-2 border-t-0 border-gray-200 rounded-b-lg p-3 min-h-[400px] max-h-[600px] overflow-y-auto space-y-3">
+              <div className={`
+                bg-gray-50 border-2 border-t-0 border-gray-200 rounded-b-lg p-3 min-h-[400px] max-h-[600px] overflow-y-auto space-y-3 transition-all
+                ${dragOverColumn === etapa.id ? 'bg-green-50 border-green-300' : ''}
+              `}>
                 {oportunidadesEtapa.length === 0 ? (
                   <div className="text-center py-8 text-gray-400 text-sm">
                     Sin oportunidades

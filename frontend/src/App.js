@@ -87,6 +87,14 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+            <Route 
+              path="/admin/ventas" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <PipelinePage />
+                </ProtectedRoute>
+              } 
+            />
             
             {/* Catch all - redirect to home */}
             <Route path="*" element={<Navigate to="/" replace />} />

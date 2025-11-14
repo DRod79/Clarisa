@@ -14,7 +14,7 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 SUPABASE_URL = os.environ.get('SUPABASE_URL')
-SUPABASE_KEY = os.environ.get('SUPABASE_KEY')
+SUPABASE_KEY = os.environ.get('SUPABASE_SERVICE_KEY')  # Usar SERVICE_KEY para bypassear RLS
 
 # Datos de prueba
 CLIENTES_PRUEBA = [

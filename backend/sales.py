@@ -353,6 +353,11 @@ async def update_oportunidad(oportunidad_id: str, update_data: dict) -> Optional
         # Agregar timestamp de última actividad
         update_data['ultima_actividad'] = datetime.utcnow().isoformat()
         
+        # Convertir objetos date a string ISO
+        if 'fecha_estimada_cierre' in update_data and update_data['fecha_estimada_cierre']:
+            if isinstance(update_data['fecha_estimada_cierre'], date):
+                update_data['fecha_estimada_cierre'] = update_data['fecha_estimada_cierre'].isoformat()
+        
         response = requests.patch(
             f"{SUPABASE_URL}/rest/v1/oportunidades?id=eq.{oportunidad_id}",
             headers={

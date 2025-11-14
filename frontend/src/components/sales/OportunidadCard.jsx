@@ -50,14 +50,22 @@ const OportunidadCard = ({ oportunidad, onDragStart, onDragEnd, onActualizar, is
     return diff;
   };
 
+  const handleClick = (e) => {
+    // No navegar si está siendo arrastrada
+    if (!isDragging) {
+      navigate(`/admin/ventas/oportunidad/${oportunidad.id}`);
+    }
+  };
+
   return (
     <div
       draggable
       onDragStart={(e) => onDragStart(e, oportunidad)}
       onDragEnd={onDragEnd}
+      onClick={handleClick}
       className={`
-        bg-white rounded-lg border-2 border-gray-200 p-4 cursor-move
-        hover:shadow-md transition-all duration-200
+        bg-white rounded-lg border-2 border-gray-200 p-4 cursor-pointer
+        hover:shadow-md hover:border-green-300 transition-all duration-200 group
         ${isDragging ? 'opacity-50 scale-95' : 'opacity-100'}
       `}
     >

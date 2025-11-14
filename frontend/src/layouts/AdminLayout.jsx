@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContextNew';
 import { Button } from '@/components/ui/button';
+import NotificacionesPanel from '@/components/sales/NotificacionesPanel';
 import {
   LayoutDashboard,
   Users,

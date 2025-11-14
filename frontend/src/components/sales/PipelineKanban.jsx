@@ -152,6 +152,8 @@ const PipelineKanban = ({ oportunidades, onMoverOportunidad, onActualizar }) => 
               key={etapa.id}
               className="flex-shrink-0 w-80"
               onDragOver={handleDragOver}
+              onDragEnter={(e) => handleDragEnter(e, etapa.id)}
+              onDragLeave={(e) => handleDragLeave(e, etapa.id)}
               onDrop={(e) => handleDrop(e, etapa.id)}
             >
               {/* Header de columna */}

@@ -22,6 +22,7 @@ import AdminHome from "@/pages/admin/AdminHome";
 import AdminContenido from "@/pages/admin/ContenidoPage";
 import PipelinePage from "@/pages/admin/sales/PipelinePage";
 import OportunidadDetailPage from "@/pages/admin/sales/OportunidadDetailPage";
+import DashboardVentasPage from "@/pages/admin/sales/DashboardVentasPage";
 
 import { Toaster } from "@/components/ui/sonner";
 

@@ -21,6 +21,7 @@ import RecursosPage from "@/pages/app/RecursosPage";
 import AdminHome from "@/pages/admin/AdminHome";
 import AdminContenido from "@/pages/admin/ContenidoPage";
 import PipelinePage from "@/pages/admin/sales/PipelinePage";
+import OportunidadDetailPage from "@/pages/admin/sales/OportunidadDetailPage";
 
 import { Toaster } from "@/components/ui/sonner";
 

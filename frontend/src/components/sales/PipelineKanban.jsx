@@ -80,10 +80,16 @@ const ETAPAS = [
 
 const PipelineKanban = ({ oportunidades, onMoverOportunidad, onActualizar }) => {
   const [draggedItem, setDraggedItem] = useState(null);
+  const [dragOverColumn, setDragOverColumn] = useState(null);
 
   const handleDragStart = (e, oportunidad) => {
     setDraggedItem(oportunidad);
     e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.currentTarget);
+    // Add opacity to dragged item
+    setTimeout(() => {
+      e.target.style.opacity = '0.4';
+    }, 0);
   };
 
   const handleDragOver = (e) => {
@@ -91,18 +97,37 @@ const PipelineKanban = ({ oportunidades, onMoverOportunidad, onActualizar }) => 
     e.dataTransfer.dropEffect = 'move';
   };
 
-  const handleDrop = (e, etapaId) => {
+  const handleDragEnter = (e, etapaId) => {
     e.preventDefault();
+    setDragOverColumn(etapaId);
+  };
+
+  const handleDragLeave = (e, etapaId) => {
+    // Only remove highlight if leaving the column container
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX;
+    const y = e.clientY;
+    
+    if (x < rect.left || x >= rect.right || y < rect.top || y >= rect.bottom) {
+      setDragOverColumn(null);
+    }
+  };
+
+  const handleDrop = async (e, etapaId) => {
+    e.preventDefault();
+    setDragOverColumn(null);
     
     if (draggedItem && draggedItem.etapa_pipeline !== etapaId) {
-      onMoverOportunidad(draggedItem.id, etapaId);
+      await onMoverOportunidad(draggedItem.id, etapaId);
     }
     
     setDraggedItem(null);
   };
 
-  const handleDragEnd = () => {
+  const handleDragEnd = (e) => {
+    e.target.style.opacity = '1';
     setDraggedItem(null);
+    setDragOverColumn(null);
   };
 
   const getOportunidadesPorEtapa = (etapaId) => {

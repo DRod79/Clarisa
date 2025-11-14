@@ -96,6 +96,14 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+            <Route 
+              path="/admin/ventas/oportunidad/:id" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <OportunidadDetailPage />
+                </ProtectedRoute>
+              } 
+            />
             
             {/* Catch all - redirect to home */}
             <Route path="*" element={<Navigate to="/" replace />} />

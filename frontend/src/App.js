@@ -20,6 +20,7 @@ import RecursosPage from "@/pages/app/RecursosPage";
 // Admin pages
 import AdminHome from "@/pages/admin/AdminHome";
 import AdminContenido from "@/pages/admin/ContenidoPage";
+import PipelinePage from "@/pages/admin/sales/PipelinePage";
 
 import { Toaster } from "@/components/ui/sonner";
 

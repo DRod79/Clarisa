@@ -105,7 +105,7 @@ def crear_oportunidad(cliente_data):
         fecha_cierre = (datetime.utcnow() + timedelta(days=dias_futuro)).date().isoformat()
         
         oportunidad = {
-            'user_id': '9e8dc65f-d00e-40ea-b9de-8f2fa97e0a99',  # ID de ejemplo, ajustar si es necesario
+            'user_id': '0ea42ae2-b602-4434-907b-18fa42108144',  # ID del admin
             'diagnostico_id': None,  # Opcional
             'nombre_cliente': cliente_data['nombre_cliente'],
             'email_cliente': cliente_data['email_cliente'],

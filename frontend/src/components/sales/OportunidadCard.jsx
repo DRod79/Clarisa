@@ -35,6 +35,8 @@ const PRIORIDAD_LABELS = {
 };
 
 const OportunidadCard = ({ oportunidad, onDragStart, onDragEnd, onActualizar, isDragging }) => {
+  const navigate = useNavigate();
+  
   const formatFecha = (fecha) => {
     if (!fecha) return null;
     const date = new Date(fecha);

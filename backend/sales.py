@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, EmailStr
 from datetime import datetime, date
 import requests
 import os
+import json
 
 SUPABASE_URL = os.environ.get('SUPABASE_URL')
 SUPABASE_KEY = os.environ.get('SUPABASE_SERVICE_KEY')  # Usar SERVICE_KEY para bypassear RLS en backend

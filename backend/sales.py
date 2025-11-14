@@ -449,6 +449,15 @@ async def update_actividad(actividad_id: str, update_data: dict) -> Optional[dic
         if update_data.get('completada') and 'fecha_completada' not in update_data:
             update_data['fecha_completada'] = datetime.utcnow().isoformat()
         
+        # Convertir objetos datetime a string ISO
+        if 'fecha_programada' in update_data and update_data['fecha_programada']:
+            if isinstance(update_data['fecha_programada'], datetime):
+                update_data['fecha_programada'] = update_data['fecha_programada'].isoformat()
+        
+        if 'fecha_completada' in update_data and update_data['fecha_completada']:
+            if isinstance(update_data['fecha_completada'], datetime):
+                update_data['fecha_completada'] = update_data['fecha_completada'].isoformat()
+        
         response = requests.patch(
             f"{SUPABASE_URL}/rest/v1/actividades?id=eq.{actividad_id}",
             headers={

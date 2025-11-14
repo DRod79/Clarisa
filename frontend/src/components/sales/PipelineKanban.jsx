@@ -157,7 +157,10 @@ const PipelineKanban = ({ oportunidades, onMoverOportunidad, onActualizar }) => 
               onDrop={(e) => handleDrop(e, etapa.id)}
             >
               {/* Header de columna */}
-              <div className={`${etapa.color} border-2 rounded-t-lg p-4`}>
+              <div className={`
+                ${etapa.color} border-2 rounded-t-lg p-4 transition-all
+                ${dragOverColumn === etapa.id ? 'ring-4 ring-green-400 ring-opacity-50' : ''}
+              `}>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <Icon className="h-5 w-5 text-gray-700" />

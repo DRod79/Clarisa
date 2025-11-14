@@ -387,6 +387,11 @@ async def update_oportunidad(oportunidad_id: str, update_data: dict) -> Optional
 async def crear_actividad(actividad_data: dict) -> Optional[dict]:
     """Crea una nueva actividad"""
     try:
+        # Convertir objetos datetime a string ISO
+        if 'fecha_programada' in actividad_data and actividad_data['fecha_programada']:
+            if isinstance(actividad_data['fecha_programada'], datetime):
+                actividad_data['fecha_programada'] = actividad_data['fecha_programada'].isoformat()
+        
         response = requests.post(
             f"{SUPABASE_URL}/rest/v1/actividades",
             headers={
@@ -407,10 +412,14 @@ async def crear_actividad(actividad_data: dict) -> Optional[dict]:
                 {'ultima_actividad': datetime.utcnow().isoformat()}
             )
             return actividad
+        else:
+            print(f"Error creating actividad: {response.status_code} - {response.text}")
         return None
         
     except Exception as e:
         print(f"Error in crear_actividad: {e}")
+        import traceback
+        traceback.print_exc()
         return None
 
 async def get_actividades_by_oportunidad(oportunidad_id: str) -> List[dict]:

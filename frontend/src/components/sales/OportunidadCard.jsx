@@ -1,11 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   DollarSign, 
   Calendar, 
   TrendingUp,
   Building2,
   Mail,
-  Clock
+  Clock,
+  ExternalLink
 } from 'lucide-react';
 
 const PRIORIDAD_COLORS = {

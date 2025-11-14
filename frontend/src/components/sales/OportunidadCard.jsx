@@ -77,9 +77,12 @@ const OportunidadCard = ({ oportunidad, onDragStart, onDragEnd, onActualizar, is
         `}>
           {PRIORIDAD_LABELS[oportunidad.prioridad]}
         </span>
-        <span className="text-xs text-gray-500 font-mono bg-gray-100 px-2 py-1 rounded">
-          {oportunidad.arquetipo_niif}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-500 font-mono bg-gray-100 px-2 py-1 rounded">
+            {oportunidad.arquetipo_niif}
+          </span>
+          <ExternalLink className="h-3 w-3 text-gray-400 group-hover:text-green-600 transition" />
+        </div>
       </div>
 
       {/* Nombre Cliente */}

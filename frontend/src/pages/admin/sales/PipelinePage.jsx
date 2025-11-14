@@ -9,7 +9,8 @@ import {
   Target,
   Plus,
   Search,
-  Filter
+  Filter,
+  BarChart3
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import PipelineKanban from '@/components/sales/PipelineKanban';

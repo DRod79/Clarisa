@@ -151,7 +151,14 @@ const AdminLayout = ({ children }) => {
             <Menu className="w-6 h-6" />
           </button>
           <h1 className="text-xl font-bold text-[#2D5F3F]">Clarisa Admin</h1>
-          <div className="w-6" /> {/* Spacer for centering */}
+          <NotificacionesPanel />
+        </div>
+        
+        {/* Desktop header con notificaciones */}
+        <div className="hidden lg:block sticky top-0 z-10 bg-white border-b shadow-sm">
+          <div className="flex items-center justify-end h-16 px-8">
+            <NotificacionesPanel />
+          </div>
         </div>
 
         {/* Page content */}

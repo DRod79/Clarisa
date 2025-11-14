@@ -128,13 +128,22 @@ const PipelinePage = () => {
               Gestiona y da seguimiento a tus oportunidades de venta
             </p>
           </div>
-          <Button
-            className="bg-green-600 hover:bg-green-700 text-white"
-            onClick={() => toast.info('Función en desarrollo')}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Nueva Oportunidad
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => window.location.href = '/admin/ventas/dashboard'}
+            >
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Ver Dashboard
+            </Button>
+            <Button
+              className="bg-green-600 hover:bg-green-700 text-white"
+              onClick={() => toast.info('Función en desarrollo')}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Nueva Oportunidad
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}

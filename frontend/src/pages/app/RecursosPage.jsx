@@ -25,37 +25,65 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const RecursosPage = () => {
   const { userData } = useAuth();
   const [recursos, setRecursos] = useState([]);
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTipo, setFilterTipo] = useState('all');
   const [filterCategoria, setFilterCategoria] = useState('all');
+  const [filterFase, setFilterFase] = useState('all');
+  const [recursoSeleccionado, setRecursoSeleccionado] = useState(null);
 
   useEffect(() => {
-    fetchRecursos();
-  }, []);
+    if (userData?.id) {
+      fetchRecursos();
+      fetchStats();
+    }
+  }, [userData, filterTipo, filterCategoria, filterFase]);
 
   const fetchRecursos = async () => {
     try {
-      // Fetch only published content
+      setLoading(true);
+      
+      // Construir query params
+      const params = new URLSearchParams({
+        user_id: userData.id,
+        user_rol: userData.rol || 'cliente_gratuito',
+      });
+      
+      if (filterTipo !== 'all') params.append('tipo', filterTipo);
+      if (filterCategoria !== 'all') params.append('categoria', filterCategoria);
+      if (filterFase !== 'all') params.append('fase', filterFase);
+      
       const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/contenido?publicado=eq.true&order=created_at.desc`,
-        {
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`
-          }
-        }
+        `${BACKEND_URL}/api/recursos?${params.toString()}`
       );
 
       if (response.ok) {
         const data = await response.json();
         setRecursos(data);
+      } else {
+        toast.error('Error al cargar recursos');
       }
     } catch (error) {
       console.error('Error fetching recursos:', error);
       toast.error('Error al cargar recursos');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch(
+        `${BACKEND_URL}/api/recursos/stats/resumen?user_id=${userData.id}`
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setStats(data);
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error);
     }
   };
 

@@ -508,6 +508,126 @@ const RecursosPage = () => {
           })}
         </div>
       )}
+
+      {/* Modal de Detalle */}
+      {recursoSeleccionado && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              {/* Header */}
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-800 font-medium">
+                      {getTipoLabel(recursoSeleccionado.tipo)}
+                    </span>
+                    {recursoSeleccionado.nivel_dificultad && (
+                      <span className={`px-3 py-1 text-xs rounded-full font-medium ${getNivelColor(recursoSeleccionado.nivel_dificultad)}`}>
+                        {recursoSeleccionado.nivel_dificultad}
+                      </span>
+                    )}
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    {recursoSeleccionado.titulo}
+                  </h2>
+                </div>
+                <button
+                  onClick={() => setRecursoSeleccionado(null)}
+                  className="text-gray-400 hover:text-gray-600 ml-4"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Descripción */}
+              <p className="text-gray-600 mb-6">{recursoSeleccionado.descripcion}</p>
+
+              {/* Contenido */}
+              {recursoSeleccionado.contenido && (
+                <div className="mb-6 prose max-w-none">
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="whitespace-pre-wrap">{recursoSeleccionado.contenido}</div>
+                  </div>
+                </div>
+              )}
+
+              {/* Video externo */}
+              {recursoSeleccionado.url_externo && recursoSeleccionado.tipo === 'video' && (
+                <div className="mb-6">
+                  <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
+                    <p className="text-gray-600">
+                      <a 
+                        href={recursoSeleccionado.url_externo} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-[#4CAF50] hover:underline"
+                      >
+                        Ver video en plataforma externa →
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Tags */}
+              {recursoSeleccionado.tags && recursoSeleccionado.tags.length > 0 && (
+                <div className="mb-6">
+                  <p className="text-sm font-medium text-gray-700 mb-2">Etiquetas:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {recursoSeleccionado.tags.map((tag, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Actions */}
+              <div className="flex gap-3 pt-4 border-t">
+                {recursoSeleccionado.archivo_url && (
+                  <Button
+                    onClick={() => {
+                      handleDownload(recursoSeleccionado);
+                      setRecursoSeleccionado(null);
+                    }}
+                    className="flex-1 bg-[#4CAF50] hover:bg-[#45a049] text-white"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Descargar
+                  </Button>
+                )}
+                
+                {!recursoSeleccionado.completado && (
+                  <Button
+                    onClick={() => {
+                      handleMarcarCompletado(recursoSeleccionado.id);
+                      setRecursoSeleccionado(null);
+                    }}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Marcar como completado
+                  </Button>
+                )}
+                
+                {recursoSeleccionado.completado && (
+                  <div className="flex-1 flex items-center justify-center gap-2 text-green-600">
+                    <CheckCircle className="w-5 h-5" />
+                    <span className="font-medium">Completado</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </ClientLayout>
   );
 };

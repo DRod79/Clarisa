@@ -170,12 +170,35 @@ const RecursosPage = () => {
 
   const getIconByType = (tipo) => {
     switch (tipo) {
-      case 'plantilla': return FileText;
+      case 'template': return FileText;
       case 'guia': return BookOpen;
       case 'video': return Video;
       case 'herramienta': return Wrench;
+      case 'articulo': return FileText;
+      case 'caso_estudio': return Award;
       default: return FileText;
     }
+  };
+
+  const getTipoLabel = (tipo) => {
+    const labels = {
+      'guia': 'Guía',
+      'template': 'Plantilla',
+      'video': 'Video',
+      'articulo': 'Artículo',
+      'herramienta': 'Herramienta',
+      'caso_estudio': 'Caso de Estudio',
+    };
+    return labels[tipo] || tipo;
+  };
+
+  const getNivelColor = (nivel) => {
+    const colors = {
+      'basico': 'bg-green-100 text-green-800',
+      'intermedio': 'bg-yellow-100 text-yellow-800',
+      'avanzado': 'bg-red-100 text-red-800',
+    };
+    return colors[nivel] || 'bg-gray-100 text-gray-800';
   };
 
   const filteredRecursos = recursos.filter(item => {

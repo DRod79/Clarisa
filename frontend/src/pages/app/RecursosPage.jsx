@@ -225,29 +225,56 @@ const RecursosPage = () => {
     <ClientLayout>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Biblioteca de Recursos</h1>
+        <h1 className="text-3xl font-bold text-gray-900">📚 Biblioteca de Recursos</h1>
         <p className="mt-2 text-gray-600">
-          Plantillas, guías y herramientas para implementar NIIF S1 y S2
+          Guías, plantillas, videos y herramientas para tu implementación NIIF S1/S2
         </p>
       </div>
 
-      {/* User plan info */}
-      <div className="bg-gradient-to-r from-[#2D5F3F] to-[#4CAF50] rounded-lg p-4 mb-6 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm opacity-90">Tu plan actual</p>
-            <p className="text-xl font-bold capitalize">{userData?.plan_actual || 'Gratuito'}</p>
+      {/* Stats Cards */}
+      {stats && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-white rounded-lg shadow p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Total Recursos</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.total_recursos}</p>
+              </div>
+              <FileText className="w-10 h-10 text-blue-500 opacity-20" />
+            </div>
           </div>
-          {userData?.plan_actual === 'gratuito' && (
-            <Button 
-              onClick={() => window.location.href = '/app/suscripcion'}
-              className="bg-white text-[#2D5F3F] hover:bg-gray-100"
-            >
-              Actualizar Plan
-            </Button>
-          )}
+          
+          <div className="bg-white rounded-lg shadow p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Vistos</p>
+                <p className="text-2xl font-bold text-green-600">{stats.recursos_vistos}</p>
+              </div>
+              <Eye className="w-10 h-10 text-green-500 opacity-20" />
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Descargados</p>
+                <p className="text-2xl font-bold text-purple-600">{stats.recursos_descargados}</p>
+              </div>
+              <Download className="w-10 h-10 text-purple-500 opacity-20" />
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Completados</p>
+                <p className="text-2xl font-bold text-[#4CAF50]">{stats.recursos_completados}</p>
+              </div>
+              <CheckCircle className="w-10 h-10 text-[#4CAF50] opacity-20" />
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow p-4 mb-6">

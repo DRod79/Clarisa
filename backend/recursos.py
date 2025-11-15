@@ -9,15 +9,12 @@ from typing import List, Optional
 from datetime import datetime
 import os
 import requests
-import psycopg2
-from psycopg2.extras import RealDictCursor
 
 router = APIRouter()
 
 # Configuración Supabase
 SUPABASE_URL = os.environ.get('SUPABASE_URL')
 SUPABASE_KEY = os.environ.get('SUPABASE_SERVICE_KEY')
-SUPABASE_DB_URL = os.environ.get('SUPABASE_DB_URL')
 
 # ============================================
 # MODELOS

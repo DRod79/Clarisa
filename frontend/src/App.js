@@ -126,6 +126,32 @@ function App() {
               } 
             />
             
+            {/* Admin - Recursos */}
+            <Route 
+              path="/admin/recursos" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <RecursosAdminPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/recursos/crear" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <CrearRecursoPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin/recursos/editar/:id" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <EditarRecursoPage />
+                </ProtectedRoute>
+              } 
+            />
+            
             {/* Catch all - redirect to home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

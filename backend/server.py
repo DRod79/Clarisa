@@ -168,6 +168,10 @@ async def submit_diagnostico(diagnostico: DiagnosticoSubmission, user_id: Option
                     oportunidad = await crear_oportunidad_desde_diagnostico(diagnostico_dict, user)
                     if oportunidad:
                         logger.info(f"Oportunidad creada automáticamente: {oportunidad['id']} para user: {user_id}")
+                    
+                    # Registrar progreso - Fase 1 completada
+                    await registrar_diagnostico_completado(user_id)
+                    logger.info(f"Progreso registrado: Diagnóstico completado para user: {user_id}")
             except Exception as e:
                 logger.error(f"Error creating opportunity from diagnostico: {e}")
                 # No detenemos el flujo si falla la creación de oportunidad

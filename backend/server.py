@@ -226,6 +226,15 @@ from sales import (
     update_actividad,
     get_pipeline_stats
 )
+from progreso import (
+    AccionProgreso,
+    obtener_progreso_usuario,
+    inicializar_progreso_usuario,
+    registrar_accion,
+    obtener_acciones_usuario,
+    obtener_estadisticas_progreso,
+    registrar_diagnostico_completado
+)
 
 class RegisterRequest(BaseModel):
     email: EmailStr

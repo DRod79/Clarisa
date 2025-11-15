@@ -281,24 +281,24 @@ async def calificar_recurso(
         if body.calificacion < 1 or body.calificacion > 5:
             raise HTTPException(status_code=400, detail="La calificación debe estar entre 1 y 5")
         
-        conn = get_db_connection()
-        cursor = conn.cursor()
+        datos = {
+            'user_id': user_id,
+            'recurso_id': recurso_id,
+            'calificacion': body.calificacion,
+            'comentario': body.comentario
+        }
         
-        # Insertar o actualizar calificación
-        cursor.execute("""
-            INSERT INTO public.recursos_usuario (
-                user_id, recurso_id, calificacion, comentario
-            ) VALUES (%s, %s, %s, %s)
-            ON CONFLICT (user_id, recurso_id)
-            DO UPDATE SET 
-                calificacion = EXCLUDED.calificacion,
-                comentario = EXCLUDED.comentario,
-                updated_at = NOW()
-        """, [user_id, recurso_id, body.calificacion, body.comentario])
+        # Verificar si existe
+        existente = supabase_request('GET', 'recursos_usuario', 
+                                    params={'user_id': f'eq.{user_id}', 'recurso_id': f'eq.{recurso_id}'})
         
-        conn.commit()
-        cursor.close()
-        conn.close()
+        if existente and len(existente) > 0:
+            # Actualizar
+            supabase_request('PATCH', f'recursos_usuario?user_id=eq.{user_id}&recurso_id=eq.{recurso_id}', 
+                           data=datos)
+        else:
+            # Insertar
+            supabase_request('POST', 'recursos_usuario', data=datos)
         
         return {"success": True, "message": "Calificación guardada correctamente"}
     
@@ -315,31 +315,31 @@ async def obtener_stats_recursos(user_id: str):
     Obtiene estadísticas de recursos para el usuario
     """
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        # Obtener total de recursos publicados
+        recursos = supabase_request('GET', 'recursos', params={'publicado': 'eq.true', 'select': 'id'})
+        total_recursos = len(recursos) if recursos else 0
         
-        # Contar recursos vistos, completados, etc.
-        query = """
-            SELECT 
-                COUNT(CASE WHEN ru.visto = TRUE THEN 1 END) as recursos_vistos,
-                COUNT(CASE WHEN ru.completado = TRUE THEN 1 END) as recursos_completados,
-                COUNT(CASE WHEN ru.descargado = TRUE THEN 1 END) as recursos_descargados,
-                (SELECT COUNT(*) FROM public.recursos WHERE publicado = TRUE) as total_recursos
-            FROM public.recursos_usuario ru
-            WHERE ru.user_id = %s
-        """
+        # Obtener interacciones del usuario
+        interacciones = supabase_request('GET', 'recursos_usuario', params={'user_id': f'eq.{user_id}'})
         
-        cursor.execute(query, [user_id])
-        stats = cursor.fetchone()
+        recursos_vistos = 0
+        recursos_completados = 0
+        recursos_descargados = 0
         
-        cursor.close()
-        conn.close()
+        if interacciones:
+            for interaccion in interacciones:
+                if interaccion.get('visto'):
+                    recursos_vistos += 1
+                if interaccion.get('completado'):
+                    recursos_completados += 1
+                if interaccion.get('descargado'):
+                    recursos_descargados += 1
         
-        return stats or {
-            'recursos_vistos': 0,
-            'recursos_completados': 0,
-            'recursos_descargados': 0,
-            'total_recursos': 0
+        return {
+            'recursos_vistos': recursos_vistos,
+            'recursos_completados': recursos_completados,
+            'recursos_descargados': recursos_descargados,
+            'total_recursos': total_recursos
         }
     
     except Exception as e:

@@ -60,14 +60,29 @@ class CalificarRecursoRequest(BaseModel):
 # UTILIDADES
 # ============================================
 
-def get_db_connection():
-    """Obtiene conexión a la base de datos PostgreSQL"""
+def supabase_request(method: str, endpoint: str, data: dict = None, params: dict = None):
+    """Hace una petición a Supabase REST API"""
+    url = f"{SUPABASE_URL}/rest/v1/{endpoint}"
+    headers = {
+        'apikey': SUPABASE_KEY,
+        'Authorization': f'Bearer {SUPABASE_KEY}',
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+    }
+    
     try:
-        conn = psycopg2.connect(SUPABASE_DB_URL)
-        return conn
+        if method == 'GET':
+            response = requests.get(url, headers=headers, params=params, timeout=10)
+        elif method == 'POST':
+            response = requests.post(url, headers=headers, json=data, timeout=10)
+        elif method == 'PATCH':
+            response = requests.patch(url, headers=headers, json=data, timeout=10)
+        
+        response.raise_for_status()
+        return response.json()
     except Exception as e:
-        print(f"Error conectando a la base de datos: {e}")
-        raise HTTPException(status_code=500, detail="Error de conexión a la base de datos")
+        print(f"Error en petición Supabase: {e}")
+        return None
 
 def verificar_acceso_recurso(recurso: dict, user_rol: str) -> bool:
     """Verifica si el usuario tiene acceso al recurso"""

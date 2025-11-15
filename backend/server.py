@@ -562,6 +562,9 @@ async def get_estadisticas(user_id: str):
         logger.error(f"Error getting stats: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# Include routers
+api_router.include_router(recursos_router, tags=["recursos"])
+
 # Include the router in the main app
 app.include_router(api_router)
 

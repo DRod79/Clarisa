@@ -114,62 +114,47 @@ async def obtener_recursos(
     Filtros: tipo, categoria, fase, destacados
     """
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        # Construir query parameters para Supabase
+        params = {'publicado': 'eq.true', 'order': 'destacado.desc,created_at.desc'}
         
-        # Construir query base
-        query = """
-            SELECT 
-                r.*,
-                ru.visto,
-                ru.completado,
-                ru.calificacion
-            FROM public.recursos r
-            LEFT JOIN public.recursos_usuario ru 
-                ON r.id = ru.recurso_id AND ru.user_id = %s
-            WHERE r.publicado = TRUE
-        """
-        
-        params = [user_id]
-        
-        # Aplicar filtros
         if tipo:
-            query += " AND r.tipo = %s"
-            params.append(tipo)
-        
+            params['tipo'] = f'eq.{tipo}'
         if categoria:
-            query += " AND r.categoria = %s"
-            params.append(categoria)
-        
+            params['categoria'] = f'eq.{categoria}'
         if fase is not None:
-            query += " AND r.fase_relacionada = %s"
-            params.append(fase)
-        
+            params['fase_relacionada'] = f'eq.{fase}'
         if destacados:
-            query += " AND r.destacado = TRUE"
+            params['destacado'] = 'eq.true'
         
-        # Ordenar por destacados primero, luego por fecha
-        query += " ORDER BY r.destacado DESC, r.created_at DESC"
+        # Obtener recursos
+        recursos = supabase_request('GET', 'recursos', params=params)
         
-        cursor.execute(query, params)
-        recursos = cursor.fetchall()
+        if recursos is None:
+            raise HTTPException(status_code=500, detail="Error al obtener recursos de Supabase")
         
-        # Filtrar por acceso permitido
+        # Obtener interacciones del usuario
+        user_interacciones = supabase_request('GET', 'recursos_usuario', params={'user_id': f'eq.{user_id}'})
+        interacciones_dict = {}
+        if user_interacciones:
+            for interaccion in user_interacciones:
+                interacciones_dict[interaccion['recurso_id']] = interaccion
+        
+        # Combinar datos y filtrar por acceso
         recursos_filtrados = []
         for recurso in recursos:
             if verificar_acceso_recurso(recurso, user_rol):
+                interaccion = interacciones_dict.get(recurso['id'], {})
                 recursos_filtrados.append({
                     **recurso,
-                    'visto': recurso.get('visto') or False,
-                    'completado': recurso.get('completado') or False,
-                    'calificacion': recurso.get('calificacion')
+                    'visto': interaccion.get('visto', False),
+                    'completado': interaccion.get('completado', False),
+                    'calificacion': interaccion.get('calificacion')
                 })
-        
-        cursor.close()
-        conn.close()
         
         return recursos_filtrados
     
+    except HTTPException:
+        raise
     except Exception as e:
         print(f"Error obteniendo recursos: {e}")
         raise HTTPException(status_code=500, detail=f"Error al obtener recursos: {str(e)}")

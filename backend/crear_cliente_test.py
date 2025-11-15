@@ -24,10 +24,8 @@ def create_client_user(email: str, password: str):
             'email': email,
             'password_hash': hash_password(password),
             'nombre_completo': 'Cliente Test',
-            'nombre_empresa': 'Empresa Test',
-            'rol': 'cliente_gratuito',
-            'created_at': 'now()',
-            'last_access': 'now()'
+            'organizacion': 'Empresa Test',
+            'rol': 'cliente_gratuito'
         }
         
         response = requests.post(

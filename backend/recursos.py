@@ -170,45 +170,29 @@ async def obtener_recurso_detalle(
     Obtiene detalle completo de un recurso específico
     """
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        # Obtener recurso
+        recursos = supabase_request('GET', 'recursos', params={'id': f'eq.{recurso_id}', 'publicado': 'eq.true'})
         
-        # Obtener recurso con datos de interacción
-        query = """
-            SELECT 
-                r.*,
-                ru.visto,
-                ru.completado,
-                ru.calificacion,
-                ru.comentario
-            FROM public.recursos r
-            LEFT JOIN public.recursos_usuario ru 
-                ON r.id = ru.recurso_id AND ru.user_id = %s
-            WHERE r.id = %s AND r.publicado = TRUE
-        """
-        
-        cursor.execute(query, [user_id, recurso_id])
-        recurso = cursor.fetchone()
-        
-        if not recurso:
-            cursor.close()
-            conn.close()
+        if not recursos or len(recursos) == 0:
             raise HTTPException(status_code=404, detail="Recurso no encontrado")
+        
+        recurso = recursos[0]
         
         # Verificar acceso
         if not verificar_acceso_recurso(recurso, user_rol):
-            cursor.close()
-            conn.close()
             raise HTTPException(status_code=403, detail="No tienes acceso a este recurso")
         
-        cursor.close()
-        conn.close()
+        # Obtener interacción del usuario
+        interacciones = supabase_request('GET', 'recursos_usuario', 
+                                       params={'user_id': f'eq.{user_id}', 'recurso_id': f'eq.{recurso_id}'})
+        
+        interaccion = interacciones[0] if interacciones and len(interacciones) > 0 else {}
         
         return {
             **recurso,
-            'visto': recurso.get('visto') or False,
-            'completado': recurso.get('completado') or False,
-            'calificacion': recurso.get('calificacion')
+            'visto': interaccion.get('visto', False),
+            'completado': interaccion.get('completado', False),
+            'calificacion': interaccion.get('calificacion')
         }
     
     except HTTPException:

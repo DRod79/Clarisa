@@ -278,12 +278,12 @@ const RecursosPage = () => {
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow p-4 mb-6">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="relative flex-1">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="relative md:col-span-2">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Buscar recursos..."
+              placeholder="Buscar por título, descripción o etiquetas..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
@@ -295,26 +295,55 @@ const RecursosPage = () => {
             onChange={(e) => setFilterTipo(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
           >
-            <option value="all">Todos los tipos</option>
-            <option value="plantilla">Plantillas</option>
-            <option value="guia">Guías</option>
-            <option value="curso">Cursos</option>
-            <option value="video">Videos</option>
-            <option value="herramienta">Herramientas</option>
+            <option value="all">🎯 Todos los tipos</option>
+            <option value="guia">📖 Guías</option>
+            <option value="template">📄 Plantillas</option>
+            <option value="video">🎥 Videos</option>
+            <option value="articulo">📝 Artículos</option>
+            <option value="herramienta">🔧 Herramientas</option>
+            <option value="caso_estudio">🏆 Casos de Estudio</option>
           </select>
 
-          {categorias.length > 0 && (
-            <select
-              value={filterCategoria}
-              onChange={(e) => setFilterCategoria(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
+          <select
+            value={filterCategoria}
+            onChange={(e) => setFilterCategoria(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4CAF50]"
+          >
+            <option value="all">Todas las categorías</option>
+            <option value="diagnostico">Diagnóstico</option>
+            <option value="materialidad">Materialidad</option>
+            <option value="riesgos">Riesgos</option>
+            <option value="medicion">Medición</option>
+            <option value="reporte">Reporte</option>
+            <option value="general">General</option>
+          </select>
+        </div>
+        
+        {/* Filtro por fase */}
+        <div className="mt-4 flex gap-2">
+          <button
+            onClick={() => setFilterFase('all')}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              filterFase === 'all' 
+                ? 'bg-[#4CAF50] text-white' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            Todas las fases
+          </button>
+          {[1, 2, 3, 4, 5].map(fase => (
+            <button
+              key={fase}
+              onClick={() => setFilterFase(fase.toString())}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                filterFase === fase.toString()
+                  ? 'bg-[#4CAF50] text-white' 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
             >
-              <option value="all">Todas las categorías</option>
-              {categorias.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-          )}
+              Fase {fase}
+            </button>
+          ))}
         </div>
       </div>
 

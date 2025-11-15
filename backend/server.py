@@ -240,6 +240,7 @@ from progreso import (
     registrar_diagnostico_completado
 )
 from recursos import router as recursos_router
+from admin_recursos import router as admin_recursos_router
 
 class RegisterRequest(BaseModel):
     email: EmailStr

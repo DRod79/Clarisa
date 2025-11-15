@@ -212,40 +212,52 @@ async def marcar_accion_recurso(
     Marca una acción del usuario sobre un recurso (visto, descargado, completado)
     """
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
         accion = body.accion
         
+        # Verificar que existe el recurso
+        recursos = supabase_request('GET', 'recursos', params={'id': f'eq.{recurso_id}'})
+        if not recursos or len(recursos) == 0:
+            raise HTTPException(status_code=404, detail="Recurso no encontrado")
+        
+        recurso = recursos[0]
+        
+        # Preparar datos según la acción
+        datos = {'user_id': user_id, 'recurso_id': recurso_id}
+        
         if accion == 'visto':
-            # Llamar función que registra vista
-            cursor.execute(
-                "SELECT registrar_vista_recurso(%s, %s)",
-                [user_id, recurso_id]
-            )
+            datos['visto'] = True
+            datos['fecha_visto'] = datetime.utcnow().isoformat()
+            
+            # Incrementar contador de vistas
+            supabase_request('PATCH', f'recursos?id=eq.{recurso_id}', 
+                           data={'vistas': (recurso.get('vistas', 0) + 1)})
+            
         elif accion == 'descargado':
-            # Llamar función que registra descarga
-            cursor.execute(
-                "SELECT registrar_descarga_recurso(%s, %s)",
-                [user_id, recurso_id]
-            )
+            datos['descargado'] = True
+            datos['fecha_descargado'] = datetime.utcnow().isoformat()
+            
+            # Incrementar contador de descargas
+            supabase_request('PATCH', f'recursos?id=eq.{recurso_id}', 
+                           data={'descargas': (recurso.get('descargas', 0) + 1)})
+            
         elif accion == 'completado':
-            # Marcar como completado
-            cursor.execute("""
-                INSERT INTO public.recursos_usuario (
-                    user_id, recurso_id, completado, fecha_completado
-                ) VALUES (%s, %s, TRUE, NOW())
-                ON CONFLICT (user_id, recurso_id)
-                DO UPDATE SET 
-                    completado = TRUE,
-                    fecha_completado = NOW()
-            """, [user_id, recurso_id])
+            datos['completado'] = True
+            datos['fecha_completado'] = datetime.utcnow().isoformat()
         else:
             raise HTTPException(status_code=400, detail="Acción no válida")
         
-        conn.commit()
-        cursor.close()
-        conn.close()
+        # Upsert en recursos_usuario
+        # Primero intentar obtener el registro existente
+        existente = supabase_request('GET', 'recursos_usuario', 
+                                    params={'user_id': f'eq.{user_id}', 'recurso_id': f'eq.{recurso_id}'})
+        
+        if existente and len(existente) > 0:
+            # Actualizar
+            supabase_request('PATCH', f'recursos_usuario?user_id=eq.{user_id}&recurso_id=eq.{recurso_id}', 
+                           data=datos)
+        else:
+            # Insertar
+            supabase_request('POST', 'recursos_usuario', data=datos)
         
         return {"success": True, "message": f"Acción '{accion}' registrada correctamente"}
     

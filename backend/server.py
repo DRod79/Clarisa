@@ -239,6 +239,7 @@ from progreso import (
     obtener_estadisticas_progreso,
     registrar_diagnostico_completado
 )
+from recursos import router as recursos_router
 
 class RegisterRequest(BaseModel):
     email: EmailStr

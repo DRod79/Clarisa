@@ -203,14 +203,10 @@ const RecursosPage = () => {
 
   const filteredRecursos = recursos.filter(item => {
     const matchSearch = item.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                       item.descripcion?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchTipo = filterTipo === 'all' || item.tipo === filterTipo;
-    const matchCategoria = filterCategoria === 'all' || item.categoria === filterCategoria;
-    return matchSearch && matchTipo && matchCategoria;
+                       item.descripcion?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                       item.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+    return matchSearch;
   });
-
-  // Get unique categories
-  const categorias = [...new Set(recursos.map(r => r.categoria).filter(c => c))];
 
   if (loading) {
     return (

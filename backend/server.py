@@ -482,6 +482,81 @@ async def get_sales_stats():
         logger.error(f"Error getting sales stats: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# ============================================
+# PROGRESO MODULE ENDPOINTS
+# ============================================
+
+@api_router.get("/progreso/{user_id}")
+async def get_progreso(user_id: str):
+    """Obtiene el progreso del usuario"""
+    try:
+        progreso = await obtener_progreso_usuario(user_id)
+        if not progreso:
+            raise HTTPException(status_code=404, detail="Progreso not found")
+        return progreso
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting progreso: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/progreso/{user_id}/inicializar")
+async def inicializar_progreso(user_id: str):
+    """Inicializa el progreso para un usuario"""
+    try:
+        progreso = await inicializar_progreso_usuario(user_id)
+        if not progreso:
+            raise HTTPException(status_code=500, detail="Failed to initialize progreso")
+        logger.info(f"Progreso initialized for user: {user_id}")
+        return progreso
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error initializing progreso: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/progreso/{user_id}/accion")
+async def registrar_accion_endpoint(user_id: str, accion: AccionProgreso):
+    """Registra una acción y actualiza el progreso"""
+    try:
+        success = await registrar_accion(user_id, accion)
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to register action")
+        
+        logger.info(f"Action registered for user {user_id}: {accion.tipo_accion} (Fase {accion.fase})")
+        
+        # Obtener progreso actualizado
+        progreso = await obtener_progreso_usuario(user_id)
+        return {
+            'success': True,
+            'progreso': progreso
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error registering action: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/progreso/{user_id}/acciones")
+async def get_acciones(user_id: str, fase: Optional[int] = None):
+    """Obtiene las acciones del usuario"""
+    try:
+        acciones = await obtener_acciones_usuario(user_id, fase)
+        return acciones
+    except Exception as e:
+        logger.error(f"Error getting acciones: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/progreso/{user_id}/estadisticas")
+async def get_estadisticas(user_id: str):
+    """Obtiene estadísticas del progreso"""
+    try:
+        stats = await obtener_estadisticas_progreso(user_id)
+        return stats
+    except Exception as e:
+        logger.error(f"Error getting stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include the router in the main app
 app.include_router(api_router)
 

@@ -72,6 +72,14 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+            <Route 
+              path="/mi-progreso" 
+              element={
+                <ProtectedRoute allowedRoles={['cliente_pagado', 'cliente_gratuito']}>
+                  <MiProgresoPage />
+                </ProtectedRoute>
+              } 
+            />
             
             {/* Admin routes - protected */}
             <Route 

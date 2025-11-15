@@ -323,7 +323,7 @@ const RecursosPage = () => {
         </div>
         
         {/* Filtro por fase */}
-        <div className="mt-4 flex gap-2">
+        <div className="mt-4 flex gap-2 flex-wrap">
           <button
             onClick={() => setFilterFase('all')}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
@@ -334,19 +334,34 @@ const RecursosPage = () => {
           >
             Todas las fases
           </button>
-          {[1, 2, 3, 4, 5].map(fase => (
-            <button
-              key={fase}
-              onClick={() => setFilterFase(fase.toString())}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                filterFase === fase.toString()
-                  ? 'bg-[#4CAF50] text-white' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Fase {fase}
-            </button>
-          ))}
+          {[1, 2, 3, 4, 5].map(fase => {
+            const esFaseGratuita = fase === 1;
+            const tieneAcceso = userData?.rol === 'admin' || userData?.rol === 'cliente_pagado' || esFaseGratuita;
+            
+            return (
+              <button
+                key={fase}
+                onClick={() => {
+                  if (tieneAcceso) {
+                    setFilterFase(fase.toString());
+                  } else {
+                    toast.error('Esta fase requiere un plan de pago. Actualiza tu suscripción para acceder.');
+                  }
+                }}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors relative ${
+                  filterFase === fase.toString()
+                    ? 'bg-[#4CAF50] text-white' 
+                    : tieneAcceso
+                      ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      : 'bg-gray-50 text-gray-400 cursor-not-allowed'
+                } ${!tieneAcceso ? 'flex items-center gap-1' : ''}`}
+                disabled={!tieneAcceso}
+              >
+                {!tieneAcceso && <Lock className="w-3 h-3" />}
+                Fase {fase}
+              </button>
+            );
+          })}
         </div>
       </div>
 

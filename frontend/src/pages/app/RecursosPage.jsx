@@ -103,7 +103,11 @@ const RecursosPage = () => {
 
   const registrarAccion = async (recursoId, accion) => {
     try {
-      await fetch(`${BACKEND_URL}/api/recursos/${recursoId}/accion`, {
+      const params = new URLSearchParams({
+        user_id: userData.id,
+      });
+      
+      await fetch(`${BACKEND_URL}/api/recursos/${recursoId}/accion?${params.toString()}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -111,7 +115,6 @@ const RecursosPage = () => {
         body: JSON.stringify({
           accion: accion,
         }),
-        credentials: 'include',
       });
       
       // Actualizar stats

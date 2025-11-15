@@ -87,23 +87,57 @@ const RecursosPage = () => {
     }
   };
 
-  const canAccess = (nivelRecurso) => {
-    const userPlan = userData?.plan_actual || 'gratuito';
+  const canAccess = (accesoRequerido) => {
+    const userRol = userData?.rol || 'cliente_gratuito';
     
-    // Define access hierarchy
-    const hierarchy = {
-      'gratuito': ['gratuito'],
-      'basico': ['gratuito', 'basico'],
-      'pro': ['gratuito', 'basico', 'pro'],
-      'enterprise': ['gratuito', 'basico', 'pro', 'enterprise']
-    };
+    if (accesoRequerido === 'gratuito' || accesoRequerido === 'todos') {
+      return true;
+    }
+    
+    if (accesoRequerido === 'pagado' && (userRol === 'cliente_pagado' || userRol === 'admin')) {
+      return true;
+    }
+    
+    return false;
+  };
 
-    return hierarchy[userPlan]?.includes(nivelRecurso) || false;
+  const registrarAccion = async (recursoId, accion) => {
+    try {
+      await fetch(`${BACKEND_URL}/api/recursos/${recursoId}/accion`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          accion: accion,
+        }),
+        credentials: 'include',
+      });
+      
+      // Actualizar stats
+      fetchStats();
+      fetchRecursos();
+    } catch (error) {
+      console.error('Error registrando acción:', error);
+    }
+  };
+
+  const handleView = async (recurso) => {
+    if (!canAccess(recurso.acceso_requerido)) {
+      toast.error('Este recurso requiere un plan de pago');
+      return;
+    }
+
+    // Registrar vista
+    await registrarAccion(recurso.id, 'visto');
+    
+    // Abrir modal con detalle
+    setRecursoSeleccionado(recurso);
   };
 
   const handleDownload = async (recurso) => {
-    if (!canAccess(recurso.nivel_acceso)) {
-      toast.error('Este recurso requiere un plan superior');
+    if (!canAccess(recurso.acceso_requerido)) {
+      toast.error('Este recurso requiere un plan de pago');
       return;
     }
 
@@ -113,55 +147,24 @@ const RecursosPage = () => {
     }
 
     try {
-      // Update download count
-      await fetch(`${SUPABASE_URL}/rest/v1/contenido?id=eq.${recurso.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`
-        },
-        body: JSON.stringify({ 
-          descargas: (recurso.descargas || 0) + 1 
-        })
-      });
+      // Registrar descarga
+      await registrarAccion(recurso.id, 'descargado');
 
-      // Open file in new tab
+      // Abrir archivo
       window.open(recurso.archivo_url, '_blank');
       toast.success('Descargando recurso...');
-      
-      // Refresh list
-      fetchRecursos();
     } catch (error) {
       console.error('Error downloading:', error);
       toast.error('Error al descargar recurso');
     }
   };
 
-  const handleView = async (recurso) => {
-    if (!canAccess(recurso.nivel_acceso)) {
-      toast.error('Este recurso requiere un plan superior');
-      return;
-    }
-
+  const handleMarcarCompletado = async (recursoId) => {
     try {
-      // Update view count
-      await fetch(`${SUPABASE_URL}/rest/v1/contenido?id=eq.${recurso.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`
-        },
-        body: JSON.stringify({ 
-          vistas: (recurso.vistas || 0) + 1 
-        })
-      });
-
-      // For now just download, later we can add preview
-      handleDownload(recurso);
+      await registrarAccion(recursoId, 'completado');
+      toast.success('¡Recurso marcado como completado!');
     } catch (error) {
-      console.error('Error viewing:', error);
+      toast.error('Error al marcar como completado');
     }
   };
 

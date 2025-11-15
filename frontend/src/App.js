@@ -24,6 +24,9 @@ import AdminContenido from "@/pages/admin/ContenidoPage";
 import PipelinePage from "@/pages/admin/sales/PipelinePage";
 import OportunidadDetailPage from "@/pages/admin/sales/OportunidadDetailPage";
 import DashboardVentasPage from "@/pages/admin/sales/DashboardVentasPage";
+import RecursosAdminPage from "@/pages/admin/RecursosAdminPage";
+import CrearRecursoPage from "@/pages/admin/CrearRecursoPage";
+import EditarRecursoPage from "@/pages/admin/EditarRecursoPage";
 
 import { Toaster } from "@/components/ui/sonner";
 

@@ -364,46 +364,85 @@ const RecursosPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredRecursos.map((recurso) => {
             const Icon = getIconByType(recurso.tipo);
-            const hasAccess = canAccess(recurso.nivel_acceso);
+            const hasAccess = canAccess(recurso.acceso_requerido);
 
             return (
               <div
                 key={recurso.id}
-                className={`bg-white rounded-lg shadow hover:shadow-lg transition-shadow overflow-hidden ${
-                  !hasAccess ? 'opacity-75' : ''
-                }`}
+                className={`bg-white rounded-lg shadow hover:shadow-lg transition-all duration-300 overflow-hidden border-2 ${
+                  recurso.destacado ? 'border-yellow-400' : 'border-transparent'
+                } ${!hasAccess ? 'opacity-75' : ''}`}
               >
+                {/* Destacado badge */}
+                {recurso.destacado && (
+                  <div className="bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 text-center">
+                    ⭐ DESTACADO
+                  </div>
+                )}
+
                 {/* Thumbnail or Icon */}
-                <div className="h-48 bg-gradient-to-br from-[#2D5F3F] to-[#4CAF50] flex items-center justify-center">
-                  {recurso.thumbnail_url ? (
-                    <img
-                      src={recurso.thumbnail_url}
-                      alt={recurso.titulo}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <Icon className="w-20 h-20 text-white opacity-80" />
+                <div className="h-40 bg-gradient-to-br from-[#2D5F3F] to-[#4CAF50] flex items-center justify-center relative">
+                  <Icon className="w-16 h-16 text-white opacity-80" />
+                  
+                  {/* Estado de progreso */}
+                  {recurso.completado && (
+                    <div className="absolute top-2 right-2 bg-green-500 rounded-full p-1">
+                      <CheckCircle className="w-5 h-5 text-white" />
+                    </div>
+                  )}
+                  {recurso.visto && !recurso.completado && (
+                    <div className="absolute top-2 right-2 bg-blue-500 rounded-full p-1">
+                      <Eye className="w-5 h-5 text-white" />
+                    </div>
+                  )}
+                  {!hasAccess && (
+                    <div className="absolute top-2 right-2 bg-gray-800 rounded-full p-1">
+                      <Lock className="w-5 h-5 text-white" />
+                    </div>
                   )}
                 </div>
 
                 {/* Content */}
                 <div className="p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
-                      {recurso.tipo}
+                  {/* Badges */}
+                  <div className="flex items-center gap-2 mb-3 flex-wrap">
+                    <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 font-medium">
+                      {getTipoLabel(recurso.tipo)}
                     </span>
-                    {!hasAccess && (
-                      <Lock className="w-4 h-4 text-gray-400" />
+                    {recurso.nivel_dificultad && (
+                      <span className={`px-2 py-1 text-xs rounded-full font-medium ${getNivelColor(recurso.nivel_dificultad)}`}>
+                        {recurso.nivel_dificultad}
+                      </span>
+                    )}
+                    {recurso.fase_relacionada && (
+                      <span className="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-800 font-medium">
+                        Fase {recurso.fase_relacionada}
+                      </span>
                     )}
                   </div>
 
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
                     {recurso.titulo}
                   </h3>
 
                   <p className="text-sm text-gray-600 mb-3 line-clamp-2">
                     {recurso.descripcion || 'Sin descripción'}
                   </p>
+
+                  {/* Metadata */}
+                  {(recurso.duracion_minutos || recurso.autor) && (
+                    <div className="flex items-center gap-3 mb-3 text-xs text-gray-500">
+                      {recurso.duracion_minutos && (
+                        <span className="flex items-center gap-1">
+                          <Play className="w-3 h-3" />
+                          {recurso.duracion_minutos} min
+                        </span>
+                      )}
+                      {recurso.autor && (
+                        <span>Por {recurso.autor}</span>
+                      )}
+                    </div>
+                  )}
 
                   {/* Tags */}
                   {recurso.tags && recurso.tags.length > 0 && (
@@ -413,16 +452,22 @@ const RecursosPage = () => {
                           key={idx}
                           className="px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded"
                         >
-                          {tag}
+                          #{tag}
                         </span>
                       ))}
                     </div>
                   )}
 
                   {/* Stats */}
-                  <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
-                    <span>{recurso.descargas || 0} descargas</span>
-                    <span>{recurso.vistas || 0} vistas</span>
+                  <div className="flex items-center justify-between text-xs text-gray-500 mb-4 pt-3 border-t">
+                    <span className="flex items-center gap-1">
+                      <Eye className="w-3 h-3" />
+                      {recurso.vistas || 0}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Download className="w-3 h-3" />
+                      {recurso.descargas || 0}
+                    </span>
                   </div>
 
                   {/* Actions */}
@@ -432,26 +477,28 @@ const RecursosPage = () => {
                         <Button
                           onClick={() => handleView(recurso)}
                           variant="outline"
-                          className="flex-1"
+                          className="flex-1 text-sm"
                         >
-                          <Eye className="w-4 h-4 mr-2" />
+                          <Eye className="w-4 h-4 mr-1" />
                           Ver
                         </Button>
-                        <Button
-                          onClick={() => handleDownload(recurso)}
-                          className="flex-1 bg-[#4CAF50] hover:bg-[#45a049] text-white"
-                        >
-                          <Download className="w-4 h-4 mr-2" />
-                          Descargar
-                        </Button>
+                        {recurso.archivo_url && (
+                          <Button
+                            onClick={() => handleDownload(recurso)}
+                            className="flex-1 bg-[#4CAF50] hover:bg-[#45a049] text-white text-sm"
+                          >
+                            <Download className="w-4 h-4 mr-1" />
+                            Descargar
+                          </Button>
+                        )}
                       </>
                     ) : (
                       <Button
-                        onClick={() => window.location.href = '/app/suscripcion'}
-                        className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+                        onClick={() => toast.info('Actualiza tu plan para acceder a este recurso')}
+                        className="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm"
                       >
                         <Lock className="w-4 h-4 mr-2" />
-                        Desbloquear con Plan {recurso.nivel_acceso}
+                        🔒 Requiere Plan de Pago
                       </Button>
                     )}
                   </div>

@@ -792,25 +792,12 @@ const RecursosPage = () => {
               {/* Actions */}
               <div className="pt-4 border-t">
                 <div className="flex flex-col sm:flex-row gap-3">
-                  {recursoSeleccionado.archivo_url && (
-                    <Button
-                      onClick={() => {
-                        handleDownload(recursoSeleccionado);
-                      }}
-                      className="flex-1 bg-[#4CAF50] hover:bg-[#45a049] text-white"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Descargar Archivo
-                    </Button>
-                  )}
-                  
                   {!recursoSeleccionado.completado ? (
                     <Button
                       onClick={() => {
                         handleMarcarCompletado(recursoSeleccionado.id);
                       }}
-                      variant="outline"
-                      className="flex-1 border-green-500 text-green-600 hover:bg-green-50"
+                      className="flex-1 bg-[#4CAF50] hover:bg-[#45a049] text-white"
                     >
                       <CheckCircle className="w-4 h-4 mr-2" />
                       Marcar como completado
@@ -825,7 +812,7 @@ const RecursosPage = () => {
                   <Button
                     onClick={() => setRecursoSeleccionado(null)}
                     variant="outline"
-                    className="sm:w-auto"
+                    className="flex-1 sm:flex-none sm:px-8"
                   >
                     Cerrar
                   </Button>

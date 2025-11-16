@@ -581,7 +581,7 @@ const RecursosPage = () => {
               )}
 
               {/* Contenido principal */}
-              {recursoSeleccionado.contenido && recursoSeleccionado.contenido.trim() !== '' ? (
+              {recursoSeleccionado.contenido && recursoSeleccionado.contenido.trim() !== '' && (
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-3">📄 Contenido</h3>
                   <div className="prose max-w-none">
@@ -592,16 +592,148 @@ const RecursosPage = () => {
                     </div>
                   </div>
                 </div>
-              ) : (
-                // Si no hay contenido pero hay archivo
-                recursoSeleccionado.archivo_url && (
-                  <div className="mb-6 bg-blue-50 p-4 rounded-lg border border-blue-200">
-                    <p className="text-blue-800 text-sm">
-                      📎 Este recurso contiene un archivo descargable. Haz clic en el botón "Descargar" abajo para obtenerlo.
-                    </p>
-                  </div>
-                )
               )}
+
+              {/* Visualización de Archivo */}
+              {recursoSeleccionado.archivo_url && (() => {
+                const fileUrl = recursoSeleccionado.archivo_url;
+                const fileName = fileUrl.split('/').pop();
+                const fileExtension = fileName.split('.').pop().toLowerCase();
+                
+                // Archivos visualizables
+                if (['pdf'].includes(fileExtension)) {
+                  return (
+                    <div className="mb-6">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-lg font-semibold text-gray-900">📄 Documento</h3>
+                        <a
+                          href={fileUrl}
+                          download
+                          className="text-sm text-[#4CAF50] hover:text-[#45a049] flex items-center gap-1"
+                        >
+                          <Download className="w-4 h-4" />
+                          Descargar PDF
+                        </a>
+                      </div>
+                      <div className="border-2 border-gray-200 rounded-lg overflow-hidden bg-white">
+                        <iframe
+                          src={fileUrl}
+                          className="w-full h-[600px]"
+                          title="Vista previa del documento"
+                        />
+                      </div>
+                    </div>
+                  );
+                }
+                
+                // Imágenes
+                if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExtension)) {
+                  return (
+                    <div className="mb-6">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-lg font-semibold text-gray-900">🖼️ Imagen</h3>
+                        <a
+                          href={fileUrl}
+                          download
+                          className="text-sm text-[#4CAF50] hover:text-[#45a049] flex items-center gap-1"
+                        >
+                          <Download className="w-4 h-4" />
+                          Descargar imagen
+                        </a>
+                      </div>
+                      <div className="border-2 border-gray-200 rounded-lg overflow-hidden bg-gray-50 p-4">
+                        <img
+                          src={fileUrl}
+                          alt={recursoSeleccionado.titulo}
+                          className="w-full h-auto rounded"
+                        />
+                      </div>
+                    </div>
+                  );
+                }
+                
+                // Documentos Office y otros
+                if (['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'].includes(fileExtension)) {
+                  return (
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-3">📑 Documento Office</h3>
+                      <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                        <div className="flex items-center gap-4">
+                          <FileText className="w-12 h-12 text-blue-600" />
+                          <div className="flex-1">
+                            <p className="font-medium text-gray-900 mb-1">{fileName}</p>
+                            <p className="text-sm text-gray-600">
+                              Archivo {fileExtension.toUpperCase()} disponible para descargar
+                            </p>
+                          </div>
+                          <a
+                            href={fileUrl}
+                            download
+                            className="px-4 py-2 bg-[#4CAF50] text-white rounded-md hover:bg-[#45a049] flex items-center gap-2"
+                          >
+                            <Download className="w-4 h-4" />
+                            Descargar
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+                
+                // Videos
+                if (['mp4', 'mov', 'avi', 'webm'].includes(fileExtension)) {
+                  return (
+                    <div className="mb-6">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-lg font-semibold text-gray-900">🎥 Video</h3>
+                        <a
+                          href={fileUrl}
+                          download
+                          className="text-sm text-[#4CAF50] hover:text-[#45a049] flex items-center gap-1"
+                        >
+                          <Download className="w-4 h-4" />
+                          Descargar video
+                        </a>
+                      </div>
+                      <div className="border-2 border-gray-200 rounded-lg overflow-hidden bg-black">
+                        <video
+                          src={fileUrl}
+                          controls
+                          className="w-full h-auto"
+                        >
+                          Tu navegador no soporta la reproducción de video.
+                        </video>
+                      </div>
+                    </div>
+                  );
+                }
+                
+                // Otros archivos - solo descarga
+                return (
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">📎 Archivo Adjunto</h3>
+                    <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                      <div className="flex items-center gap-4">
+                        <File className="w-12 h-12 text-gray-600" />
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-900 mb-1">{fileName}</p>
+                          <p className="text-sm text-gray-600">
+                            Haz clic para descargar el archivo
+                          </p>
+                        </div>
+                        <a
+                          href={fileUrl}
+                          download
+                          className="px-4 py-2 bg-[#4CAF50] text-white rounded-md hover:bg-[#45a049] flex items-center gap-2"
+                        >
+                          <Download className="w-4 h-4" />
+                          Descargar
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* Video externo */}
               {recursoSeleccionado.url_externo && recursoSeleccionado.tipo === 'video' && (

@@ -560,32 +560,82 @@ const RecursosPage = () => {
               </div>
 
               {/* Descripción */}
-              <p className="text-gray-600 mb-6">{recursoSeleccionado.descripcion}</p>
+              <div className="mb-6">
+                <p className="text-lg text-gray-700 leading-relaxed">{recursoSeleccionado.descripcion}</p>
+              </div>
 
-              {/* Contenido */}
-              {recursoSeleccionado.contenido && (
-                <div className="mb-6 prose max-w-none">
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <div className="whitespace-pre-wrap">{recursoSeleccionado.contenido}</div>
+              {/* Información adicional */}
+              {(recursoSeleccionado.autor || recursoSeleccionado.duracion_minutos) && (
+                <div className="flex items-center gap-4 mb-6 text-sm text-gray-600 pb-4 border-b">
+                  {recursoSeleccionado.autor && (
+                    <span className="flex items-center gap-1">
+                      <strong>Autor:</strong> {recursoSeleccionado.autor}
+                    </span>
+                  )}
+                  {recursoSeleccionado.duracion_minutos && (
+                    <span className="flex items-center gap-1">
+                      <strong>Duración:</strong> {recursoSeleccionado.duracion_minutos} min
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Contenido principal */}
+              {recursoSeleccionado.contenido && recursoSeleccionado.contenido.trim() !== '' ? (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">📄 Contenido</h3>
+                  <div className="prose max-w-none">
+                    <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                      <div className="whitespace-pre-wrap text-gray-800 leading-relaxed">
+                        {recursoSeleccionado.contenido}
+                      </div>
+                    </div>
                   </div>
                 </div>
+              ) : (
+                // Si no hay contenido pero hay archivo
+                recursoSeleccionado.archivo_url && (
+                  <div className="mb-6 bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <p className="text-blue-800 text-sm">
+                      📎 Este recurso contiene un archivo descargable. Haz clic en el botón "Descargar" abajo para obtenerlo.
+                    </p>
+                  </div>
+                )
               )}
 
               {/* Video externo */}
               {recursoSeleccionado.url_externo && recursoSeleccionado.tipo === 'video' && (
                 <div className="mb-6">
-                  <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
-                    <p className="text-gray-600">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">🎥 Video</h3>
+                  <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200">
+                    <div className="text-center p-6">
+                      <p className="text-gray-600 mb-4">Video disponible en plataforma externa</p>
                       <a 
                         href={recursoSeleccionado.url_externo} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-[#4CAF50] hover:underline"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-[#4CAF50] text-white rounded-md hover:bg-[#45a049] transition-colors"
                       >
-                        Ver video en plataforma externa →
+                        <Play className="w-4 h-4" />
+                        Ver video
                       </a>
-                    </p>
+                    </div>
                   </div>
+                </div>
+              )}
+
+              {/* URL Externa (si no es video) */}
+              {recursoSeleccionado.url_externo && recursoSeleccionado.tipo !== 'video' && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">🔗 Enlace Externo</h3>
+                  <a 
+                    href={recursoSeleccionado.url_externo} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-[#4CAF50] hover:underline break-all"
+                  >
+                    {recursoSeleccionado.url_externo}
+                  </a>
                 </div>
               )}
 

@@ -34,7 +34,7 @@ const AdminLayout = ({ children }) => {
     { name: 'Dashboard', href: '/admin/home', icon: LayoutDashboard },
     { name: 'Ventas', href: '/admin/ventas', icon: BarChart3 },
     { name: 'Usuarios', href: '/admin/usuarios', icon: Users },
-    { name: 'Contenido', href: '/admin/contenido', icon: FileText },
+    { name: 'Recursos', href: '/admin/recursos', icon: FileText },
     { name: 'Reportes', href: '/admin/reportes', icon: Package },
   ];
 

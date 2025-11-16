@@ -17,6 +17,7 @@ import {
   Award,
   TrendingUp,
   Play,
+  File,
 } from 'lucide-react';
 import { toast } from 'sonner';
 

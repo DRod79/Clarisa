@@ -64,7 +64,7 @@ Rol:      cliente_gratuito
 
 ### Prueba con Usuario Cliente:
 1. Ir a: https://clarisa-sustain.preview.emergentagent.com/login
-2. Ingresar: cliente@test.com / password123
+2. Ingresar: cliente@test.com / pass123
 3. Explorar módulo de cliente (Dashboard, Roadmap, Ayuda, Soporte)
 4. Verificar restricciones de contenido pagado en Recursos
 5. Crear un ticket de soporte y verificar notificación

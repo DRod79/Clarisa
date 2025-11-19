@@ -241,6 +241,8 @@ from progreso import (
 )
 from recursos import router as recursos_router
 from admin_recursos import router as admin_recursos_router
+from notificaciones import router as notificaciones_router
+from ayuda import router as ayuda_router
 
 class RegisterRequest(BaseModel):
     email: EmailStr

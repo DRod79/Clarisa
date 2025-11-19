@@ -122,6 +122,94 @@ def test_notificaciones_list(user_id):
         return False
 
 
+def test_create_notification(user_id):
+    """Create a test notification for testing mark as read functionality"""
+    print("\n🧪 Creating test notification...")
+    
+    try:
+        response = requests.post(
+            f"{API_BASE}/notificaciones/crear",
+            params={
+                "user_id": user_id,
+                "tipo": "test",
+                "titulo": "Notificación de prueba",
+                "mensaje": "Esta es una notificación de prueba para testing",
+                "link": "/app/test"
+            },
+            timeout=30
+        )
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Could not create test notification: {response.status_code}")
+            return None
+        
+        data = response.json()
+        print(f"✅ Test notification created: {data['id']}")
+        return data['id']
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return None
+
+
+def test_mark_notification_read(user_id, notif_id):
+    """Test POST /api/notificaciones/{notif_id}/marcar-leida"""
+    print(f"\n🧪 Testing POST /api/notificaciones/{notif_id}/marcar-leida...")
+    
+    try:
+        response = requests.post(
+            f"{API_BASE}/notificaciones/{notif_id}/marcar-leida",
+            params={"user_id": user_id},
+            timeout=30
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: Notification marked as read")
+        print(f"📝 Response: {data['message']}")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_mark_all_notifications_read(user_id):
+    """Test POST /api/notificaciones/marcar-todas-leidas"""
+    print("\n🧪 Testing POST /api/notificaciones/marcar-todas-leidas...")
+    
+    try:
+        response = requests.post(
+            f"{API_BASE}/notificaciones/marcar-todas-leidas",
+            params={"user_id": user_id},
+            timeout=30
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: All notifications marked as read")
+        print(f"📝 Response: {data['message']}")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
 def test_faqs_list():
     """Test GET /api/ayuda/faqs"""
     print("\n🧪 Testing GET /api/ayuda/faqs...")

@@ -152,15 +152,18 @@ backend:
 
   - task: "Notificaciones API - POST /api/notificaciones/marcar-todas-leidas"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/notificaciones.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint para marcar todas las notificaciones de un usuario como leídas. Necesita testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint POST /api/notificaciones/marcar-todas-leidas funciona perfectamente. Actualiza todas las notificaciones no leídas del usuario a leida=true con timestamp. Operación batch exitosa en Supabase. Status 200."
 
   - task: "Ayuda API - GET /api/ayuda/faqs"
     implemented: true

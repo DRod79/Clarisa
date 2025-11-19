@@ -245,63 +245,78 @@ test_plan:
 frontend:
   - task: "NotificacionesDropdown integration in ClientLayout"
     implemented: true
-    working: "NA"
+    working: true
     file: "frontend/src/layouts/ClientLayout.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Integrado NotificacionesDropdown en el header del ClientLayout. Visible tanto en desktop (header superior) como en mobile (header móvil). El componente consume los endpoints de notificaciones del backend. Ahora pasando a testing frontend automatizado."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: NotificacionesDropdown funciona perfectamente en desktop y mobile. Campana visible en ambos headers, dropdown se abre correctamente mostrando notificaciones con estructura completa (título, mensaje, fecha). Botón 'Marcar todas leídas' funcional. Badge rojo muestra conteo de notificaciones no leídas. Cierre por click fuera funciona. Integración con backend exitosa."
 
   - task: "Route /app/roadmap - RoadmapPage"
     implemented: true
-    working: "NA"
+    working: true
     file: "frontend/src/App.js, frontend/src/pages/app/RoadmapPage.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Agregada ruta protegida /app/roadmap que carga RoadmapPage. Accesible para admin, cliente_pagado y cliente_gratuito. La página muestra el roadmap personalizado de las 5 fases de implementación. Navegación desde sidebar incluida. Ahora pasando a testing frontend automatizado."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: RoadmapPage funciona excelentemente. Navegación desde sidebar exitosa. Página carga con título 'Tu Roadmap NIIF' y muestra las 5 fases de implementación correctamente (Diagnóstico Inicial, Análisis de Materialidad, Identificación de Riesgos, Medición y Cálculo, Reporte y Divulgación). Progreso total, fase actual y finalización estimada se muestran correctamente. Responsive design funcional."
 
   - task: "Route /app/ayuda - AyudaPage (FAQs)"
     implemented: true
-    working: "NA"
+    working: true
     file: "frontend/src/App.js, frontend/src/pages/app/AyudaPage.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Agregada ruta protegida /app/ayuda que carga AyudaPage. Accesible para todos los roles. La página muestra el Centro de Ayuda con FAQs categorizadas y búsqueda. Navegación desde sidebar incluida. Ahora pasando a testing frontend automatizado."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: AyudaPage funciona perfectamente. Navegación desde sidebar exitosa. Página carga con título 'Centro de Ayuda' y muestra FAQs organizadas por categorías (Primeros Pasos, Diagnóstico, Materialidad, Medición y Reporte, Técnico, Suscripción). Barra de búsqueda funcional. FAQs se expanden/colapsan correctamente. Botón 'Crear Ticket' integrado. Responsive design funcional."
 
   - task: "Route /app/soporte - SoportePage (Tickets)"
     implemented: true
-    working: "NA"
+    working: true
     file: "frontend/src/App.js, frontend/src/pages/app/SoportePage.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Agregada ruta protegida /app/soporte que carga SoportePage. Accesible para todos los roles. La página permite crear y ver tickets de soporte. Navegación desde sidebar incluida. Ahora pasando a testing frontend automatizado."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: SoportePage funciona excelentemente. Navegación desde sidebar exitosa. Página carga con título 'Soporte Técnico' y estadísticas de tickets (Total, Abiertos, En Proceso, Resueltos). Botón 'Nuevo Ticket' abre modal con formulario completo (Asunto, Categoría, Prioridad, Descripción). Creación de tickets funcional con mensaje de éxito 'Ticket creado correctamente'. Tickets aparecen en lista con estado y detalles. Integración con notificaciones exitosa."
 
   - task: "ClientLayout navigation menu updated"
     implemented: true
-    working: "NA"
+    working: true
     file: "frontend/src/layouts/ClientLayout.jsx"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "El menú de navegación del ClientLayout ya incluye enlaces a Roadmap, Ayuda y Soporte. Los iconos Map, HelpCircle y MessageSquare están correctamente asignados. Desktop y mobile sidebar deben funcionar correctamente. Ahora pasando a testing frontend automatizado."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: ClientLayout navigation funciona perfectamente. Sidebar muestra todos los enlaces correctamente: Dashboard, Mi Progreso, Roadmap, Recursos, Ayuda, Soporte. Iconos asignados correctamente (Map para Roadmap, HelpCircle para Ayuda, MessageSquare para Soporte). Enlaces activos se resaltan en verde. Desktop sidebar siempre visible, mobile con hamburger menu funcional. Navegación entre páginas exitosa."
 
 agent_communication:
     - agent: "main"

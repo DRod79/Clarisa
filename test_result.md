@@ -233,11 +233,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Notificaciones API - GET /api/notificaciones"
-    - "Notificaciones API - GET /api/notificaciones/stats"
-    - "Ayuda API - GET /api/ayuda/faqs"
-    - "Tickets API - POST /api/ayuda/tickets"
-    - "Tickets API - GET /api/ayuda/tickets"
+    - "Frontend E2E testing of client module integration"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"

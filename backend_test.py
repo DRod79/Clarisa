@@ -344,8 +344,11 @@ def main():
     
     print("\n" + "=" * 70)
     
-    # Login with client credentials
-    user_id = login_user(CLIENT_EMAIL, CLIENT_PASSWORD)
+    # Try login with admin credentials first
+    user_id = login_user(ADMIN_EMAIL, ADMIN_PASSWORD)
+    if not user_id:
+        print("Admin login failed, trying client credentials...")
+        user_id = login_user(CLIENT_EMAIL, CLIENT_PASSWORD)
     if not user_id:
         print("\n❌ Login failed. Cannot proceed with tests.")
         sys.exit(1)

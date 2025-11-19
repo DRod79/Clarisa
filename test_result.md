@@ -167,15 +167,18 @@ backend:
 
   - task: "Ayuda API - GET /api/ayuda/faqs"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/ayuda.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint para obtener FAQs con filtros por categoría y búsqueda. Usado por AyudaPage. Necesita testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint GET /api/ayuda/faqs funciona excelentemente. Retorna 13 FAQs desde Supabase con estructura correcta (id, categoria_id, pregunta, respuesta, orden). Filtros por categoría y búsqueda funcionan. Status 200. Datos reales disponibles."
 
   - task: "Tickets API - POST /api/ayuda/tickets"
     implemented: true

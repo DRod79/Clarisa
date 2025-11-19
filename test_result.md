@@ -137,15 +137,18 @@ backend:
 
   - task: "Notificaciones API - POST /api/notificaciones/{id}/marcar-leida"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/notificaciones.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint para marcar una notificación individual como leída. Necesita testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint POST /api/notificaciones/{id}/marcar-leida funciona correctamente. Actualiza campo 'leida' a true y establece 'leida_at' timestamp. Valida user_id y notif_id. Retorna mensaje de éxito. Status 200."
 
   - task: "Notificaciones API - POST /api/notificaciones/marcar-todas-leidas"
     implemented: true

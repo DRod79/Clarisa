@@ -217,7 +217,7 @@ async def get_estadisticas_recursos():
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/api/admin/estadisticas/soporte")
+@router.get("/admin/estadisticas/soporte")
 async def get_estadisticas_soporte():
     """
     Obtiene estadísticas de tickets de soporte

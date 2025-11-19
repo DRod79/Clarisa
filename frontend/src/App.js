@@ -86,6 +86,30 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+            <Route 
+              path="/app/roadmap" 
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'cliente_pagado', 'cliente_gratuito']}>
+                  <RoadmapPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/app/ayuda" 
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'cliente_pagado', 'cliente_gratuito']}>
+                  <AyudaPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/app/soporte" 
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'cliente_pagado', 'cliente_gratuito']}>
+                  <SoportePage />
+                </ProtectedRoute>
+              } 
+            />
             
             {/* Admin routes - protected */}
             <Route 

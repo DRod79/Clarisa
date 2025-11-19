@@ -30,6 +30,7 @@ import DashboardVentasPage from "@/pages/admin/sales/DashboardVentasPage";
 import RecursosAdminPage from "@/pages/admin/RecursosAdminPage";
 import CrearRecursoPage from "@/pages/admin/CrearRecursoPage";
 import EditarRecursoPage from "@/pages/admin/EditarRecursoPage";
+import DashboardEstadisticas from "@/pages/admin/DashboardEstadisticas";
 
 import { Toaster } from "@/components/ui/sonner";
 

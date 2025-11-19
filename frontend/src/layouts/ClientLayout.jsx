@@ -158,6 +158,13 @@ const ClientLayout = ({ children }) => {
 
       {/* Main content */}
       <div className="lg:pl-64">
+        {/* Desktop header - visible only on large screens */}
+        <div className="hidden lg:block sticky top-0 z-10 bg-white border-b shadow-sm">
+          <div className="flex items-center justify-end h-16 px-6">
+            <NotificacionesDropdown />
+          </div>
+        </div>
+
         {/* Mobile header */}
         <div className="lg:hidden sticky top-0 z-10 flex items-center justify-between h-16 px-4 bg-white border-b">
           <button
@@ -167,7 +174,7 @@ const ClientLayout = ({ children }) => {
             <Menu className="w-6 h-6" />
           </button>
           <h1 className="text-xl font-bold text-[#2D5F3F]">Clarisa</h1>
-          <div className="w-6" /> {/* Spacer for centering */}
+          <NotificacionesDropdown />
         </div>
 
         {/* Page content */}

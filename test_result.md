@@ -275,17 +275,16 @@ backend:
 
 metadata:
   created_by: "main_agent"
-  version: "2.3"
-  test_sequence: 6
-  run_ui: true
+  version: "3.0"
+  test_sequence: 7
+  run_ui: false
 
 test_plan:
   current_focus:
-    - "NotificacionesDropdown integration in ClientLayout"
-    - "Route /app/roadmap - RoadmapPage"
-    - "Route /app/ayuda - AyudaPage (FAQs)"
-    - "Route /app/soporte - SoportePage (Tickets)"
-    - "ClientLayout navigation menu updated"
+    - "Estadísticas Admin API - GET /api/admin/estadisticas/general"
+    - "Estadísticas Admin API - GET /api/admin/estadisticas/recursos"
+    - "Estadísticas Admin API - GET /api/admin/estadisticas/soporte"
+    - "Estadísticas Admin API - GET /api/admin/estadisticas/actividad"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"

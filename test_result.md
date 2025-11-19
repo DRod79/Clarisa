@@ -272,15 +272,18 @@ backend:
 
   - task: "Estadísticas Admin API - GET /api/admin/estadisticas/actividad"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/estadisticas_admin.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint para obtener estadísticas de actividad reciente: nuevos usuarios última semana, nuevos diagnósticos última semana, nuevos tickets última semana. Necesita testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint GET /api/admin/estadisticas/actividad funciona correctamente. Retorna estructura JSON con campos requeridos (nuevos_usuarios_semana, nuevos_diagnosticos_semana, nuevos_tickets_semana). Todos los valores son enteros >= 0. Datos reales: 1 nuevo diagnóstico en última semana. Status 200. Integración Supabase exitosa."
 
 metadata:
   created_by: "main_agent"

@@ -105,65 +105,101 @@
 user_problem_statement: "Finalizar la integración del Módulo de Cliente que incluye: 1) Sistema de Roadmap Personalizado para visualizar las 5 fases de implementación, 2) Centro de Ayuda con FAQs y sistema de tickets de soporte, 3) Sistema de Notificaciones integrado en la navegación. Las bases de datos ya están creadas y los componentes frontend existen, se requiere integrar todo en la navegación y probar funcionalidad."
 
 backend:
-  - task: "POST /api/diagnostico endpoint"
+  - task: "Notificaciones API - GET /api/notificaciones"
     implemented: true
-    working: true
-    file: "backend/server.py"
+    working: "NA"
+    file: "backend/notificaciones.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
-        - working: true
-          agent: "testing"
-          comment: "COMPREHENSIVE TESTING COMPLETED - All tests passed successfully. POST /api/diagnostico endpoint working correctly with complete test data. Status 200 returned, response includes id and timestamp, scoring structure preserved, data saved to MongoDB verified via GET /api/diagnosticos and GET /api/diagnostico/{id}. Logger issue has been resolved. Backend logs show successful diagnostic save: 'Diagnóstico guardado: test@empresa.com - Test Empresa S.A. - Arquetipo: UH-MN-CB'"
+        - working: "NA"
+          agent: "main"
+          comment: "Endpoint implementado previamente. Permite obtener notificaciones de un usuario con filtros de límite. Integrado en server.py. Necesita testing para confirmar funcionamiento."
 
-  - task: "GET /api/diagnosticos endpoint"
+  - task: "Notificaciones API - GET /api/notificaciones/stats"
     implemented: true
-    working: true
-    file: "backend/server.py"
+    working: "NA"
+    file: "backend/notificaciones.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Endpoint para obtener estadísticas de notificaciones no leídas. Usado por NotificacionesDropdown para mostrar badge con conteo. Necesita testing."
+
+  - task: "Notificaciones API - POST /api/notificaciones/{id}/marcar-leida"
+    implemented: true
+    working: "NA"
+    file: "backend/notificaciones.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
-        - working: true
-          agent: "testing"
-          comment: "Verified working - Successfully retrieves all diagnosticos from MongoDB. Tested as part of POST endpoint verification."
+        - working: "NA"
+          agent: "main"
+          comment: "Endpoint para marcar una notificación individual como leída. Necesita testing."
 
-  - task: "GET /api/diagnostico/{id} endpoint"
+  - task: "Notificaciones API - POST /api/notificaciones/marcar-todas-leidas"
     implemented: true
-    working: true
-    file: "backend/server.py"
+    working: "NA"
+    file: "backend/notificaciones.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
-        - working: true
-          agent: "testing"
-          comment: "Verified working - Successfully retrieves specific diagnostic by ID from MongoDB. Tested with ID: 633401d7-babb-4523-a962-c0f7a5cd18a6"
+        - working: "NA"
+          agent: "main"
+          comment: "Endpoint para marcar todas las notificaciones de un usuario como leídas. Necesita testing."
 
-  - task: "MongoDB data persistence"
+  - task: "Ayuda API - GET /api/ayuda/faqs"
     implemented: true
-    working: true
-    file: "backend/server.py"
+    working: "NA"
+    file: "backend/ayuda.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
-        - working: true
-          agent: "testing"
-          comment: "Verified working - Data is correctly saved to MongoDB with proper structure. Scoring data, contact information, and all diagnostic responses preserved correctly."
+        - working: "NA"
+          agent: "main"
+          comment: "Endpoint para obtener FAQs con filtros por categoría y búsqueda. Usado por AyudaPage. Necesita testing."
 
-  - task: "Logger configuration fix"
+  - task: "Tickets API - POST /api/ayuda/tickets"
     implemented: true
-    working: true
-    file: "backend/server.py"
+    working: "NA"
+    file: "backend/ayuda.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
-        - working: true
-          agent: "testing"
-          comment: "Verified working - Logger is properly configured at line 19-23 and working correctly. Backend logs show successful diagnostic logging: 'Diagnóstico guardado: test@empresa.com - Test Empresa S.A. - Arquetipo: UH-MN-CB'"
+        - working: "NA"
+          agent: "main"
+          comment: "Endpoint para crear nuevos tickets de soporte. Usado por SoportePage. Necesita testing."
+
+  - task: "Tickets API - GET /api/ayuda/tickets"
+    implemented: true
+    working: "NA"
+    file: "backend/ayuda.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Endpoint para obtener tickets de un usuario. Usado por SoportePage para mostrar historial. Necesita testing."
+
+  - task: "Tickets API - GET /api/ayuda/tickets/{id}"
+    implemented: true
+    working: "NA"
+    file: "backend/ayuda.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Endpoint para obtener detalles de un ticket específico incluyendo mensajes. Necesita testing."
 
 metadata:
   created_by: "testing_agent"

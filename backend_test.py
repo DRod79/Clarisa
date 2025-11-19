@@ -445,6 +445,8 @@ def main():
     results = {
         'notificaciones_stats': False,
         'notificaciones_list': False,
+        'mark_notification_read': False,
+        'mark_all_notifications_read': False,
         'faqs_list': False,
         'faqs_search': False,
         'create_ticket': False,

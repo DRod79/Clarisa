@@ -12,7 +12,7 @@ router = APIRouter()
 SUPABASE_URL = os.environ.get('SUPABASE_URL')
 SUPABASE_KEY = os.environ.get('SUPABASE_KEY')
 
-@router.get("/api/admin/estadisticas/general")
+@router.get("/admin/estadisticas/general")
 async def get_estadisticas_generales():
     """
     Obtiene estadísticas generales del sistema

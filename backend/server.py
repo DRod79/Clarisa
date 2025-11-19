@@ -568,6 +568,8 @@ async def get_estadisticas(user_id: str):
 # Include routers
 api_router.include_router(recursos_router, tags=["recursos"])
 api_router.include_router(admin_recursos_router, tags=["admin-recursos"])
+api_router.include_router(notificaciones_router, tags=["notificaciones"])
+api_router.include_router(ayuda_router, tags=["ayuda"])
 
 # Include the router in the main app
 app.include_router(api_router)

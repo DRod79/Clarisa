@@ -225,6 +225,54 @@ backend:
           agent: "testing"
           comment: "✅ TESTING COMPLETADO: Endpoint GET /api/soporte/tickets/{id} (no /api/ayuda/tickets/{id}) funciona perfectamente. Retorna detalles completos del ticket incluyendo array de mensajes. Valida pertenencia del ticket al usuario (seguridad). Status 200. Estructura JSON completa."
 
+  - task: "Estadísticas Admin API - GET /api/admin/estadisticas/general"
+    implemented: true
+    working: "NA"
+    file: "backend/estadisticas_admin.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Endpoint implementado para obtener estadísticas generales del sistema: total de usuarios, usuarios activos del mes, usuarios por rol (admin, pagado, gratuito), total de diagnósticos y diagnósticos del mes. Necesita testing."
+
+  - task: "Estadísticas Admin API - GET /api/admin/estadisticas/recursos"
+    implemented: true
+    working: "NA"
+    file: "backend/estadisticas_admin.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Endpoint para obtener estadísticas de recursos: total de recursos, recursos por tipo, recursos por fase, y top 5 recursos más vistos. Necesita testing."
+
+  - task: "Estadísticas Admin API - GET /api/admin/estadisticas/soporte"
+    implemented: true
+    working: "NA"
+    file: "backend/estadisticas_admin.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Endpoint para obtener estadísticas de tickets de soporte: total de tickets, tickets por estado, tickets por prioridad, y tickets del último mes. Necesita testing."
+
+  - task: "Estadísticas Admin API - GET /api/admin/estadisticas/actividad"
+    implemented: true
+    working: "NA"
+    file: "backend/estadisticas_admin.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Endpoint para obtener estadísticas de actividad reciente: nuevos usuarios última semana, nuevos diagnósticos última semana, nuevos tickets última semana. Necesita testing."
+
 metadata:
   created_by: "main_agent"
   version: "2.3"

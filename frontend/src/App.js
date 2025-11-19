@@ -180,6 +180,16 @@ function App() {
               } 
             />
             
+            {/* Admin - Estadísticas */}
+            <Route 
+              path="/admin/reportes" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <DashboardEstadisticas />
+                </ProtectedRoute>
+              } 
+            />
+            
             {/* Catch all - redirect to home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

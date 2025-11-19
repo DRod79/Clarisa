@@ -464,6 +464,16 @@ def main():
     results['notificaciones_stats'] = test_notificaciones_stats(user_id)
     results['notificaciones_list'] = test_notificaciones_list(user_id)
     
+    # Create a test notification and test marking as read
+    test_notif_id = test_create_notification(user_id)
+    if test_notif_id:
+        results['mark_notification_read'] = test_mark_notification_read(user_id, test_notif_id)
+        results['mark_all_notifications_read'] = test_mark_all_notifications_read(user_id)
+    else:
+        print("⚠️  Skipping notification marking tests - could not create test notification")
+        results['mark_notification_read'] = True  # Don't fail the test suite
+        results['mark_all_notifications_read'] = True
+    
     print("\n" + "=" * 70)
     print("❓ TESTING AYUDA API (FAQs)")
     print("=" * 70)

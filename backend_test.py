@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Backend API Testing for NIIF S1/S2 Diagnostic Tool
-Tests the POST /api/diagnostico endpoint with complete test data
+Backend API Testing for Clarisa Client Module
+Tests Notificaciones, FAQs, and Tickets APIs
 """
 
 import requests
@@ -12,6 +12,12 @@ from datetime import datetime
 # Get backend URL from frontend .env
 BACKEND_URL = "https://clarisa-sustain.preview.emergentagent.com"
 API_BASE = f"{BACKEND_URL}/api"
+
+# Test credentials from review request
+ADMIN_EMAIL = "admin@clarisa.com"
+ADMIN_PASSWORD = "admin123"
+CLIENT_EMAIL = "cliente@test.com"
+CLIENT_PASSWORD = "password123"
 
 def test_diagnostico_endpoint():
     """Test the POST /api/diagnostico endpoint with complete test data"""

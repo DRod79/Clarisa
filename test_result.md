@@ -227,15 +227,18 @@ backend:
 
   - task: "Estadísticas Admin API - GET /api/admin/estadisticas/general"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/estadisticas_admin.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint implementado para obtener estadísticas generales del sistema: total de usuarios, usuarios activos del mes, usuarios por rol (admin, pagado, gratuito), total de diagnósticos y diagnósticos del mes. Necesita testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint GET /api/admin/estadisticas/general funciona perfectamente. Retorna estructura JSON correcta con todos los campos requeridos (total_usuarios, usuarios_activos_mes, usuarios_admin, usuarios_pagado, usuarios_gratuito, total_diagnosticos, diagnosticos_mes). Validaciones lógicas exitosas: suma de roles <= total usuarios. Datos reales: 6 usuarios totales (2 admin, 4 gratuito), 0 diagnósticos. Status 200. Conexión Supabase exitosa."
 
   - task: "Estadísticas Admin API - GET /api/admin/estadisticas/recursos"
     implemented: true

@@ -109,7 +109,7 @@ print(response.json())
 ```bash
 curl -X POST "https://clarisa-sustain.preview.emergentagent.com/api/auth/login" \
   -H "Content-Type: application/json" \
-  -d '{"email": "cliente@test.com", "password": "password123"}'
+  -d '{"email": "cliente@test.com", "password": "pass123"}'
 ```
 
 ---

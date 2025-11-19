@@ -107,15 +107,18 @@ user_problem_statement: "Finalizar la integración del Módulo de Cliente que in
 backend:
   - task: "Notificaciones API - GET /api/notificaciones"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/notificaciones.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint implementado previamente. Permite obtener notificaciones de un usuario con filtros de límite. Integrado en server.py. Necesita testing para confirmar funcionamiento."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint GET /api/notificaciones funciona correctamente. Retorna estructura JSON válida con campos requeridos (id, tipo, titulo, mensaje, leida, created_at). Probado con user_id válido y parámetro limit. Responde con status 200. Conexión a Supabase exitosa."
 
   - task: "Notificaciones API - GET /api/notificaciones/stats"
     implemented: true

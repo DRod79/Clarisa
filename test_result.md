@@ -287,12 +287,13 @@ backend:
 
 metadata:
   created_by: "main_agent"
-  version: "3.1"
-  test_sequence: 8
-  run_ui: false
+  version: "3.2"
+  test_sequence: 9
+  run_ui: true
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Dashboard Estadísticas Admin - Route /admin/reportes"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"

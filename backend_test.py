@@ -636,9 +636,9 @@ def test_admin_estadisticas_actividad():
         return False
 
 def main():
-    """Run all tests for Clarisa Client Module"""
+    """Run all tests for Clarisa Client Module and Admin Statistics"""
     print("=" * 70)
-    print("🚀 CLARISA CLIENT MODULE - Backend API Testing")
+    print("🚀 CLARISA - Backend API Testing (Client Module + Admin Statistics)")
     print("=" * 70)
     
     # Test API health first
@@ -667,7 +667,11 @@ def main():
         'faqs_search': False,
         'create_ticket': False,
         'get_tickets': False,
-        'get_ticket_detail': False
+        'get_ticket_detail': False,
+        'admin_estadisticas_general': False,
+        'admin_estadisticas_recursos': False,
+        'admin_estadisticas_soporte': False,
+        'admin_estadisticas_actividad': False
     }
     
     ticket_id = None

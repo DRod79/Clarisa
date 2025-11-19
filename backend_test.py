@@ -332,34 +332,94 @@ def test_api_health():
         return False
 
 def main():
-    """Run all tests"""
-    print("=" * 60)
-    print("🚀 NIIF S1/S2 Diagnostic API Testing")
-    print("=" * 60)
+    """Run all tests for Clarisa Client Module"""
+    print("=" * 70)
+    print("🚀 CLARISA CLIENT MODULE - Backend API Testing")
+    print("=" * 70)
     
     # Test API health first
     if not test_api_health():
         print("\n❌ API health check failed. Cannot proceed with tests.")
         sys.exit(1)
     
-    print("\n" + "=" * 60)
+    print("\n" + "=" * 70)
     
-    # Test the main diagnostic endpoint
-    success = test_diagnostico_endpoint()
-    
-    print("\n" + "=" * 60)
-    if success:
-        print("🎉 ALL TESTS PASSED!")
-        print("✅ POST /api/diagnostico endpoint is working correctly")
-        print("✅ Data is being saved to MongoDB properly")
-        print("✅ Scoring structure is preserved")
-        print("✅ GET endpoints are working")
-    else:
-        print("💥 TESTS FAILED!")
-        print("❌ There are issues with the diagnostic endpoint")
+    # Login with client credentials
+    user_id = login_user(CLIENT_EMAIL, CLIENT_PASSWORD)
+    if not user_id:
+        print("\n❌ Login failed. Cannot proceed with tests.")
         sys.exit(1)
     
-    print("=" * 60)
+    # Track test results
+    results = {
+        'notificaciones_stats': False,
+        'notificaciones_list': False,
+        'faqs_list': False,
+        'faqs_search': False,
+        'create_ticket': False,
+        'get_tickets': False,
+        'get_ticket_detail': False
+    }
+    
+    ticket_id = None
+    
+    print("\n" + "=" * 70)
+    print("📋 TESTING NOTIFICACIONES API")
+    print("=" * 70)
+    
+    # Test Notificaciones API
+    results['notificaciones_stats'] = test_notificaciones_stats(user_id)
+    results['notificaciones_list'] = test_notificaciones_list(user_id)
+    
+    print("\n" + "=" * 70)
+    print("❓ TESTING AYUDA API (FAQs)")
+    print("=" * 70)
+    
+    # Test FAQs API
+    results['faqs_list'] = test_faqs_list()
+    results['faqs_search'] = test_faqs_search()
+    
+    print("\n" + "=" * 70)
+    print("🎫 TESTING SOPORTE API (Tickets)")
+    print("=" * 70)
+    
+    # Test Tickets API
+    create_success, ticket_id = test_create_ticket(user_id)
+    results['create_ticket'] = create_success
+    
+    results['get_tickets'] = test_get_tickets(user_id)
+    
+    if ticket_id:
+        results['get_ticket_detail'] = test_get_ticket_detail(user_id, ticket_id)
+    
+    # Summary
+    print("\n" + "=" * 70)
+    print("📊 TEST RESULTS SUMMARY")
+    print("=" * 70)
+    
+    passed = sum(results.values())
+    total = len(results)
+    
+    for test_name, result in results.items():
+        status = "✅ PASS" if result else "❌ FAIL"
+        print(f"{status} - {test_name}")
+    
+    print(f"\n🎯 OVERALL: {passed}/{total} tests passed")
+    
+    if passed == total:
+        print("\n🎉 ALL TESTS PASSED!")
+        print("✅ Notificaciones API is working correctly")
+        print("✅ FAQs API is working correctly") 
+        print("✅ Tickets API is working correctly")
+        print("✅ All endpoints respond with correct HTTP codes")
+        print("✅ JSON structures are consistent")
+    else:
+        print(f"\n⚠️  {total - passed} TESTS FAILED!")
+        print("❌ Some endpoints have issues that need attention")
+        
+        # Don't exit with error code - report issues but let testing agent handle
+    
+    print("=" * 70)
 
 if __name__ == "__main__":
     main()

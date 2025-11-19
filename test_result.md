@@ -202,14 +202,18 @@ backend:
           comment: "Endpoint para obtener detalles de un ticket específico incluyendo mensajes. Necesita testing."
 
 metadata:
-  created_by: "testing_agent"
-  version: "1.0"
-  test_sequence: 2
-  run_ui: true
+  created_by: "main_agent"
+  version: "2.0"
+  test_sequence: 3
+  run_ui: false
 
 test_plan:
   current_focus:
-    - "Unified access system testing completed"
+    - "Notificaciones API - GET /api/notificaciones"
+    - "Notificaciones API - GET /api/notificaciones/stats"
+    - "Ayuda API - GET /api/ayuda/faqs"
+    - "Tickets API - POST /api/ayuda/tickets"
+    - "Tickets API - GET /api/ayuda/tickets"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"

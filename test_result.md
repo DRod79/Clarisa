@@ -180,17 +180,20 @@ backend:
           agent: "testing"
           comment: "✅ TESTING COMPLETADO: Endpoint GET /api/ayuda/faqs funciona excelentemente. Retorna 13 FAQs desde Supabase con estructura correcta (id, categoria_id, pregunta, respuesta, orden). Filtros por categoría y búsqueda funcionan. Status 200. Datos reales disponibles."
 
-  - task: "Tickets API - POST /api/ayuda/tickets"
+  - task: "Tickets API - POST /api/soporte/tickets"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/ayuda.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint para crear nuevos tickets de soporte. Usado por SoportePage. Necesita testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint POST /api/soporte/tickets (no /api/ayuda/tickets) funciona perfectamente. Crea tickets con estructura completa (asunto, categoria, descripcion, prioridad). Genera notificación automática al usuario. Retorna ticket creado con ID. Status 200. Integración Supabase exitosa."
 
   - task: "Tickets API - GET /api/ayuda/tickets"
     implemented: true

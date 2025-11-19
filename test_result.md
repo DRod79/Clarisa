@@ -242,15 +242,18 @@ backend:
 
   - task: "Estadísticas Admin API - GET /api/admin/estadisticas/recursos"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/estadisticas_admin.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint para obtener estadísticas de recursos: total de recursos, recursos por tipo, recursos por fase, y top 5 recursos más vistos. Necesita testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint GET /api/admin/estadisticas/recursos funciona excelentemente. Retorna estructura JSON completa con campos requeridos (total_recursos, recursos_por_tipo, recursos_por_fase, recursos_mas_vistos). Datos reales encontrados: 4 tipos de recursos (artículo, guía, template, video), top 5 recursos más vistos con títulos y vistas. Maneja tablas vacías gracefully. Status 200. Integración Supabase exitosa."
 
   - task: "Estadísticas Admin API - GET /api/admin/estadisticas/soporte"
     implemented: true

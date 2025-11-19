@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContextNew';
 import { Button } from '@/components/ui/button';
+import NotificacionesDropdown from '@/components/NotificacionesDropdown';
 import {
   Home,
   FileText,
@@ -13,6 +14,9 @@ import {
   X,
   CreditCard,
   TrendingUp,
+  Map,
+  HelpCircle,
+  MessageSquare,
 } from 'lucide-react';
 
 const ClientLayout = ({ children }) => {

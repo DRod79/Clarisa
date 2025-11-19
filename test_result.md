@@ -365,6 +365,18 @@ frontend:
           agent: "testing"
           comment: "✅ TESTING COMPLETADO: ClientLayout navigation funciona perfectamente. Sidebar muestra todos los enlaces correctamente: Dashboard, Mi Progreso, Roadmap, Recursos, Ayuda, Soporte. Iconos asignados correctamente (Map para Roadmap, HelpCircle para Ayuda, MessageSquare para Soporte). Enlaces activos se resaltan en verde. Desktop sidebar siempre visible, mobile con hamburger menu funcional. Navegación entre páginas exitosa."
 
+  - task: "Dashboard Estadísticas Admin - Route /admin/reportes"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/App.js, frontend/src/pages/admin/DashboardEstadisticas.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Creada página DashboardEstadisticas.jsx con diseño visual completo que muestra: estadísticas generales (usuarios, diagnósticos, recursos), actividad reciente (última semana), análisis de tickets de soporte, análisis de recursos, y tabla de recursos más vistos. Ruta /admin/reportes agregada a App.js. AdminLayout ya tiene el enlace 'Reportes' en la navegación. Necesita testing backend y frontend."
+
 agent_communication:
     - agent: "main"
       message: "MÓDULO CLIENTE - INTEGRACIÓN COMPLETADA. He finalizado la integración del módulo de cliente en la aplicación: 1) NotificacionesDropdown integrado en ClientLayout (desktop y mobile headers), 2) Rutas agregadas en App.js para /app/roadmap, /app/ayuda y /app/soporte con protección de roles, 3) Navegación del ClientLayout ya incluye enlaces a las 3 nuevas páginas. Los backends ya estaban implementados (notificaciones.py, ayuda.py) y las páginas frontend existen (RoadmapPage.jsx, AyudaPage.jsx, SoportePage.jsx). NECESITA TESTING: Todos los endpoints del backend necesitan ser probados (notificaciones, FAQs, tickets). Frontend necesita verificación E2E de navegación y funcionalidad completa de las 3 nuevas páginas."

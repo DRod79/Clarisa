@@ -419,6 +419,222 @@ def test_api_health():
         print(f"❌ API health check failed: {str(e)}")
         return False
 
+
+def test_admin_estadisticas_general():
+    """Test GET /api/admin/estadisticas/general"""
+    print("\n🧪 Testing GET /api/admin/estadisticas/general...")
+    
+    try:
+        response = requests.get(f"{API_BASE}/admin/estadisticas/general", timeout=30)
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: General statistics retrieved")
+        
+        # Verify required fields
+        required_fields = [
+            'total_usuarios', 'usuarios_activos_mes', 'usuarios_admin', 
+            'usuarios_pagado', 'usuarios_gratuito', 'total_diagnosticos', 'diagnosticos_mes'
+        ]
+        
+        for field in required_fields:
+            if field not in data:
+                print(f"❌ FAILED: Missing field '{field}' in general stats")
+                return False
+            
+            # Verify all values are integers >= 0
+            if not isinstance(data[field], int) or data[field] < 0:
+                print(f"❌ FAILED: Field '{field}' should be integer >= 0, got {data[field]}")
+                return False
+        
+        # Verify logical consistency: sum of roles <= total users
+        total_roles = data['usuarios_admin'] + data['usuarios_pagado'] + data['usuarios_gratuito']
+        if total_roles > data['total_usuarios']:
+            print(f"❌ FAILED: Sum of role users ({total_roles}) > total users ({data['total_usuarios']})")
+            return False
+        
+        print(f"📊 General Stats:")
+        print(f"   Total usuarios: {data['total_usuarios']}")
+        print(f"   Usuarios activos (mes): {data['usuarios_activos_mes']}")
+        print(f"   Admin: {data['usuarios_admin']}, Pagado: {data['usuarios_pagado']}, Gratuito: {data['usuarios_gratuito']}")
+        print(f"   Total diagnósticos: {data['total_diagnosticos']}")
+        print(f"   Diagnósticos (mes): {data['diagnosticos_mes']}")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_admin_estadisticas_recursos():
+    """Test GET /api/admin/estadisticas/recursos"""
+    print("\n🧪 Testing GET /api/admin/estadisticas/recursos...")
+    
+    try:
+        response = requests.get(f"{API_BASE}/admin/estadisticas/recursos", timeout=30)
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: Resources statistics retrieved")
+        
+        # Verify required fields
+        required_fields = ['total_recursos', 'recursos_por_tipo', 'recursos_por_fase', 'recursos_mas_vistos']
+        
+        for field in required_fields:
+            if field not in data:
+                print(f"❌ FAILED: Missing field '{field}' in resources stats")
+                return False
+        
+        # Verify data types
+        if not isinstance(data['total_recursos'], int) or data['total_recursos'] < 0:
+            print(f"❌ FAILED: total_recursos should be integer >= 0, got {data['total_recursos']}")
+            return False
+        
+        if not isinstance(data['recursos_por_tipo'], dict):
+            print(f"❌ FAILED: recursos_por_tipo should be dict, got {type(data['recursos_por_tipo'])}")
+            return False
+        
+        if not isinstance(data['recursos_por_fase'], dict):
+            print(f"❌ FAILED: recursos_por_fase should be dict, got {type(data['recursos_por_fase'])}")
+            return False
+        
+        if not isinstance(data['recursos_mas_vistos'], list):
+            print(f"❌ FAILED: recursos_mas_vistos should be list, got {type(data['recursos_mas_vistos'])}")
+            return False
+        
+        # Verify recursos_mas_vistos structure
+        for recurso in data['recursos_mas_vistos']:
+            if not isinstance(recurso, dict) or 'titulo' not in recurso or 'vistas' not in recurso:
+                print(f"❌ FAILED: recursos_mas_vistos items should have 'titulo' and 'vistas' fields")
+                return False
+        
+        print(f"📊 Resources Stats:")
+        print(f"   Total recursos: {data['total_recursos']}")
+        print(f"   Recursos por tipo: {len(data['recursos_por_tipo'])} tipos")
+        print(f"   Recursos por fase: {len(data['recursos_por_fase'])} fases")
+        print(f"   Top recursos: {len(data['recursos_mas_vistos'])} items")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_admin_estadisticas_soporte():
+    """Test GET /api/admin/estadisticas/soporte"""
+    print("\n🧪 Testing GET /api/admin/estadisticas/soporte...")
+    
+    try:
+        response = requests.get(f"{API_BASE}/admin/estadisticas/soporte", timeout=30)
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: Support statistics retrieved")
+        
+        # Verify required fields
+        required_fields = ['total_tickets', 'tickets_por_estado', 'tickets_por_prioridad', 'tickets_mes']
+        
+        for field in required_fields:
+            if field not in data:
+                print(f"❌ FAILED: Missing field '{field}' in support stats")
+                return False
+        
+        # Verify data types
+        if not isinstance(data['total_tickets'], int) or data['total_tickets'] < 0:
+            print(f"❌ FAILED: total_tickets should be integer >= 0, got {data['total_tickets']}")
+            return False
+        
+        if not isinstance(data['tickets_por_estado'], dict):
+            print(f"❌ FAILED: tickets_por_estado should be dict, got {type(data['tickets_por_estado'])}")
+            return False
+        
+        if not isinstance(data['tickets_por_prioridad'], dict):
+            print(f"❌ FAILED: tickets_por_prioridad should be dict, got {type(data['tickets_por_prioridad'])}")
+            return False
+        
+        if not isinstance(data['tickets_mes'], int) or data['tickets_mes'] < 0:
+            print(f"❌ FAILED: tickets_mes should be integer >= 0, got {data['tickets_mes']}")
+            return False
+        
+        # Verify logical consistency: tickets_mes <= total_tickets
+        if data['tickets_mes'] > data['total_tickets']:
+            print(f"❌ FAILED: tickets_mes ({data['tickets_mes']}) > total_tickets ({data['total_tickets']})")
+            return False
+        
+        print(f"📊 Support Stats:")
+        print(f"   Total tickets: {data['total_tickets']}")
+        print(f"   Tickets por estado: {len(data['tickets_por_estado'])} estados")
+        print(f"   Tickets por prioridad: {len(data['tickets_por_prioridad'])} prioridades")
+        print(f"   Tickets (mes): {data['tickets_mes']}")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_admin_estadisticas_actividad():
+    """Test GET /api/admin/estadisticas/actividad"""
+    print("\n🧪 Testing GET /api/admin/estadisticas/actividad...")
+    
+    try:
+        response = requests.get(f"{API_BASE}/admin/estadisticas/actividad", timeout=30)
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: Activity statistics retrieved")
+        
+        # Verify required fields
+        required_fields = ['nuevos_usuarios_semana', 'nuevos_diagnosticos_semana', 'nuevos_tickets_semana']
+        
+        for field in required_fields:
+            if field not in data:
+                print(f"❌ FAILED: Missing field '{field}' in activity stats")
+                return False
+            
+            # Verify all values are integers >= 0
+            if not isinstance(data[field], int) or data[field] < 0:
+                print(f"❌ FAILED: Field '{field}' should be integer >= 0, got {data[field]}")
+                return False
+        
+        print(f"📊 Activity Stats (última semana):")
+        print(f"   Nuevos usuarios: {data['nuevos_usuarios_semana']}")
+        print(f"   Nuevos diagnósticos: {data['nuevos_diagnosticos_semana']}")
+        print(f"   Nuevos tickets: {data['nuevos_tickets_semana']}")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
 def main():
     """Run all tests for Clarisa Client Module"""
     print("=" * 70)

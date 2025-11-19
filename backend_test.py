@@ -19,170 +19,300 @@ ADMIN_PASSWORD = "admin123"
 CLIENT_EMAIL = "cliente@test.com"
 CLIENT_PASSWORD = "password123"
 
-def test_diagnostico_endpoint():
-    """Test the POST /api/diagnostico endpoint with complete test data"""
+def login_user(email, password):
+    """Login and get user_id"""
+    print(f"🔐 Logging in user: {email}")
     
-    print("🧪 Testing POST /api/diagnostico endpoint...")
-    print(f"Backend URL: {BACKEND_URL}")
-    print(f"API Endpoint: {API_BASE}/diagnostico")
+    try:
+        response = requests.post(
+            f"{API_BASE}/auth/login",
+            json={"email": email, "password": password},
+            headers={"Content-Type": "application/json"},
+            timeout=30
+        )
+        
+        if response.status_code != 200:
+            print(f"❌ Login failed: {response.status_code} - {response.text}")
+            return None
+        
+        data = response.json()
+        user_id = data['user']['id']
+        print(f"✅ Login successful. User ID: {user_id}")
+        return user_id
+        
+    except Exception as e:
+        print(f"❌ Login error: {str(e)}")
+        return None
+
+
+def test_notificaciones_stats(user_id):
+    """Test GET /api/notificaciones/stats"""
+    print("\n🧪 Testing GET /api/notificaciones/stats...")
     
-    # Test data as provided in the review request
-    test_data = {
-        "nombre_completo": "Test Usuario",
-        "email": "test@empresa.com",
-        "telefono": "1234-5678",
-        "organizacion": "Test Empresa S.A.",
-        "puesto": "Director de Sostenibilidad",
-        "pais": "Costa Rica",
-        "departamento": "Sostenibilidad",
-        "anios_experiencia": "3-5 años",
-        "p1_sector": "Servicios Financieros",
-        "p2_tamano": "200-500 empleados",
-        "p3_motivacion": "Regulación obligatoria",
-        "p4_plazo": "6-12 meses",
-        "p5_publica_info": "No",
-        "p6_materialidad": "No",
-        "p7_familiaridad": "Principiante",
-        "p8_riesgos_clima": "No",
-        "p9_huella_carbono": "No",
-        "p10_liderazgo": "No",
-        "p11_junta": "No",
-        "p12_personas_dedicadas": "Ninguna",
-        "p13_presupuesto": "Sin presupuesto",
-        "p14_recopilacion": "Manual básico",
-        "p15_control_interno": "No",
-        "p16_datos_auditables": "No",
-        "p17_rastreo_impacto": "No",
-        "p18_obstaculo": "Falta de conocimiento técnico",
-        "p19_apoyo_valioso": ["Guía paso a paso", "Plantillas"],
-        "p20_inversion": "< $10,000",
-        "scoring": {
-            "urgencia": {
-                "puntos": 75,
-                "nivel": "Alta",
-                "categoria": "Urgente"
-            },
-            "madurez": {
-                "puntos": 25,
-                "nivel": "Baja",
-                "categoria": "Novato"
-            },
-            "capacidad": {
-                "puntos": 30,
-                "nivel": "Baja",
-                "categoria": "Limitada"
-            },
-            "arquetipo": {
-                "codigo": "UH-MN-CB",
-                "nombre": "Planificador Novato",
-                "descripcion": "Urgencia alta pero madurez y capacidad bajas",
-                "recomendacion": "Comenzar con capacitación básica"
-            }
-        }
+    try:
+        response = requests.get(
+            f"{API_BASE}/notificaciones/stats",
+            params={"user_id": user_id},
+            timeout=30
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: Stats retrieved")
+        
+        # Verify structure
+        required_fields = ['total', 'no_leidas', 'leidas']
+        for field in required_fields:
+            if field not in data:
+                print(f"❌ FAILED: Missing field '{field}' in stats response")
+                return False
+        
+        print(f"📊 Stats: Total={data['total']}, No leídas={data['no_leidas']}, Leídas={data['leidas']}")
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_notificaciones_list(user_id):
+    """Test GET /api/notificaciones"""
+    print("\n🧪 Testing GET /api/notificaciones...")
+    
+    try:
+        response = requests.get(
+            f"{API_BASE}/notificaciones",
+            params={"user_id": user_id, "limit": 10},
+            timeout=30
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: Notificaciones retrieved")
+        print(f"📋 Found {len(data)} notificaciones")
+        
+        # If there are notifications, verify structure
+        if len(data) > 0:
+            notif = data[0]
+            required_fields = ['id', 'tipo', 'titulo', 'mensaje', 'leida', 'created_at']
+            for field in required_fields:
+                if field not in notif:
+                    print(f"❌ FAILED: Missing field '{field}' in notification")
+                    return False
+            print(f"📝 Sample notification: {notif['titulo']}")
+        else:
+            print("ℹ️  No notifications found (empty table - this is normal)")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_faqs_list():
+    """Test GET /api/ayuda/faqs"""
+    print("\n🧪 Testing GET /api/ayuda/faqs...")
+    
+    try:
+        response = requests.get(f"{API_BASE}/ayuda/faqs", timeout=30)
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: FAQs retrieved")
+        print(f"📋 Found {len(data)} FAQs")
+        
+        # If there are FAQs, verify structure
+        if len(data) > 0:
+            faq = data[0]
+            required_fields = ['id', 'categoria_id', 'pregunta', 'respuesta', 'orden']
+            for field in required_fields:
+                if field not in faq:
+                    print(f"❌ FAILED: Missing field '{field}' in FAQ")
+                    return False
+            print(f"❓ Sample FAQ: {faq['pregunta'][:50]}...")
+        else:
+            print("ℹ️  No FAQs found (empty table - this is normal)")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_faqs_search():
+    """Test GET /api/ayuda/faqs with search"""
+    print("\n🧪 Testing GET /api/ayuda/faqs with search...")
+    
+    try:
+        response = requests.get(
+            f"{API_BASE}/ayuda/faqs",
+            params={"search": "implementacion"},
+            timeout=30
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: FAQ search completed")
+        print(f"🔍 Found {len(data)} FAQs matching 'implementacion'")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_create_ticket(user_id):
+    """Test POST /api/soporte/tickets"""
+    print("\n🧪 Testing POST /api/soporte/tickets...")
+    
+    ticket_data = {
+        "asunto": "Consulta sobre implementación NIIF S1",
+        "categoria": "implementacion", 
+        "descripcion": "Necesito ayuda para entender los requisitos de divulgación del estándar NIIF S1",
+        "prioridad": "media"
     }
     
     try:
-        # Make POST request
-        print("\n📤 Sending POST request...")
         response = requests.post(
-            f"{API_BASE}/diagnostico",
-            json=test_data,
+            f"{API_BASE}/soporte/tickets",
+            params={"user_id": user_id},
+            json=ticket_data,
             headers={"Content-Type": "application/json"},
             timeout=30
         )
         
         print(f"Status Code: {response.status_code}")
         
-        # Check status code
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False, None
+        
+        data = response.json()
+        print(f"✅ SUCCESS: Ticket created")
+        
+        # Verify response structure
+        required_fields = ['id', 'asunto', 'categoria', 'estado', 'prioridad']
+        for field in required_fields:
+            if field not in data:
+                print(f"❌ FAILED: Missing field '{field}' in ticket response")
+                return False, None
+        
+        ticket_id = data['id']
+        print(f"🎫 Ticket ID: {ticket_id}")
+        print(f"📝 Subject: {data['asunto']}")
+        print(f"📊 Status: {data['estado']}")
+        
+        return True, ticket_id
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False, None
+
+
+def test_get_tickets(user_id):
+    """Test GET /api/soporte/tickets"""
+    print("\n🧪 Testing GET /api/soporte/tickets...")
+    
+    try:
+        response = requests.get(
+            f"{API_BASE}/soporte/tickets",
+            params={"user_id": user_id},
+            timeout=30
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
         if response.status_code != 200:
             print(f"❌ FAILED: Expected status 200, got {response.status_code}")
             print(f"Response: {response.text}")
             return False
         
-        # Parse response
-        response_data = response.json()
-        print(f"✅ SUCCESS: Status 200 received")
+        data = response.json()
+        print(f"✅ SUCCESS: Tickets retrieved")
+        print(f"🎫 Found {len(data)} tickets")
         
-        # Verify response structure
-        required_fields = ['id', 'mensaje', 'timestamp', 'scoring']
-        missing_fields = []
-        
-        for field in required_fields:
-            if field not in response_data:
-                missing_fields.append(field)
-        
-        if missing_fields:
-            print(f"❌ FAILED: Missing required fields in response: {missing_fields}")
-            return False
-        
-        print(f"✅ SUCCESS: Response contains all required fields")
-        print(f"Response ID: {response_data['id']}")
-        print(f"Response Timestamp: {response_data['timestamp']}")
-        print(f"Response Message: {response_data['mensaje']}")
-        
-        # Verify scoring structure
-        scoring = response_data['scoring']
-        scoring_fields = ['urgencia', 'madurez', 'capacidad', 'arquetipo']
-        
-        for field in scoring_fields:
-            if field not in scoring:
-                print(f"❌ FAILED: Missing scoring field: {field}")
-                return False
-        
-        print(f"✅ SUCCESS: Scoring structure is complete")
-        print(f"Arquetipo: {scoring['arquetipo']['codigo']} - {scoring['arquetipo']['nombre']}")
-        
-        # Store the ID for verification
-        diagnostico_id = response_data['id']
-        
-        # Test GET all diagnosticos to verify it was saved
-        print(f"\n📥 Verifying data was saved in MongoDB...")
-        get_response = requests.get(f"{API_BASE}/diagnosticos", timeout=30)
-        
-        if get_response.status_code != 200:
-            print(f"❌ FAILED: Could not retrieve diagnosticos. Status: {get_response.status_code}")
-            return False
-        
-        all_diagnosticos = get_response.json()
-        
-        # Find our diagnostic in the list
-        found_diagnostic = None
-        for diag in all_diagnosticos:
-            if diag.get('id') == diagnostico_id:
-                found_diagnostic = diag
-                break
-        
-        if not found_diagnostic:
-            print(f"❌ FAILED: Diagnostic with ID {diagnostico_id} not found in MongoDB")
-            return False
-        
-        print(f"✅ SUCCESS: Diagnostic found in MongoDB")
-        print(f"Saved Email: {found_diagnostic.get('email')}")
-        print(f"Saved Organization: {found_diagnostic.get('organizacion')}")
-        print(f"Saved Arquetipo: {found_diagnostic.get('scoring', {}).get('arquetipo', {}).get('codigo')}")
-        
-        # Test GET specific diagnostic
-        print(f"\n🔍 Testing GET specific diagnostic...")
-        specific_response = requests.get(f"{API_BASE}/diagnostico/{diagnostico_id}", timeout=30)
-        
-        if specific_response.status_code != 200:
-            print(f"❌ FAILED: Could not retrieve specific diagnostic. Status: {specific_response.status_code}")
-            return False
-        
-        specific_data = specific_response.json()
-        print(f"✅ SUCCESS: Retrieved specific diagnostic")
-        print(f"Retrieved ID: {specific_data.get('id')}")
+        # If there are tickets, verify structure
+        if len(data) > 0:
+            ticket = data[0]
+            required_fields = ['id', 'asunto', 'estado', 'prioridad', 'created_at']
+            for field in required_fields:
+                if field not in ticket:
+                    print(f"❌ FAILED: Missing field '{field}' in ticket")
+                    return False
+            print(f"🎫 Latest ticket: {ticket['asunto']}")
+        else:
+            print("ℹ️  No tickets found")
         
         return True
         
-    except requests.exceptions.RequestException as e:
-        print(f"❌ FAILED: Network error - {str(e)}")
-        return False
-    except json.JSONDecodeError as e:
-        print(f"❌ FAILED: Invalid JSON response - {str(e)}")
-        return False
     except Exception as e:
-        print(f"❌ FAILED: Unexpected error - {str(e)}")
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_get_ticket_detail(user_id, ticket_id):
+    """Test GET /api/soporte/tickets/{ticket_id}"""
+    print(f"\n🧪 Testing GET /api/soporte/tickets/{ticket_id}...")
+    
+    try:
+        response = requests.get(
+            f"{API_BASE}/soporte/tickets/{ticket_id}",
+            params={"user_id": user_id},
+            timeout=30
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: Ticket detail retrieved")
+        
+        # Verify response structure
+        required_fields = ['id', 'asunto', 'descripcion', 'estado', 'mensajes']
+        for field in required_fields:
+            if field not in data:
+                print(f"❌ FAILED: Missing field '{field}' in ticket detail")
+                return False
+        
+        print(f"🎫 Ticket: {data['asunto']}")
+        print(f"💬 Messages: {len(data['mensajes'])}")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
         return False
 
 def test_api_health():

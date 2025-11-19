@@ -310,7 +310,7 @@ async def get_estadisticas_soporte():
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/api/admin/estadisticas/actividad")
+@router.get("/admin/estadisticas/actividad")
 async def get_estadisticas_actividad():
     """
     Obtiene estadísticas de actividad reciente

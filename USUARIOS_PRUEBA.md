@@ -21,7 +21,7 @@ Rol:      admin
 ### 2. 🟢 **Usuario Cliente Gratuito**
 ```
 Email:    cliente@test.com
-Password: password123
+Password: pass123
 Rol:      cliente_gratuito
 ```
 

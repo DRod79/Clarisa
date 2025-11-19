@@ -227,13 +227,17 @@ backend:
 
 metadata:
   created_by: "main_agent"
-  version: "2.1"
-  test_sequence: 4
-  run_ui: false
+  version: "2.2"
+  test_sequence: 5
+  run_ui: true
 
 test_plan:
   current_focus:
-    - "Frontend E2E testing of client module integration"
+    - "NotificacionesDropdown integration in ClientLayout"
+    - "Route /app/roadmap - RoadmapPage"
+    - "Route /app/ayuda - AyudaPage (FAQs)"
+    - "Route /app/soporte - SoportePage (Tickets)"
+    - "ClientLayout navigation menu updated"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"

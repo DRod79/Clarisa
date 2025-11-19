@@ -715,6 +715,16 @@ def main():
     if ticket_id:
         results['get_ticket_detail'] = test_get_ticket_detail(user_id, ticket_id)
     
+    print("\n" + "=" * 70)
+    print("📈 TESTING ADMIN STATISTICS API")
+    print("=" * 70)
+    
+    # Test Admin Statistics API (no authentication required)
+    results['admin_estadisticas_general'] = test_admin_estadisticas_general()
+    results['admin_estadisticas_recursos'] = test_admin_estadisticas_recursos()
+    results['admin_estadisticas_soporte'] = test_admin_estadisticas_soporte()
+    results['admin_estadisticas_actividad'] = test_admin_estadisticas_actividad()
+    
     # Summary
     print("\n" + "=" * 70)
     print("📊 TEST RESULTS SUMMARY")

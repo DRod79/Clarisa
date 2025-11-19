@@ -35,7 +35,7 @@ Rol:      cliente_gratuito
 - ✅ Notificaciones
 - ❌ NO tiene acceso al panel de administración
 
-**Estado:** ✅ **ACTIVO Y VERIFICADO** (Contraseña actualizada el 2025-11-19)
+**Estado:** ✅ **ACTIVO Y VERIFICADO** (Contraseña corregida a pass123 el 2025-11-19)
 
 ---
 

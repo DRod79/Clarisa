@@ -210,17 +210,20 @@ backend:
           agent: "testing"
           comment: "✅ TESTING COMPLETADO: Endpoint GET /api/soporte/tickets (no /api/ayuda/tickets) funciona correctamente. Retorna tickets del usuario con estructura completa (id, asunto, estado, prioridad, created_at). Incluye conteo de mensajes. Filtro por estado funcional. Status 200."
 
-  - task: "Tickets API - GET /api/ayuda/tickets/{id}"
+  - task: "Tickets API - GET /api/soporte/tickets/{id}"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/ayuda.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint para obtener detalles de un ticket específico incluyendo mensajes. Necesita testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint GET /api/soporte/tickets/{id} (no /api/ayuda/tickets/{id}) funciona perfectamente. Retorna detalles completos del ticket incluyendo array de mensajes. Valida pertenencia del ticket al usuario (seguridad). Status 200. Estructura JSON completa."
 
 metadata:
   created_by: "main_agent"

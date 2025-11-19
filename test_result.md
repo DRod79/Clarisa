@@ -249,7 +249,7 @@ frontend:
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "Integrado NotificacionesDropdown en el header del ClientLayout. Visible tanto en desktop (header superior) como en mobile (header móvil). El componente consume los endpoints de notificaciones del backend."
+          comment: "Integrado NotificacionesDropdown en el header del ClientLayout. Visible tanto en desktop (header superior) como en mobile (header móvil). El componente consume los endpoints de notificaciones del backend. Ahora pasando a testing frontend automatizado."
 
   - task: "Route /app/roadmap - RoadmapPage"
     implemented: true
@@ -261,7 +261,7 @@ frontend:
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "Agregada ruta protegida /app/roadmap que carga RoadmapPage. Accesible para admin, cliente_pagado y cliente_gratuito. La página muestra el roadmap personalizado de las 5 fases de implementación."
+          comment: "Agregada ruta protegida /app/roadmap que carga RoadmapPage. Accesible para admin, cliente_pagado y cliente_gratuito. La página muestra el roadmap personalizado de las 5 fases de implementación. Navegación desde sidebar incluida. Ahora pasando a testing frontend automatizado."
 
   - task: "Route /app/ayuda - AyudaPage (FAQs)"
     implemented: true
@@ -273,7 +273,7 @@ frontend:
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "Agregada ruta protegida /app/ayuda que carga AyudaPage. Accesible para todos los roles. La página muestra el Centro de Ayuda con FAQs categorizadas y búsqueda."
+          comment: "Agregada ruta protegida /app/ayuda que carga AyudaPage. Accesible para todos los roles. La página muestra el Centro de Ayuda con FAQs categorizadas y búsqueda. Navegación desde sidebar incluida. Ahora pasando a testing frontend automatizado."
 
   - task: "Route /app/soporte - SoportePage (Tickets)"
     implemented: true
@@ -285,7 +285,7 @@ frontend:
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "Agregada ruta protegida /app/soporte que carga SoportePage. Accesible para todos los roles. La página permite crear y ver tickets de soporte."
+          comment: "Agregada ruta protegida /app/soporte que carga SoportePage. Accesible para todos los roles. La página permite crear y ver tickets de soporte. Navegación desde sidebar incluida. Ahora pasando a testing frontend automatizado."
 
   - task: "ClientLayout navigation menu updated"
     implemented: true
@@ -297,7 +297,7 @@ frontend:
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "El menú de navegación del ClientLayout ya incluye enlaces a Roadmap, Ayuda y Soporte. Los iconos Map, HelpCircle y MessageSquare están correctamente asignados."
+          comment: "El menú de navegación del ClientLayout ya incluye enlaces a Roadmap, Ayuda y Soporte. Los iconos Map, HelpCircle y MessageSquare están correctamente asignados. Desktop y mobile sidebar deben funcionar correctamente. Ahora pasando a testing frontend automatizado."
 
 agent_communication:
     - agent: "main"

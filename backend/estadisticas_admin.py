@@ -46,26 +46,6 @@ async def get_estadisticas_generales():
             stats['usuarios_pagado'] = 0
             stats['usuarios_gratuito'] = 0
         
-        # Usuarios por rol
-        response_roles = requests.get(
-            f"{SUPABASE_URL}/rest/v1/users?select=rol",
-            headers={
-                'apikey': SUPABASE_KEY,
-                'Authorization': f'Bearer {SUPABASE_KEY}'
-            },
-            timeout=10
-        )
-        
-        if response_roles.status_code == 200:
-            usuarios = response_roles.json()
-            stats['usuarios_admin'] = len([u for u in usuarios if u.get('rol') == 'admin'])
-            stats['usuarios_pagado'] = len([u for u in usuarios if u.get('rol') == 'cliente_pagado'])
-            stats['usuarios_gratuito'] = len([u for u in usuarios if u.get('rol') == 'cliente_gratuito'])
-        else:
-            stats['usuarios_admin'] = 0
-            stats['usuarios_pagado'] = 0
-            stats['usuarios_gratuito'] = 0
-        
         # Usuarios activos (último mes)
         fecha_hace_mes = (datetime.now() - timedelta(days=30)).isoformat()
         response_activos = requests.get(

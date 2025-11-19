@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Finalizar la integración del Módulo de Cliente que incluye: 1) Sistema de Roadmap Personalizado para visualizar las 5 fases de implementación, 2) Centro de Ayuda con FAQs y sistema de tickets de soporte, 3) Sistema de Notificaciones integrado en la navegación. Las bases de datos ya están creadas y los componentes frontend existen, se requiere integrar todo en la navegación y probar funcionalidad."
+user_problem_statement: "Implementar Dashboard de Estadísticas Admin que muestre métricas clave del sistema: usuarios totales y activos, diagnósticos, recursos, tickets de soporte. Incluir análisis por tipo, estado, prioridad, y mostrar actividad reciente. El dashboard debe ser visual, informativo y actualizable en tiempo real."
 
 backend:
   - task: "Notificaciones API - GET /api/notificaciones"

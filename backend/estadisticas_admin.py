@@ -127,7 +127,7 @@ async def get_estadisticas_generales():
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/api/admin/estadisticas/recursos")
+@router.get("/admin/estadisticas/recursos")
 async def get_estadisticas_recursos():
     """
     Obtiene estadísticas de recursos

@@ -257,15 +257,18 @@ backend:
 
   - task: "Estadísticas Admin API - GET /api/admin/estadisticas/soporte"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/estadisticas_admin.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint para obtener estadísticas de tickets de soporte: total de tickets, tickets por estado, tickets por prioridad, y tickets del último mes. Necesita testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint GET /api/admin/estadisticas/soporte funciona perfectamente. Retorna estructura JSON correcta con campos requeridos (total_tickets, tickets_por_estado, tickets_por_prioridad, tickets_mes). Validaciones lógicas exitosas: tickets_mes <= total_tickets. Maneja tablas vacías gracefully retornando objetos/arrays vacíos. Status 200. Conexión Supabase exitosa."
 
   - task: "Estadísticas Admin API - GET /api/admin/estadisticas/actividad"
     implemented: true

@@ -122,15 +122,18 @@ backend:
 
   - task: "Notificaciones API - GET /api/notificaciones/stats"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/notificaciones.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint para obtener estadísticas de notificaciones no leídas. Usado por NotificacionesDropdown para mostrar badge con conteo. Necesita testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint GET /api/notificaciones/stats funciona perfectamente. Retorna estructura JSON correcta con campos 'total', 'no_leidas', 'leidas'. Calcula estadísticas correctamente desde Supabase. Status 200. Ideal para uso en NotificacionesDropdown badge."
 
   - task: "Notificaciones API - POST /api/notificaciones/{id}/marcar-leida"
     implemented: true

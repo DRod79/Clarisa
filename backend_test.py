@@ -744,6 +744,7 @@ def main():
         print("✅ Notificaciones API is working correctly")
         print("✅ FAQs API is working correctly") 
         print("✅ Tickets API is working correctly")
+        print("✅ Admin Statistics API is working correctly")
         print("✅ All endpoints respond with correct HTTP codes")
         print("✅ JSON structures are consistent")
     else:

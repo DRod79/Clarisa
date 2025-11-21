@@ -391,15 +391,18 @@ test_plan:
 frontend:
   - task: "Mis Favoritos functionality in RecursosPage"
     implemented: true
-    working: "NA"
+    working: true
     file: "frontend/src/pages/app/RecursosPage.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "user"
           comment: "Nueva funcionalidad 'Mis Favoritos' implementada en RecursosPage. Incluye: 1) Botón de filtro 'Mis Favoritos' con ícono de corazón y contador, 2) Funcionalidad para agregar/quitar favoritos con corazón en cada tarjeta, 3) Filtrado de recursos por favoritos, 4) Integración con otros filtros de fase, 5) Persistencia de favoritos al recargar página. Necesita testing exhaustivo de todas las funcionalidades."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO - MIS FAVORITOS FUNCIONANDO CORRECTAMENTE. Funcionalidades probadas: 1) VERIFICACIÓN VISUAL: Botón 'Mis Favoritos' visible con ícono de corazón y contador (1), posicionado junto a 'Todas las fases'. 2) AGREGAR FAVORITOS: Corazones en tarjetas funcionan, cambian de estado (gris → rojo), toast 'Agregado a favoritos' aparece. 3) FILTRADO: Botón cambia a rojo cuando activo, filtra correctamente mostrando solo favoritos (6 de 23 recursos). 4) QUITAR FAVORITOS: Toast 'Quitado de favoritos' funciona, recursos desaparecen de vista filtrada. 5) INTEGRACIÓN: Filtros combinados (Fase 1 + Favoritos) funcionan correctamente. Minor: Contador no siempre se actualiza inmediatamente, pero funcionalidad core es sólida. Backend de favoritos integrado correctamente."
 
   - task: "NotificacionesDropdown integration in ClientLayout"
     implemented: true

@@ -145,7 +145,14 @@ const RecursosPage = () => {
       if (filterFase !== 'all') params.append('fase', filterFase);
       
       const response = await fetch(
-        `${BACKEND_URL}/api/recursos?${params.toString()}`
+        `${BACKEND_URL}/api/recursos?${params.toString()}`,
+        {
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        }
       );
 
       if (response.ok) {

@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Implementar Dashboard de Estadísticas Admin que muestre métricas clave del sistema: usuarios totales y activos, diagnósticos, recursos, tickets de soporte. Incluir análisis por tipo, estado, prioridad, y mostrar actividad reciente. El dashboard debe ser visual, informativo y actualizable en tiempo real."
+user_problem_statement: "Implementar sistema completo de Gestión de Usuarios Admin que permita: listar todos los usuarios con filtros (rol, plan, búsqueda), ver detalles completos, editar información (nombre, organización, rol, plan), cambiar planes de suscripción, y desactivar/reactivar usuarios. La interfaz debe ser intuitiva, con tabla visual, modales de edición y confirmaciones para acciones críticas."
 
 backend:
   - task: "Notificaciones API - GET /api/notificaciones"

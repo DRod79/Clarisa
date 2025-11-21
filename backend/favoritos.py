@@ -25,6 +25,8 @@ async def obtener_favoritos(user_id: str):
     Obtiene la lista de recursos favoritos de un usuario
     """
     try:
+        print(f"[FAVORITOS] Obteniendo favoritos para user_id: {user_id}")
+        
         # Obtener IDs de recursos favoritos
         response = requests.get(
             f"{SUPABASE_URL}/rest/v1/recursos_favoritos?user_id=eq.{user_id}",
@@ -35,8 +37,12 @@ async def obtener_favoritos(user_id: str):
             timeout=10
         )
         
+        print(f"[FAVORITOS] Status de recursos_favoritos: {response.status_code}")
+        
         if response.status_code == 200:
             favoritos = response.json()
+            print(f"[FAVORITOS] Registros encontrados: {len(favoritos)}")
+            print(f"[FAVORITOS] Favoritos raw: {favoritos}")
             
             if not favoritos:
                 return {

@@ -234,6 +234,10 @@ async def exportar_tickets(
         if response.status_code == 200:
             tickets = response.json()
             
+            # Si formato es JSON, retornar directamente
+            if formato == "json":
+                return tickets
+            
             # Definir columnas para el CSV
             columnas = [
                 'id', 'user_id', 'asunto', 'categoria', 'estado', 'prioridad',

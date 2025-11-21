@@ -1186,15 +1186,18 @@ def main():
         print("✅ FAQs API is working correctly") 
         print("✅ Tickets API is working correctly")
         print("✅ Admin Statistics API is working correctly")
+        print("✅ Admin User Management API is working correctly")
         print("✅ All endpoints respond with correct HTTP codes")
         print("✅ JSON structures are consistent")
+        print("✅ Security validations working (no password_hash in responses)")
+        print("✅ Business logic validations working (role/plan validation)")
     else:
         print(f"\n⚠️  {total - passed} TESTS FAILED!")
         print("❌ Some endpoints have issues that need attention")
         
         # Don't exit with error code - report issues but let testing agent handle
     
-    print("=" * 70)
+    print("=" * 80)
 
 if __name__ == "__main__":
     main()

@@ -516,6 +516,86 @@ const ReportesAvanzadosPage = () => {
           </div>
         </div>
 
+        {/* Vista Previa de Datos */}
+        {mostrandoPreview && previsualizacion && previsualizacion.datos.length > 0 && (
+          <div className="bg-white rounded-lg shadow">
+            <div className="p-6 border-b">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">Vista Previa de Datos</h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {previsualizacion.total} registro{previsualizacion.total !== 1 ? 's' : ''} encontrado{previsualizacion.total !== 1 ? 's' : ''}
+                  </p>
+                </div>
+                <Button
+                  onClick={descargarReporte}
+                  disabled={loading}
+                  className="bg-[#4CAF50] hover:bg-[#45a049] text-white"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Descargar CSV
+                </Button>
+              </div>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 border-b">
+                  <tr>
+                    {previsualizacion.datos.length > 0 && 
+                      Object.keys(previsualizacion.datos[0]).map((key) => (
+                        <th
+                          key={key}
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                          {key}
+                        </th>
+                      ))
+                    }
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {previsualizacion.datos.slice(0, 50).map((row, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      {Object.values(row).map((value, idx) => (
+                        <td
+                          key={idx}
+                          className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                        >
+                          {value || 'N/A'}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            
+            {previsualizacion.total > 50 && (
+              <div className="px-6 py-4 bg-gray-50 border-t">
+                <p className="text-sm text-gray-600">
+                  Mostrando los primeros 50 registros de {previsualizacion.total}. 
+                  Descarga el CSV para ver todos los datos.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Mensaje si no hay datos */}
+        {mostrandoPreview && previsualizacion && previsualizacion.datos.length === 0 && (
+          <div className="bg-white rounded-lg shadow p-12 text-center">
+            <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              No se encontraron datos
+            </h3>
+            <p className="text-gray-600">
+              No hay datos que coincidan con los filtros seleccionados. 
+              Intenta ajustar los criterios de búsqueda.
+            </p>
+          </div>
+        )}
+
         {/* Info */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div className="flex items-start gap-3">
@@ -524,8 +604,8 @@ const ReportesAvanzadosPage = () => {
               <p className="text-sm font-medium text-blue-900">Acerca de los reportes</p>
               <p className="text-sm text-blue-800 mt-1">
                 Los reportes se generan en tiempo real con los datos actuales de la base de datos. 
-                Puedes usar los filtros para personalizar la información exportada. Los archivos CSV 
-                pueden abrirse con Excel, Google Sheets u otras herramientas de análisis.
+                Haz clic en "Ver Datos" para previsualizar la información antes de descargar. 
+                Los archivos CSV pueden abrirse con Excel, Google Sheets u otras herramientas de análisis.
               </p>
             </div>
           </div>

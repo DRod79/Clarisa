@@ -463,6 +463,24 @@ const RecursosPage = () => {
                 <div className="h-40 bg-gradient-to-br from-[#2D5F3F] to-[#4CAF50] flex items-center justify-center relative">
                   <Icon className="w-16 h-16 text-white opacity-80" />
                   
+                  {/* Botón de Favorito */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorito(recurso.id);
+                    }}
+                    className="absolute top-2 left-2 bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-2 transition-all duration-200 transform hover:scale-110"
+                    title={favoritos.has(recurso.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+                  >
+                    <Heart 
+                      className={`w-5 h-5 transition-colors ${
+                        favoritos.has(recurso.id) 
+                          ? 'fill-red-500 text-red-500' 
+                          : 'text-gray-600'
+                      }`}
+                    />
+                  </button>
+                  
                   {/* Estado de progreso */}
                   {recurso.completado && (
                     <div className="absolute top-2 right-2 bg-green-500 rounded-full p-1">

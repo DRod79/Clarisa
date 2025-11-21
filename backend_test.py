@@ -635,6 +635,390 @@ def test_admin_estadisticas_actividad():
         print(f"❌ FAILED: {str(e)}")
         return False
 
+
+def test_admin_usuarios_list():
+    """Test GET /api/admin/usuarios"""
+    print("\n🧪 Testing GET /api/admin/usuarios...")
+    
+    try:
+        response = requests.get(f"{API_BASE}/admin/usuarios", timeout=30)
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False, None
+        
+        data = response.json()
+        print(f"✅ SUCCESS: Users list retrieved")
+        
+        # Verify response structure
+        required_fields = ['usuarios', 'total', 'limit', 'offset']
+        for field in required_fields:
+            if field not in data:
+                print(f"❌ FAILED: Missing field '{field}' in users list response")
+                return False, None
+        
+        usuarios = data['usuarios']
+        print(f"👥 Found {len(usuarios)} users (total: {data['total']})")
+        
+        # Verify no password_hash in response
+        for usuario in usuarios:
+            if 'password_hash' in usuario:
+                print(f"❌ FAILED: password_hash found in user response - security issue!")
+                return False, None
+        
+        # If there are users, verify structure and get a test user ID
+        test_user_id = None
+        if len(usuarios) > 0:
+            user = usuarios[0]
+            required_user_fields = ['id', 'email', 'nombre_completo', 'rol']
+            for field in required_user_fields:
+                if field not in user:
+                    print(f"❌ FAILED: Missing field '{field}' in user object")
+                    return False, None
+            
+            test_user_id = user['id']
+            print(f"👤 Sample user: {user['email']} (rol: {user['rol']})")
+        
+        return True, test_user_id
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False, None
+
+
+def test_admin_usuarios_list_with_filters():
+    """Test GET /api/admin/usuarios with filters"""
+    print("\n🧪 Testing GET /api/admin/usuarios with filters...")
+    
+    try:
+        # Test filter by rol=admin
+        response = requests.get(
+            f"{API_BASE}/admin/usuarios",
+            params={"rol": "admin"},
+            timeout=30
+        )
+        
+        print(f"Status Code (rol=admin): {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: Admin users filter works")
+        print(f"👑 Found {len(data['usuarios'])} admin users")
+        
+        # Test search functionality
+        response = requests.get(
+            f"{API_BASE}/admin/usuarios",
+            params={"search": "admin"},
+            timeout=30
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            print(f"🔍 Search 'admin' found {len(data['usuarios'])} users")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_admin_usuarios_get_user(user_id):
+    """Test GET /api/admin/usuarios/{user_id}"""
+    print(f"\n🧪 Testing GET /api/admin/usuarios/{user_id}...")
+    
+    try:
+        response = requests.get(f"{API_BASE}/admin/usuarios/{user_id}", timeout=30)
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: User details retrieved")
+        
+        # Verify no password_hash in response
+        if 'password_hash' in data:
+            print(f"❌ FAILED: password_hash found in user response - security issue!")
+            return False
+        
+        # Verify required fields
+        required_fields = ['id', 'email', 'nombre_completo', 'rol']
+        for field in required_fields:
+            if field not in data:
+                print(f"❌ FAILED: Missing field '{field}' in user details")
+                return False
+        
+        print(f"👤 User: {data['email']} ({data['nombre_completo']})")
+        print(f"🏷️  Role: {data['rol']}, Plan: {data.get('plan_actual', 'N/A')}")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_admin_usuarios_update_user(user_id):
+    """Test PATCH /api/admin/usuarios/{user_id}"""
+    print(f"\n🧪 Testing PATCH /api/admin/usuarios/{user_id}...")
+    
+    try:
+        # Update user data
+        update_data = {
+            "nombre_completo": "Usuario Test Actualizado",
+            "organizacion": "Empresa Test Update"
+        }
+        
+        response = requests.patch(
+            f"{API_BASE}/admin/usuarios/{user_id}",
+            json=update_data,
+            headers={"Content-Type": "application/json"},
+            timeout=30
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: User updated")
+        
+        # Verify response structure
+        if 'message' not in data or 'usuario' not in data:
+            print(f"❌ FAILED: Missing 'message' or 'usuario' in update response")
+            return False
+        
+        usuario = data['usuario']
+        if usuario['nombre_completo'] != update_data['nombre_completo']:
+            print(f"❌ FAILED: nombre_completo not updated correctly")
+            return False
+        
+        print(f"📝 Updated: {usuario['nombre_completo']}")
+        print(f"🏢 Organization: {usuario.get('organizacion', 'N/A')}")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_admin_usuarios_update_invalid_role(user_id):
+    """Test PATCH /api/admin/usuarios/{user_id} with invalid role"""
+    print(f"\n🧪 Testing PATCH /api/admin/usuarios/{user_id} with invalid role...")
+    
+    try:
+        # Try to update with invalid role
+        update_data = {
+            "rol": "invalid_role"
+        }
+        
+        response = requests.patch(
+            f"{API_BASE}/admin/usuarios/{user_id}",
+            json=update_data,
+            headers={"Content-Type": "application/json"},
+            timeout=30
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 400:
+            print(f"❌ FAILED: Expected status 400 for invalid role, got {response.status_code}")
+            return False
+        
+        print(f"✅ SUCCESS: Invalid role validation works")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_admin_usuarios_cambiar_plan(user_id):
+    """Test PATCH /api/admin/usuarios/{user_id}/cambiar-plan"""
+    print(f"\n🧪 Testing PATCH /api/admin/usuarios/{user_id}/cambiar-plan...")
+    
+    try:
+        # Change plan to basico
+        plan_data = {
+            "plan_actual": "basico",
+            "suscripcion_activa": True
+        }
+        
+        response = requests.patch(
+            f"{API_BASE}/admin/usuarios/{user_id}/cambiar-plan",
+            json=plan_data,
+            headers={"Content-Type": "application/json"},
+            timeout=30
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: Plan changed")
+        
+        # Verify response structure
+        if 'message' not in data or 'usuario' not in data:
+            print(f"❌ FAILED: Missing 'message' or 'usuario' in plan change response")
+            return False
+        
+        usuario = data['usuario']
+        if usuario['plan_actual'] != plan_data['plan_actual']:
+            print(f"❌ FAILED: plan_actual not updated correctly")
+            return False
+        
+        # Verify role was updated automatically
+        if usuario['rol'] != 'cliente_pagado':
+            print(f"❌ FAILED: rol should be 'cliente_pagado' for paid plan, got {usuario['rol']}")
+            return False
+        
+        print(f"💳 Plan: {usuario['plan_actual']}")
+        print(f"🏷️  Role: {usuario['rol']}")
+        print(f"✅ Active: {usuario['suscripcion_activa']}")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_admin_usuarios_cambiar_plan_invalid():
+    """Test PATCH /api/admin/usuarios/{user_id}/cambiar-plan with invalid plan"""
+    print(f"\n🧪 Testing PATCH /api/admin/usuarios/test/cambiar-plan with invalid plan...")
+    
+    try:
+        # Try invalid plan
+        plan_data = {
+            "plan_actual": "invalid_plan",
+            "suscripcion_activa": True
+        }
+        
+        response = requests.patch(
+            f"{API_BASE}/admin/usuarios/test-id/cambiar-plan",
+            json=plan_data,
+            headers={"Content-Type": "application/json"},
+            timeout=30
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 400:
+            print(f"❌ FAILED: Expected status 400 for invalid plan, got {response.status_code}")
+            return False
+        
+        print(f"✅ SUCCESS: Invalid plan validation works")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_admin_usuarios_desactivar_user(user_id):
+    """Test DELETE /api/admin/usuarios/{user_id}"""
+    print(f"\n🧪 Testing DELETE /api/admin/usuarios/{user_id}...")
+    
+    try:
+        response = requests.delete(f"{API_BASE}/admin/usuarios/{user_id}", timeout=30)
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: User deactivated")
+        
+        # Verify response structure
+        if 'message' not in data or 'user_id' not in data:
+            print(f"❌ FAILED: Missing 'message' or 'user_id' in deactivation response")
+            return False
+        
+        print(f"🚫 Deactivated user: {data['user_id']}")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_admin_usuarios_reactivar_user(user_id):
+    """Test POST /api/admin/usuarios/{user_id}/reactivar"""
+    print(f"\n🧪 Testing POST /api/admin/usuarios/{user_id}/reactivar...")
+    
+    try:
+        response = requests.post(f"{API_BASE}/admin/usuarios/{user_id}/reactivar", timeout=30)
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: User reactivated")
+        
+        # Verify response structure
+        if 'message' not in data or 'user_id' not in data:
+            print(f"❌ FAILED: Missing 'message' or 'user_id' in reactivation response")
+            return False
+        
+        print(f"✅ Reactivated user: {data['user_id']}")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_admin_usuarios_get_nonexistent():
+    """Test GET /api/admin/usuarios/{user_id} with non-existent user"""
+    print(f"\n🧪 Testing GET /api/admin/usuarios/nonexistent-id...")
+    
+    try:
+        response = requests.get(f"{API_BASE}/admin/usuarios/nonexistent-id", timeout=30)
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 404:
+            print(f"❌ FAILED: Expected status 404 for non-existent user, got {response.status_code}")
+            return False
+        
+        print(f"✅ SUCCESS: Non-existent user returns 404")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
 def main():
     """Run all tests for Clarisa Client Module and Admin Statistics"""
     print("=" * 70)

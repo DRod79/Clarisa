@@ -20,6 +20,7 @@ import MiProgresoPage from "@/pages/app/MiProgresoPage";
 import RoadmapPage from "@/pages/app/RoadmapPage";
 import AyudaPage from "@/pages/app/AyudaPage";
 import SoportePage from "@/pages/app/SoportePage";
+import FavoritosPage from "@/pages/app/FavoritosPage";
 
 // Admin pages
 import AdminHome from "@/pages/admin/AdminHome";

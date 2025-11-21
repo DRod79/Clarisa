@@ -496,6 +496,8 @@ const RecursosPage = () => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
+                      console.log('Click en favorito - recurso completo:', recurso);
+                      console.log('ID del recurso:', recurso.id);
                       toggleFavorito(recurso.id);
                     }}
                     className="absolute top-2 left-2 bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-2 transition-all duration-200 transform hover:scale-110"

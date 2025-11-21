@@ -583,6 +583,14 @@ api_router.include_router(usuarios_admin_router, tags=["usuarios-admin"])
 from reportes_admin import router as reportes_router
 api_router.include_router(reportes_router, tags=["reportes-admin"])
 
+# Import gamificacion router
+from gamificacion import router as gamificacion_router
+api_router.include_router(gamificacion_router, tags=["gamificacion"])
+
+# Import favoritos router
+from favoritos import router as favoritos_router
+api_router.include_router(favoritos_router, tags=["favoritos"])
+
 # Include the router in the main app
 app.include_router(api_router)
 

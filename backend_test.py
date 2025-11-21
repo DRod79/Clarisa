@@ -1020,17 +1020,17 @@ def test_admin_usuarios_get_nonexistent():
         return False
 
 def main():
-    """Run all tests for Clarisa Client Module and Admin Statistics"""
-    print("=" * 70)
-    print("🚀 CLARISA - Backend API Testing (Client Module + Admin Statistics)")
-    print("=" * 70)
+    """Run all tests for Clarisa Client Module, Admin Statistics, and User Management"""
+    print("=" * 80)
+    print("🚀 CLARISA - Backend API Testing (Client Module + Admin Statistics + User Management)")
+    print("=" * 80)
     
     # Test API health first
     if not test_api_health():
         print("\n❌ API health check failed. Cannot proceed with tests.")
         sys.exit(1)
     
-    print("\n" + "=" * 70)
+    print("\n" + "=" * 80)
     
     # Try login with admin credentials first
     user_id = login_user(ADMIN_EMAIL, ADMIN_PASSWORD)
@@ -1055,7 +1055,17 @@ def main():
         'admin_estadisticas_general': False,
         'admin_estadisticas_recursos': False,
         'admin_estadisticas_soporte': False,
-        'admin_estadisticas_actividad': False
+        'admin_estadisticas_actividad': False,
+        'admin_usuarios_list': False,
+        'admin_usuarios_list_filters': False,
+        'admin_usuarios_get_user': False,
+        'admin_usuarios_update_user': False,
+        'admin_usuarios_update_invalid_role': False,
+        'admin_usuarios_cambiar_plan': False,
+        'admin_usuarios_cambiar_plan_invalid': False,
+        'admin_usuarios_desactivar_user': False,
+        'admin_usuarios_reactivar_user': False,
+        'admin_usuarios_get_nonexistent': False
     }
     
     ticket_id = None

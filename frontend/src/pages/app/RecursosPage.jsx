@@ -40,8 +40,66 @@ const RecursosPage = () => {
     if (userData?.id) {
       fetchRecursos();
       fetchStats();
+      fetchFavoritos();
     }
   }, [userData, filterTipo, filterCategoria, filterFase]);
+
+  const fetchFavoritos = async () => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/favoritos/${userData.id}`);
+      if (response.ok) {
+        const data = await response.json();
+        const favIds = new Set(data.favoritos.map(f => f.id));
+        setFavoritos(favIds);
+      }
+    } catch (error) {
+      console.error('Error al cargar favoritos:', error);
+    }
+  };
+
+  const toggleFavorito = async (recursoId) => {
+    try {
+      const esFavorito = favoritos.has(recursoId);
+      
+      if (esFavorito) {
+        // Quitar de favoritos
+        const response = await fetch(
+          `${BACKEND_URL}/api/favoritos/${userData.id}/${recursoId}`,
+          { method: 'DELETE' }
+        );
+        
+        if (response.ok) {
+          const newFavoritos = new Set(favoritos);
+          newFavoritos.delete(recursoId);
+          setFavoritos(newFavoritos);
+          toast.success('Quitado de favoritos');
+        }
+      } else {
+        // Agregar a favoritos
+        const response = await fetch(
+          `${BACKEND_URL}/api/favoritos`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: userData.id,
+              recurso_id: recursoId
+            })
+          }
+        );
+        
+        if (response.ok) {
+          const newFavoritos = new Set(favoritos);
+          newFavoritos.add(recursoId);
+          setFavoritos(newFavoritos);
+          toast.success('Agregado a favoritos');
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Error al actualizar favoritos');
+    }
+  };
 
   const fetchRecursos = async () => {
     try {

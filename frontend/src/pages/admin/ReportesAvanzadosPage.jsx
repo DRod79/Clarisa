@@ -50,23 +50,90 @@ const ReportesAvanzadosPage = () => {
     }
   };
 
-  const descargarReporte = async (tipo) => {
+  const generarVistaPrevia = async () => {
+    try {
+      setLoading(true);
+      setPrevisualizacion(null);
+      setMostrandoPreview(false);
+      
+      let url = '';
+      let endpoint = '';
+      
+      // Construir URL según tipo de reporte
+      if (tipoReporte === 'usuarios') {
+        endpoint = `${BACKEND_URL}/api/admin/usuarios?limit=100`;
+        if (filtrosAdicionales.rol) endpoint += `&rol=${filtrosAdicionales.rol}`;
+        if (filtrosAdicionales.plan) endpoint += `&plan=${filtrosAdicionales.plan}`;
+        if (fechaDesde) endpoint += `&fecha_desde=${fechaDesde}`;
+        if (fechaHasta) endpoint += `&fecha_hasta=${fechaHasta}`;
+      } else if (tipoReporte === 'recursos') {
+        endpoint = `${BACKEND_URL}/api/admin/reportes/recursos/export?formato=json`;
+        if (filtrosAdicionales.tipo) endpoint += `&tipo=${filtrosAdicionales.tipo}`;
+        if (filtrosAdicionales.fase) endpoint += `&fase=${filtrosAdicionales.fase}`;
+        if (filtrosAdicionales.acceso) endpoint += `&acceso=${filtrosAdicionales.acceso}`;
+      } else if (tipoReporte === 'tickets') {
+        endpoint = `${BACKEND_URL}/api/admin/reportes/tickets/export?formato=json`;
+        if (filtrosAdicionales.estado) endpoint += `&estado=${filtrosAdicionales.estado}`;
+        if (filtrosAdicionales.prioridad) endpoint += `&prioridad=${filtrosAdicionales.prioridad}`;
+        if (filtrosAdicionales.categoria) endpoint += `&categoria=${filtrosAdicionales.categoria}`;
+        if (fechaDesde) endpoint += `&fecha_desde=${fechaDesde}`;
+        if (fechaHasta) endpoint += `&fecha_hasta=${fechaHasta}`;
+      }
+      
+      const response = await fetch(endpoint);
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Formatear datos según el tipo
+        let datosFormateados = [];
+        if (tipoReporte === 'usuarios') {
+          datosFormateados = (data.usuarios || []).map(u => ({
+            Email: u.email,
+            Nombre: u.nombre_completo || 'N/A',
+            Organización: u.organizacion || 'N/A',
+            Rol: u.rol,
+            Plan: u.plan_actual,
+            Estado: u.suscripcion_activa ? 'Activo' : 'Inactivo',
+            Registro: new Date(u.created_at).toLocaleDateString('es-ES')
+          }));
+        }
+        
+        setPrevisualizacion({
+          tipo: tipoReporte,
+          datos: datosFormateados,
+          total: datosFormateados.length
+        });
+        setMostrandoPreview(true);
+        toast.success(`${datosFormateados.length} registros cargados`);
+      } else {
+        toast.error('Error al cargar vista previa');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Error de conexión');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const descargarReporte = async () => {
     try {
       setLoading(true);
       
-      let url = `${BACKEND_URL}/api/admin/reportes/${tipo}/export?formato=csv`;
+      let url = `${BACKEND_URL}/api/admin/reportes/${tipoReporte}/export?formato=csv`;
       
       // Agregar filtros según el tipo de reporte
-      if (tipo === 'usuarios') {
+      if (tipoReporte === 'usuarios') {
         if (filtrosAdicionales.rol) url += `&rol=${filtrosAdicionales.rol}`;
         if (filtrosAdicionales.plan) url += `&plan=${filtrosAdicionales.plan}`;
         if (fechaDesde) url += `&fecha_desde=${fechaDesde}`;
         if (fechaHasta) url += `&fecha_hasta=${fechaHasta}`;
-      } else if (tipo === 'recursos') {
+      } else if (tipoReporte === 'recursos') {
         if (filtrosAdicionales.tipo) url += `&tipo=${filtrosAdicionales.tipo}`;
         if (filtrosAdicionales.fase) url += `&fase=${filtrosAdicionales.fase}`;
         if (filtrosAdicionales.acceso) url += `&acceso=${filtrosAdicionales.acceso}`;
-      } else if (tipo === 'tickets') {
+      } else if (tipoReporte === 'tickets') {
         if (filtrosAdicionales.estado) url += `&estado=${filtrosAdicionales.estado}`;
         if (filtrosAdicionales.prioridad) url += `&prioridad=${filtrosAdicionales.prioridad}`;
         if (filtrosAdicionales.categoria) url += `&categoria=${filtrosAdicionales.categoria}`;
@@ -81,7 +148,7 @@ const ReportesAvanzadosPage = () => {
         const downloadUrl = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = downloadUrl;
-        a.download = `reporte_${tipo}_${Date.now()}.csv`;
+        a.download = `reporte_${tipoReporte}_${Date.now()}.csv`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

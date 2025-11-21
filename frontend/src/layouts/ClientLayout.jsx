@@ -40,7 +40,6 @@ const ClientLayout = ({ children }) => {
     { name: 'Mi Progreso', href: '/app/mi-progreso', icon: TrendingUp },
     { name: 'Roadmap', href: '/app/roadmap', icon: Map },
     { name: 'Recursos', href: '/app/recursos', icon: BookOpen },
-    { name: 'Favoritos', href: '/app/favoritos', icon: Heart },
     { name: 'Ayuda', href: '/app/ayuda', icon: HelpCircle },
     { name: 'Soporte', href: '/app/soporte', icon: MessageSquare },
   ];

@@ -442,6 +442,20 @@ const RecursosPage = () => {
           >
             Todas las fases
           </button>
+          
+          {/* Botón Mis Favoritos */}
+          <button
+            onClick={() => setMostrarSoloFavoritos(!mostrarSoloFavoritos)}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
+              mostrarSoloFavoritos 
+                ? 'bg-red-500 text-white' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            <Heart className={`w-4 h-4 ${mostrarSoloFavoritos ? 'fill-white' : ''}`} />
+            Mis Favoritos {favoritos.size > 0 && `(${favoritos.size})`}
+          </button>
+          
           {[1, 2, 3, 4, 5].map(fase => {
             const esFaseGratuita = fase === 1;
             const tieneAcceso = userData?.rol === 'admin' || userData?.rol === 'cliente_pagado' || esFaseGratuita;

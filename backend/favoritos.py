@@ -76,34 +76,23 @@ async def obtener_favoritos(user_id: str):
             
             print(f"[FAVORITOS] Recursos encontrados: {len(recursos)}")
             
-            print(f"[FAVORITOS] Status de recursos: {recursos_response.status_code}")
+            # Combinar datos
+            favoritos_completos = []
+            for fav in favoritos:
+                recurso = next((r for r in recursos if r['id'] == fav['recurso_id']), None)
+                if recurso:
+                    favoritos_completos.append({
+                        'favorito_id': fav.get('id'),
+                        'agregado_at': fav.get('created_at'),
+                        **recurso
+                    })
             
-            if recursos_response.status_code == 200:
-                recursos = recursos_response.json()
-                print(f"[FAVORITOS] Recursos encontrados: {len(recursos)}")
-                
-                # Combinar datos
-                favoritos_completos = []
-                for fav in favoritos:
-                    recurso = next((r for r in recursos if r['id'] == fav['recurso_id']), None)
-                    if recurso:
-                        favoritos_completos.append({
-                            'favorito_id': fav.get('id'),
-                            'agregado_at': fav.get('created_at'),
-                            **recurso
-                        })
-                
-                print(f"[FAVORITOS] Favoritos completos: {len(favoritos_completos)}")
-                
-                return {
-                    'favoritos': favoritos_completos,
-                    'total': len(favoritos_completos)
-                }
-            else:
-                return {
-                    'favoritos': [],
-                    'total': 0
-                }
+            print(f"[FAVORITOS] Favoritos completos: {len(favoritos_completos)}")
+            
+            return {
+                'favoritos': favoritos_completos,
+                'total': len(favoritos_completos)
+            }
         else:
             # Si la tabla no existe, retornar vacío
             return {

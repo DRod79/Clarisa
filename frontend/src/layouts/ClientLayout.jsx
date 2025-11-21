@@ -17,6 +17,7 @@ import {
   Map,
   HelpCircle,
   MessageSquare,
+  Heart,
 } from 'lucide-react';
 
 const ClientLayout = ({ children }) => {

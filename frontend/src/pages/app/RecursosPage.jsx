@@ -71,6 +71,7 @@ const RecursosPage = () => {
         const newFavoritos = new Set(favoritos);
         newFavoritos.delete(recursoId);
         setFavoritos(newFavoritos);
+        setRenderKey(prev => prev + 1); // Forzar re-render
         
         // Luego hacer la llamada al backend
         const response = await fetch(
@@ -84,6 +85,7 @@ const RecursosPage = () => {
         } else {
           // Revertir si falla
           setFavoritos(favoritos);
+          setRenderKey(prev => prev + 1);
           toast.error('Error al quitar de favoritos');
         }
       } else {
@@ -91,6 +93,7 @@ const RecursosPage = () => {
         const newFavoritos = new Set(favoritos);
         newFavoritos.add(recursoId);
         setFavoritos(newFavoritos);
+        setRenderKey(prev => prev + 1); // Forzar re-render
         console.log('Nuevos favoritos:', Array.from(newFavoritos));
         
         // Luego hacer la llamada al backend
@@ -115,6 +118,7 @@ const RecursosPage = () => {
         } else {
           // Revertir si falla
           setFavoritos(favoritos);
+          setRenderKey(prev => prev + 1);
           toast.error('Error al agregar a favoritos');
         }
       }

@@ -52,9 +52,12 @@ async def obtener_favoritos(user_id: str):
             
             # Obtener información completa de los recursos
             recurso_ids = [f.get('recurso_id') for f in favoritos]
+            print(f"[FAVORITOS] IDs de recursos a buscar: {recurso_ids}")
             
             # Construir query para obtener recursos
             recursos_query = ','.join([f'"{rid}"' for rid in recurso_ids])
+            print(f"[FAVORITOS] Query para recursos: id=in.({recursos_query})")
+            
             recursos_response = requests.get(
                 f"{SUPABASE_URL}/rest/v1/recursos?id=in.({recursos_query})",
                 headers={
@@ -64,8 +67,11 @@ async def obtener_favoritos(user_id: str):
                 timeout=10
             )
             
+            print(f"[FAVORITOS] Status de recursos: {recursos_response.status_code}")
+            
             if recursos_response.status_code == 200:
                 recursos = recursos_response.json()
+                print(f"[FAVORITOS] Recursos encontrados: {len(recursos)}")
                 
                 # Combinar datos
                 favoritos_completos = []
@@ -77,6 +83,8 @@ async def obtener_favoritos(user_id: str):
                             'agregado_at': fav.get('created_at'),
                             **recurso
                         })
+                
+                print(f"[FAVORITOS] Favoritos completos: {len(favoritos_completos)}")
                 
                 return {
                     'favoritos': favoritos_completos,

@@ -114,6 +114,14 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+            <Route 
+              path="/app/favoritos" 
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'cliente_pagado', 'cliente_gratuito']}>
+                  <FavoritosPage />
+                </ProtectedRoute>
+              } 
+            />
             
             {/* Admin routes - protected */}
             <Route 

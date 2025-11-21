@@ -9,7 +9,8 @@ import {
   Filter,
   TrendingUp,
   BarChart3,
-  PieChart
+  PieChart,
+  Eye
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';

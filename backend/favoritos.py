@@ -116,6 +116,8 @@ async def agregar_favorito(datos: AgregarFavorito):
     Agrega un recurso a favoritos
     """
     try:
+        print(f"[FAVORITOS POST] Agregando favorito - user_id: {datos.user_id}, recurso_id: {datos.recurso_id}")
+        
         # Verificar si ya está en favoritos
         try:
             check_response = requests.get(
@@ -127,14 +129,18 @@ async def agregar_favorito(datos: AgregarFavorito):
                 timeout=10
             )
             
+            print(f"[FAVORITOS POST] Check existing status: {check_response.status_code}")
+            
             if check_response.status_code == 200:
                 existing = check_response.json()
+                print(f"[FAVORITOS POST] Existing: {existing}")
                 if existing:
                     return {
                         'message': 'El recurso ya está en favoritos',
                         'agregado': False
                     }
-        except:
+        except Exception as e:
+            print(f"[FAVORITOS POST] Error checking existing: {e}")
             pass
         
         # Agregar a favoritos

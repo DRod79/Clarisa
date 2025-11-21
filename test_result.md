@@ -287,75 +287,93 @@ backend:
 
   - task: "Usuarios Admin API - GET /api/admin/usuarios"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/usuarios_admin.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint implementado para listar todos los usuarios con filtros opcionales (rol, plan, search). Permite paginación con limit/offset. Excluye password_hash de respuestas. Necesita testing exhaustivo."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint GET /api/admin/usuarios funciona perfectamente. Retorna estructura JSON correcta con campos 'usuarios', 'total', 'limit', 'offset'. Filtros funcionan: rol=admin (2 usuarios), search='admin' (1 usuario). Seguridad verificada: NO incluye password_hash en respuestas. Paginación funcional. Status 200. Datos reales: 6 usuarios totales (2 admin, 4 gratuito)."
 
   - task: "Usuarios Admin API - GET /api/admin/usuarios/{user_id}"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/usuarios_admin.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint para obtener detalles completos de un usuario específico. Excluye password_hash de respuesta. Necesita testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint GET /api/admin/usuarios/{user_id} funciona correctamente. Retorna detalles completos del usuario con campos requeridos (id, email, nombre_completo, rol, plan_actual). Seguridad verificada: NO incluye password_hash. Status 200 para usuarios existentes, 404 para no existentes. Validación UUID correcta."
 
   - task: "Usuarios Admin API - PATCH /api/admin/usuarios/{user_id}"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/usuarios_admin.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint para actualizar información del usuario (nombre, organización, rol, plan, país, puesto, teléfono). Valida roles válidos. Necesita testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint PATCH /api/admin/usuarios/{user_id} funciona excelentemente. Actualiza campos correctamente (nombre_completo, organizacion). Validaciones funcionan: roles válidos (admin, cliente_pagado, cliente_gratuito), status 400 para roles inválidos. Retorna mensaje de éxito y usuario actualizado. Status 200. Timestamp updated_at se actualiza automáticamente."
 
   - task: "Usuarios Admin API - PATCH /api/admin/usuarios/{user_id}/cambiar-plan"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/usuarios_admin.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint para cambiar plan de suscripción del usuario. Actualiza automáticamente el rol según el plan. Valida planes válidos. Necesita testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint PATCH /api/admin/usuarios/{user_id}/cambiar-plan funciona perfectamente. Cambia plan correctamente (gratuito, basico, pro). LÓGICA DE NEGOCIO VERIFICADA: actualiza automáticamente el rol según el plan (basico/pro → cliente_pagado, gratuito → cliente_gratuito). Validaciones funcionan: status 400 para planes inválidos. Status 200. Cambios persisten en BD."
 
   - task: "Usuarios Admin API - DELETE /api/admin/usuarios/{user_id}"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/usuarios_admin.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint para desactivar usuario (soft delete). No permite desactivar el último admin. Marca suscripcion_activa como false. Necesita testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint DELETE /api/admin/usuarios/{user_id} funciona correctamente. Realiza soft delete marcando suscripcion_activa=false. VALIDACIÓN DE NEGOCIO: previene desactivar último admin (status 400). Status 200 para desactivación exitosa. Retorna mensaje de confirmación y user_id. No elimina registro físicamente."
 
   - task: "Usuarios Admin API - POST /api/admin/usuarios/{user_id}/reactivar"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/usuarios_admin.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint para reactivar usuario desactivado. Marca suscripcion_activa como true. Necesita testing."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTING COMPLETADO: Endpoint POST /api/admin/usuarios/{user_id}/reactivar funciona perfectamente. Reactiva usuario marcando suscripcion_activa=true. Status 200 para reactivación exitosa, 404 para usuario no existente. Retorna mensaje de confirmación y user_id. Timestamp updated_at se actualiza automáticamente."
 
 metadata:
   created_by: "main_agent"

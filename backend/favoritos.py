@@ -55,11 +55,16 @@ async def obtener_favoritos(user_id: str):
             print(f"[FAVORITOS] IDs de recursos a buscar: {recurso_ids}")
             
             # Obtener recursos uno por uno para asegurar compatibilidad
+            print(f"[FAVORITOS] Iniciando búsqueda de {len(recurso_ids)} recursos")
             recursos = []
-            for recurso_id in recurso_ids:
+            for i, recurso_id in enumerate(recurso_ids):
                 try:
+                    print(f"[FAVORITOS] Buscando recurso {i+1}/{len(recurso_ids)}: {recurso_id}")
+                    url = f"{SUPABASE_URL}/rest/v1/recursos?id=eq.{recurso_id}"
+                    print(f"[FAVORITOS] URL: {url}")
+                    
                     recursos_response = requests.get(
-                        f"{SUPABASE_URL}/rest/v1/recursos?id=eq.{recurso_id}",
+                        url,
                         headers={
                             'apikey': SUPABASE_KEY,
                             'Authorization': f'Bearer {SUPABASE_KEY}'
@@ -67,14 +72,20 @@ async def obtener_favoritos(user_id: str):
                         timeout=10
                     )
                     
+                    print(f"[FAVORITOS] Status para {recurso_id}: {recursos_response.status_code}")
+                    
                     if recursos_response.status_code == 200:
                         found = recursos_response.json()
+                        print(f"[FAVORITOS] Datos recibidos: {found}")
                         if found:
                             recursos.extend(found)
+                            print(f"[FAVORITOS] Recurso agregado, total ahora: {len(recursos)}")
                 except Exception as e:
-                    print(f"[FAVORITOS] Error buscando recurso {recurso_id}: {e}")
+                    print(f"[FAVORITOS] ERROR buscando recurso {recurso_id}: {str(e)}")
+                    import traceback
+                    print(f"[FAVORITOS] Traceback: {traceback.format_exc()}")
             
-            print(f"[FAVORITOS] Recursos encontrados: {len(recursos)}")
+            print(f"[FAVORITOS] Total recursos encontrados: {len(recursos)}")
             
             # Combinar datos
             favoritos_completos = []

@@ -34,6 +34,7 @@ const RecursosPage = () => {
   const [filterCategoria, setFilterCategoria] = useState('all');
   const [filterFase, setFilterFase] = useState('all');
   const [recursoSeleccionado, setRecursoSeleccionado] = useState(null);
+  const [favoritos, setFavoritos] = useState(new Set());
 
   useEffect(() => {
     if (userData?.id) {

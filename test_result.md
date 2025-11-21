@@ -382,7 +382,8 @@ metadata:
   run_ui: true
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Mis Favoritos functionality in RecursosPage"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"

@@ -152,6 +152,10 @@ async def exportar_recursos(
         if response.status_code == 200:
             recursos = response.json()
             
+            # Si formato es JSON, retornar directamente
+            if formato == "json":
+                return recursos
+            
             # Definir columnas para el CSV
             columnas = [
                 'id', 'titulo', 'descripcion', 'tipo', 'fase', 'acceso',

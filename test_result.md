@@ -388,6 +388,18 @@ test_plan:
   test_priority: "high_first"
 
 frontend:
+  - task: "Mis Favoritos functionality in RecursosPage"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/pages/app/RecursosPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "user"
+          comment: "Nueva funcionalidad 'Mis Favoritos' implementada en RecursosPage. Incluye: 1) Botón de filtro 'Mis Favoritos' con ícono de corazón y contador, 2) Funcionalidad para agregar/quitar favoritos con corazón en cada tarjeta, 3) Filtrado de recursos por favoritos, 4) Integración con otros filtros de fase, 5) Persistencia de favoritos al recargar página. Necesita testing exhaustivo de todas las funcionalidades."
+
   - task: "NotificacionesDropdown integration in ClientLayout"
     implemented: true
     working: true

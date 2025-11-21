@@ -63,22 +63,36 @@ const RecursosPage = () => {
   const toggleFavorito = async (recursoId) => {
     try {
       const esFavorito = favoritos.has(recursoId);
+      console.log('Toggle favorito:', recursoId, 'Es favorito:', esFavorito);
       
       if (esFavorito) {
-        // Quitar de favoritos
+        // Primero actualizar UI optimísticamente
+        const newFavoritos = new Set(favoritos);
+        newFavoritos.delete(recursoId);
+        setFavoritos(newFavoritos);
+        
+        // Luego hacer la llamada al backend
         const response = await fetch(
           `${BACKEND_URL}/api/favoritos/${userData.id}/${recursoId}`,
           { method: 'DELETE' }
         );
         
         if (response.ok) {
-          const newFavoritos = new Set(favoritos);
-          newFavoritos.delete(recursoId);
-          setFavoritos(newFavoritos);
           toast.success('Quitado de favoritos');
+          console.log('Favorito quitado exitosamente');
+        } else {
+          // Revertir si falla
+          setFavoritos(favoritos);
+          toast.error('Error al quitar de favoritos');
         }
       } else {
-        // Agregar a favoritos
+        // Primero actualizar UI optimísticamente
+        const newFavoritos = new Set(favoritos);
+        newFavoritos.add(recursoId);
+        setFavoritos(newFavoritos);
+        console.log('Nuevos favoritos:', Array.from(newFavoritos));
+        
+        // Luego hacer la llamada al backend
         const response = await fetch(
           `${BACKEND_URL}/api/favoritos`,
           {
@@ -91,16 +105,23 @@ const RecursosPage = () => {
           }
         );
         
+        const data = await response.json();
+        console.log('Respuesta del servidor:', data);
+        
         if (response.ok) {
-          const newFavoritos = new Set(favoritos);
-          newFavoritos.add(recursoId);
-          setFavoritos(newFavoritos);
           toast.success('Agregado a favoritos');
+          console.log('Favorito agregado exitosamente');
+        } else {
+          // Revertir si falla
+          setFavoritos(favoritos);
+          toast.error('Error al agregar a favoritos');
         }
       }
     } catch (error) {
       console.error('Error:', error);
       toast.error('Error al actualizar favoritos');
+      // Revertir cambios
+      setFavoritos(favoritos);
     }
   };
 

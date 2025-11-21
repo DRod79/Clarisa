@@ -37,7 +37,7 @@ const AdminLayout = ({ children }) => {
     { name: 'Usuarios', href: '/admin/usuarios', icon: Users },
     { name: 'Recursos', href: '/admin/recursos', icon: FileText },
     { name: 'Estadísticas', href: '/admin/reportes', icon: Package },
-    { name: 'Exportar', href: '/admin/reportes-avanzados', icon: Download },
+    { name: 'Reportes Avanzados', href: '/admin/reportes-avanzados', icon: Download },
   ];
 
   const isActive = (path) => location.pathname === path;

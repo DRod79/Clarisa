@@ -102,6 +102,9 @@ const MiProgresoPage = () => {
           </p>
         </div>
 
+        {/* Panel de Logros y Gamificación */}
+        <LogrosPanel />
+
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-white rounded-lg shadow p-6">

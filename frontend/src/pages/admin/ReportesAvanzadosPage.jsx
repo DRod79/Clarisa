@@ -88,6 +88,7 @@ const ReportesAvanzadosPage = () => {
         
         // Formatear datos según el tipo
         let datosFormateados = [];
+        
         if (tipoReporte === 'usuarios') {
           datosFormateados = (data.usuarios || []).map(u => ({
             Email: u.email,
@@ -97,6 +98,25 @@ const ReportesAvanzadosPage = () => {
             Plan: u.plan_actual,
             Estado: u.suscripcion_activa ? 'Activo' : 'Inactivo',
             Registro: new Date(u.created_at).toLocaleDateString('es-ES')
+          }));
+        } else if (tipoReporte === 'recursos') {
+          datosFormateados = (data || []).map(r => ({
+            Título: r.titulo,
+            Tipo: r.tipo,
+            Fase: r.fase,
+            Acceso: r.acceso,
+            Vistas: r.vistas || 0,
+            Descargas: r.descargas || 0,
+            Creado: new Date(r.created_at).toLocaleDateString('es-ES')
+          }));
+        } else if (tipoReporte === 'tickets') {
+          datosFormateados = (data || []).map(t => ({
+            Asunto: t.asunto,
+            Categoría: t.categoria,
+            Estado: t.estado,
+            Prioridad: t.prioridad,
+            Usuario: t.user_id?.substring(0, 8) + '...',
+            Creado: new Date(t.created_at).toLocaleDateString('es-ES')
           }));
         }
         

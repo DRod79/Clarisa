@@ -382,13 +382,7 @@ metadata:
   run_ui: true
 
 test_plan:
-  current_focus:
-    - "Usuarios Admin API - GET /api/admin/usuarios"
-    - "Usuarios Admin API - GET /api/admin/usuarios/{user_id}"
-    - "Usuarios Admin API - PATCH /api/admin/usuarios/{user_id}"
-    - "Usuarios Admin API - PATCH /api/admin/usuarios/{user_id}/cambiar-plan"
-    - "Usuarios Admin API - DELETE /api/admin/usuarios/{user_id}"
-    - "Usuarios Admin API - POST /api/admin/usuarios/{user_id}/reactivar"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"

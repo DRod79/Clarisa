@@ -482,24 +482,34 @@ const ReportesAvanzadosPage = () => {
               {renderFiltrosAdicionales()}
             </div>
 
-            {/* Botón de Descarga */}
+            {/* Botones de Acción */}
             <div className="flex items-center justify-end gap-4 pt-4 border-t">
               <Button
-                onClick={() => descargarReporte(tipoReporte)}
+                onClick={generarVistaPrevia}
                 disabled={loading}
-                className="bg-[#4CAF50] hover:bg-[#45a049] text-white"
+                variant="outline"
+                className="border-[#4CAF50] text-[#4CAF50] hover:bg-green-50"
               >
                 {loading ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
-                    Generando...
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#4CAF50] border-t-transparent mr-2"></div>
+                    Cargando...
                   </>
                 ) : (
                   <>
-                    <Download className="w-4 h-4 mr-2" />
-                    Descargar CSV
+                    <Eye className="w-4 h-4 mr-2" />
+                    Ver Datos
                   </>
                 )}
+              </Button>
+              
+              <Button
+                onClick={descargarReporte}
+                disabled={loading || !mostrandoPreview}
+                className="bg-[#4CAF50] hover:bg-[#45a049] text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Descargar CSV
               </Button>
             </div>
           </div>

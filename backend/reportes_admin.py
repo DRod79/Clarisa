@@ -78,6 +78,10 @@ async def exportar_usuarios(
         if response.status_code == 200:
             usuarios = response.json()
             
+            # Si formato es JSON, retornar directamente
+            if formato == "json":
+                return usuarios
+            
             # Definir columnas para el CSV
             columnas = [
                 'id', 'email', 'nombre_completo', 'organizacion', 'rol', 

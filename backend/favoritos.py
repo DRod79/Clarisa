@@ -150,6 +150,8 @@ async def agregar_favorito(datos: AgregarFavorito):
             'created_at': datetime.now().isoformat()
         }
         
+        print(f"[FAVORITOS POST] Datos a insertar: {favorito_data}")
+        
         try:
             response = requests.post(
                 f"{SUPABASE_URL}/rest/v1/recursos_favoritos",
@@ -163,18 +165,23 @@ async def agregar_favorito(datos: AgregarFavorito):
                 timeout=10
             )
             
+            print(f"[FAVORITOS POST] Insert status: {response.status_code}")
+            print(f"[FAVORITOS POST] Insert response: {response.text}")
+            
             if response.status_code == 201:
                 return {
                     'message': 'Recurso agregado a favoritos',
                     'agregado': True
                 }
             else:
+                print(f"[FAVORITOS POST] Error al insertar: {response.status_code} - {response.text}")
                 raise HTTPException(
                     status_code=response.status_code,
                     detail=f"Error al agregar favorito: {response.text}"
                 )
         except Exception as e:
             # Si la tabla no existe
+            print(f"[FAVORITOS POST] Exception: {e}")
             return {
                 'message': 'Sistema de favoritos no disponible',
                 'agregado': False

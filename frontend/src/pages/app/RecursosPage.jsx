@@ -35,6 +35,7 @@ const RecursosPage = () => {
   const [filterFase, setFilterFase] = useState('all');
   const [recursoSeleccionado, setRecursoSeleccionado] = useState(null);
   const [favoritos, setFavoritos] = useState(new Set());
+  const [, setRenderKey] = useState(0);
 
   useEffect(() => {
     if (userData?.id) {

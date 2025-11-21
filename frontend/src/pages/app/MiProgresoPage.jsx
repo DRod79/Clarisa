@@ -15,6 +15,7 @@ import {
 import { Button } from '@/components/ui/button';
 import ProgresoTracker from '@/components/progreso/ProgresoTracker';
 import TimelineDetallado from '@/components/progreso/TimelineDetallado';
+import LogrosPanel from '@/components/LogrosPanel';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;

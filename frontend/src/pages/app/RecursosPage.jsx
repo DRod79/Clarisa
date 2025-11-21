@@ -33,6 +33,7 @@ const RecursosPage = () => {
   const [filterTipo, setFilterTipo] = useState('all');
   const [filterCategoria, setFilterCategoria] = useState('all');
   const [filterFase, setFilterFase] = useState('all');
+  const [mostrarSoloFavoritos, setMostrarSoloFavoritos] = useState(false);
   const [recursoSeleccionado, setRecursoSeleccionado] = useState(null);
   const [favoritos, setFavoritos] = useState(new Set());
   const [, setRenderKey] = useState(0);

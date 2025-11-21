@@ -24,6 +24,7 @@ const ReportesAvanzadosPage = () => {
   const [resumen, setResumen] = useState(null);
   const [loading, setLoading] = useState(false);
   const [previsualizacion, setPrevisualizacion] = useState(null);
+  const [mostrandoPreview, setMostrandoPreview] = useState(false);
 
   useEffect(() => {
     cargarResumen();

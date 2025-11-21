@@ -575,6 +575,10 @@ api_router.include_router(ayuda_router, tags=["ayuda"])
 from estadisticas_admin import router as estadisticas_router
 api_router.include_router(estadisticas_router, tags=["estadisticas-admin"])
 
+# Import usuarios admin router
+from usuarios_admin import router as usuarios_admin_router
+api_router.include_router(usuarios_admin_router, tags=["usuarios-admin"])
+
 # Include the router in the main app
 app.include_router(api_router)
 

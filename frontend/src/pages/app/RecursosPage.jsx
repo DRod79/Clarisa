@@ -312,7 +312,11 @@ const RecursosPage = () => {
     const matchSearch = item.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
                        item.descripcion?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                        item.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    return matchSearch;
+    
+    // Filtrar por favoritos si está activo
+    const matchFavoritos = !mostrarSoloFavoritos || favoritos.has(item.id);
+    
+    return matchSearch && matchFavoritos;
   });
 
   if (loading) {

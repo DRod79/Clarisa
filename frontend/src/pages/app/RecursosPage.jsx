@@ -18,6 +18,7 @@ import {
   TrendingUp,
   Play,
   File,
+  Heart,
 } from 'lucide-react';
 import { toast } from 'sonner';
 

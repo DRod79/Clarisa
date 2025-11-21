@@ -1000,10 +1000,12 @@ def test_admin_usuarios_reactivar_user(user_id):
 
 def test_admin_usuarios_get_nonexistent():
     """Test GET /api/admin/usuarios/{user_id} with non-existent user"""
-    print(f"\n🧪 Testing GET /api/admin/usuarios/nonexistent-id...")
+    # Use a valid UUID format that doesn't exist
+    fake_uuid = "00000000-0000-0000-0000-000000000000"
+    print(f"\n🧪 Testing GET /api/admin/usuarios/{fake_uuid}...")
     
     try:
-        response = requests.get(f"{API_BASE}/admin/usuarios/nonexistent-id", timeout=30)
+        response = requests.get(f"{API_BASE}/admin/usuarios/{fake_uuid}", timeout=30)
         
         print(f"Status Code: {response.status_code}")
         

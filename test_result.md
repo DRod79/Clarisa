@@ -365,7 +365,12 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Dashboard Estadísticas Admin - Route /admin/reportes"
+    - "Usuarios Admin API - GET /api/admin/usuarios"
+    - "Usuarios Admin API - GET /api/admin/usuarios/{user_id}"
+    - "Usuarios Admin API - PATCH /api/admin/usuarios/{user_id}"
+    - "Usuarios Admin API - PATCH /api/admin/usuarios/{user_id}/cambiar-plan"
+    - "Usuarios Admin API - DELETE /api/admin/usuarios/{user_id}"
+    - "Usuarios Admin API - POST /api/admin/usuarios/{user_id}/reactivar"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"

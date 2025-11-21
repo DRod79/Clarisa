@@ -150,6 +150,12 @@ const RecursosPage = () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('✅ Recursos recibidos del backend:', data);
+        console.log('✅ Total de recursos:', data.length);
+        if (data.length > 0) {
+          console.log('✅ Primer recurso ID:', data[0].id);
+          console.log('✅ Primer recurso completo:', data[0]);
+        }
         setRecursos(data);
       } else {
         toast.error('Error al cargar recursos');

@@ -194,7 +194,7 @@ async def exportar_tickets(
     categoria: Optional[str] = Query(None),
     fecha_desde: Optional[str] = Query(None),
     fecha_hasta: Optional[str] = Query(None),
-    formato: str = Query("csv", regex="^(csv)$")
+    formato: str = Query("csv", regex="^(csv|json)$")
 ):
     """
     Exporta la lista de tickets de soporte a CSV con filtros opcionales

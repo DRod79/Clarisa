@@ -202,6 +202,16 @@ function App() {
               } 
             />
             
+            {/* Admin - Reportes Avanzados */}
+            <Route 
+              path="/admin/reportes-avanzados" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <ReportesAvanzadosPage />
+                </ProtectedRoute>
+              } 
+            />
+            
             {/* Catch all - redirect to home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

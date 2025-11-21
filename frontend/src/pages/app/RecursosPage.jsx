@@ -49,7 +49,10 @@ const RecursosPage = () => {
       const response = await fetch(`${BACKEND_URL}/api/favoritos/${userData.id}`);
       if (response.ok) {
         const data = await response.json();
-        const favIds = new Set(data.favoritos.map(f => f.id));
+        console.log('Favoritos cargados:', data);
+        // El backend retorna los recursos completos con su ID original
+        const favIds = new Set(data.favoritos.map(f => f.id || f.recurso_id));
+        console.log('IDs de favoritos:', Array.from(favIds));
         setFavoritos(favIds);
       }
     } catch (error) {

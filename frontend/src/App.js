@@ -191,6 +191,16 @@ function App() {
               } 
             />
             
+            {/* Admin - Usuarios */}
+            <Route 
+              path="/admin/usuarios" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <UsuariosAdminPage />
+                </ProtectedRoute>
+              } 
+            />
+            
             {/* Catch all - redirect to home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

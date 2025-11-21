@@ -119,7 +119,7 @@ async def exportar_recursos(
     tipo: Optional[str] = Query(None),
     fase: Optional[int] = Query(None),
     acceso: Optional[str] = Query(None),
-    formato: str = Query("csv", regex="^(csv)$")
+    formato: str = Query("csv", regex="^(csv|json)$")
 ):
     """
     Exporta la lista de recursos a CSV con filtros opcionales

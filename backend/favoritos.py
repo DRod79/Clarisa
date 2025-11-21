@@ -54,18 +54,27 @@ async def obtener_favoritos(user_id: str):
             recurso_ids = [f.get('recurso_id') for f in favoritos]
             print(f"[FAVORITOS] IDs de recursos a buscar: {recurso_ids}")
             
-            # Construir query para obtener recursos
-            recursos_query = ','.join([f'"{rid}"' for rid in recurso_ids])
-            print(f"[FAVORITOS] Query para recursos: id=in.({recursos_query})")
+            # Obtener recursos uno por uno para asegurar compatibilidad
+            recursos = []
+            for recurso_id in recurso_ids:
+                try:
+                    recursos_response = requests.get(
+                        f"{SUPABASE_URL}/rest/v1/recursos?id=eq.{recurso_id}",
+                        headers={
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': f'Bearer {SUPABASE_KEY}'
+                        },
+                        timeout=10
+                    )
+                    
+                    if recursos_response.status_code == 200:
+                        found = recursos_response.json()
+                        if found:
+                            recursos.extend(found)
+                except Exception as e:
+                    print(f"[FAVORITOS] Error buscando recurso {recurso_id}: {e}")
             
-            recursos_response = requests.get(
-                f"{SUPABASE_URL}/rest/v1/recursos?id=in.({recursos_query})",
-                headers={
-                    'apikey': SUPABASE_KEY,
-                    'Authorization': f'Bearer {SUPABASE_KEY}'
-                },
-                timeout=10
-            )
+            print(f"[FAVORITOS] Recursos encontrados: {len(recursos)}")
             
             print(f"[FAVORITOS] Status de recursos: {recursos_response.status_code}")
             

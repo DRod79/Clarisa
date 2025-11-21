@@ -58,12 +58,12 @@ Rol:      cliente_gratuito
 ## 🔍 Cómo Probar
 
 ### Prueba con Usuario Admin:
-1. Ir a: https://clarisa-sustain.preview.emergentagent.com/login
+1. Ir a: https://clarisa-app.preview.emergentagent.com/login
 2. Ingresar: admin@clarisa.com / admin123
 3. Explorar panel de administración y todas las funcionalidades
 
 ### Prueba con Usuario Cliente:
-1. Ir a: https://clarisa-sustain.preview.emergentagent.com/login
+1. Ir a: https://clarisa-app.preview.emergentagent.com/login
 2. Ingresar: cliente@test.com / pass123
 3. Explorar módulo de cliente (Dashboard, Roadmap, Ayuda, Soporte)
 4. Verificar restricciones de contenido pagado en Recursos
@@ -107,7 +107,7 @@ print(response.json())
 
 ### Probar login con curl:
 ```bash
-curl -X POST "https://clarisa-sustain.preview.emergentagent.com/api/auth/login" \
+curl -X POST "https://clarisa-app.preview.emergentagent.com/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email": "cliente@test.com", "password": "pass123"}'
 ```

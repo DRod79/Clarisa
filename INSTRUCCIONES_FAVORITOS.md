@@ -18,7 +18,7 @@ Esto creará las tablas:
 ## ✅ Cómo Agregar Recursos a Favoritos
 
 ### Paso 1: Login
-1. Ir a: https://clarisa-sustain.preview.emergentagent.com/login
+1. Ir a: https://clarisa-app.preview.emergentagent.com/login
 2. Usuario: `cliente@test.com`
 3. Password: `pass123`
 

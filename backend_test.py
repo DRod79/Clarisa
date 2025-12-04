@@ -17,7 +17,7 @@ API_BASE = f"{BACKEND_URL}/api"
 ADMIN_EMAIL = "admin@clarisa.com"
 ADMIN_PASSWORD = "admin123"
 CLIENT_EMAIL = "cliente@test.com"
-CLIENT_PASSWORD = "password123"
+CLIENT_PASSWORD = "pass123"
 
 def login_user(email, password):
     """Login and get user_id"""

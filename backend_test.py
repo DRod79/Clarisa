@@ -1180,7 +1180,7 @@ def test_admin_usuarios_get_nonexistent():
 def main():
     """Run all tests for Clarisa Client Module, Admin Statistics, and User Management"""
     print("=" * 80)
-    print("🚀 CLARISA - Backend API Testing (Client Module + Admin Statistics + User Management)")
+    print("🚀 CLARISA - Backend API Testing (Login Credentials Validation)")
     print("=" * 80)
     
     # Test API health first
@@ -1189,6 +1189,8 @@ def main():
         sys.exit(1)
     
     print("\n" + "=" * 80)
+    print("🔐 TESTING LOGIN CREDENTIALS VALIDATION")
+    print("=" * 80)
     
     # Try login with admin credentials first
     user_id = login_user(ADMIN_EMAIL, ADMIN_PASSWORD)

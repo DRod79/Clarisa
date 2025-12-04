@@ -1201,31 +1201,11 @@ def main():
         print("\n❌ Login failed. Cannot proceed with tests.")
         sys.exit(1)
     
-    # Track test results
+    # Track test results - Focus on login credential validation
     results = {
-        'notificaciones_stats': False,
-        'notificaciones_list': False,
-        'mark_notification_read': False,
-        'mark_all_notifications_read': False,
-        'faqs_list': False,
-        'faqs_search': False,
-        'create_ticket': False,
-        'get_tickets': False,
-        'get_ticket_detail': False,
-        'admin_estadisticas_general': False,
-        'admin_estadisticas_recursos': False,
-        'admin_estadisticas_soporte': False,
-        'admin_estadisticas_actividad': False,
-        'admin_usuarios_list': False,
-        'admin_usuarios_list_filters': False,
-        'admin_usuarios_get_user': False,
-        'admin_usuarios_update_user': False,
-        'admin_usuarios_update_invalid_role': False,
-        'admin_usuarios_cambiar_plan': False,
-        'admin_usuarios_cambiar_plan_invalid': False,
-        'admin_usuarios_desactivar_user': False,
-        'admin_usuarios_reactivar_user': False,
-        'admin_usuarios_get_nonexistent': False
+        'admin_login': False,
+        'client_login': False,
+        'invalid_credentials': False
     }
     
     ticket_id = None

@@ -397,8 +397,10 @@ metadata:
   run_ui: true
 
 test_plan:
-  current_focus: []
-  stuck_tasks: []
+  current_focus:
+    - "Login Credentials Validation - POST /api/auth/login"
+  stuck_tasks:
+    - "Login Credentials Validation - POST /api/auth/login"
   test_all: false
   test_priority: "high_first"
 

@@ -1220,7 +1220,7 @@ def main():
     
     # Summary
     print("\n" + "=" * 80)
-    print("📊 TEST RESULTS SUMMARY")
+    print("📊 LOGIN CREDENTIALS VALIDATION RESULTS")
     print("=" * 80)
     
     passed = sum(results.values())
@@ -1233,21 +1233,23 @@ def main():
     print(f"\n🎯 OVERALL: {passed}/{total} tests passed")
     
     if passed == total:
-        print("\n🎉 ALL TESTS PASSED!")
-        print("✅ Notificaciones API is working correctly")
-        print("✅ FAQs API is working correctly") 
-        print("✅ Tickets API is working correctly")
-        print("✅ Admin Statistics API is working correctly")
-        print("✅ Admin User Management API is working correctly")
-        print("✅ All endpoints respond with correct HTTP codes")
-        print("✅ JSON structures are consistent")
-        print("✅ Security validations working (no password_hash in responses)")
-        print("✅ Business logic validations working (role/plan validation)")
+        print("\n🎉 ALL LOGIN CREDENTIAL TESTS PASSED!")
+        print("✅ Admin credentials (admin@clarisa.com / admin123) working correctly")
+        print("✅ Client credentials (cliente@test.com / pass123) working correctly") 
+        print("✅ Invalid credentials properly rejected with 401")
+        print("✅ All login responses contain required fields (session_token, user, rol, email)")
+        print("✅ Role validation working correctly (admin vs cliente_gratuito)")
     else:
-        print(f"\n⚠️  {total - passed} TESTS FAILED!")
-        print("❌ Some endpoints have issues that need attention")
+        print(f"\n⚠️  {total - passed} LOGIN TESTS FAILED!")
+        print("❌ Some login credentials have issues that need attention")
         
-        # Don't exit with error code - report issues but let testing agent handle
+        # Show specific failures
+        if not results['admin_login']:
+            print("❌ Admin login (admin@clarisa.com / admin123) FAILED")
+        if not results['client_login']:
+            print("❌ Client login (cliente@test.com / pass123) FAILED")
+        if not results['invalid_credentials']:
+            print("❌ Invalid credentials test FAILED")
     
     print("=" * 80)
 

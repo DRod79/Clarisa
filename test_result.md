@@ -375,6 +375,21 @@ backend:
           agent: "testing"
           comment: "✅ TESTING COMPLETADO: Endpoint POST /api/admin/usuarios/{user_id}/reactivar funciona perfectamente. Reactiva usuario marcando suscripcion_activa=true. Status 200 para reactivación exitosa, 404 para usuario no existente. Retorna mensaje de confirmación y user_id. Timestamp updated_at se actualiza automáticamente."
 
+  - task: "Login Credentials Validation - POST /api/auth/login"
+    implemented: true
+    working: false
+    file: "backend/server.py, backend/auth.py"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "user"
+          comment: "Usuario solicita validación de credenciales de login para admin@clarisa.com/admin123 (rol: admin) y cliente@test.com/pass123 (rol: cliente_gratuito). Necesita testing de endpoint /api/auth/login con validaciones específicas: status 200, session_token presente, user con rol correcto, email correcto, y status 401 para credenciales incorrectas."
+        - working: false
+          agent: "testing"
+          comment: "❌ TESTING FALLIDO - PROBLEMA DE CONECTIVIDAD SUPABASE. No se pudieron validar las credenciales debido a error de DNS: 'Failed to resolve sgmguxorpixygluwzjug.supabase.co'. EVIDENCIA: Backend logs muestran múltiples errores de conexión HTTPSConnectionPool. HISTORIAL: Logs previos muestran logins exitosos de cliente@test.com, confirmando que las credenciales funcionaban anteriormente. DIAGNÓSTICO: Issue de infraestructura/red impidiendo conexión a Supabase, no problema de código. RECOMENDACIÓN: Verificar conectividad de red y DNS resolution para Supabase antes de re-testing."
+
 metadata:
   created_by: "main_agent"
   version: "3.2"

@@ -1208,103 +1208,15 @@ def main():
         'invalid_credentials': False
     }
     
-    ticket_id = None
+    # Test Login Credentials as requested in review
+    results['admin_login'] = test_admin_login()
+    results['client_login'] = test_client_login()
+    results['invalid_credentials'] = test_invalid_credentials()
     
-    print("\n" + "=" * 70)
-    print("📋 TESTING NOTIFICACIONES API")
-    print("=" * 70)
-    
-    # Test Notificaciones API
-    results['notificaciones_stats'] = test_notificaciones_stats(user_id)
-    results['notificaciones_list'] = test_notificaciones_list(user_id)
-    
-    # Create a test notification and test marking as read
-    test_notif_id = test_create_notification(user_id)
-    if test_notif_id:
-        results['mark_notification_read'] = test_mark_notification_read(user_id, test_notif_id)
-        results['mark_all_notifications_read'] = test_mark_all_notifications_read(user_id)
-    else:
-        print("⚠️  Skipping notification marking tests - could not create test notification")
-        results['mark_notification_read'] = True  # Don't fail the test suite
-        results['mark_all_notifications_read'] = True
-    
-    print("\n" + "=" * 70)
-    print("❓ TESTING AYUDA API (FAQs)")
-    print("=" * 70)
-    
-    # Test FAQs API
-    results['faqs_list'] = test_faqs_list()
-    results['faqs_search'] = test_faqs_search()
-    
-    print("\n" + "=" * 70)
-    print("🎫 TESTING SOPORTE API (Tickets)")
-    print("=" * 70)
-    
-    # Test Tickets API
-    create_success, ticket_id = test_create_ticket(user_id)
-    results['create_ticket'] = create_success
-    
-    results['get_tickets'] = test_get_tickets(user_id)
-    
-    if ticket_id:
-        results['get_ticket_detail'] = test_get_ticket_detail(user_id, ticket_id)
-    
-    print("\n" + "=" * 80)
-    print("📈 TESTING ADMIN STATISTICS API")
-    print("=" * 80)
-    
-    # Test Admin Statistics API (no authentication required)
-    results['admin_estadisticas_general'] = test_admin_estadisticas_general()
-    results['admin_estadisticas_recursos'] = test_admin_estadisticas_recursos()
-    results['admin_estadisticas_soporte'] = test_admin_estadisticas_soporte()
-    results['admin_estadisticas_actividad'] = test_admin_estadisticas_actividad()
-    
-    print("\n" + "=" * 80)
-    print("👥 TESTING ADMIN USER MANAGEMENT API")
-    print("=" * 80)
-    
-    # Test User Management API
-    list_success, test_user_id = test_admin_usuarios_list()
-    results['admin_usuarios_list'] = list_success
-    
-    results['admin_usuarios_list_filters'] = test_admin_usuarios_list_with_filters()
-    
-    if test_user_id:
-        results['admin_usuarios_get_user'] = test_admin_usuarios_get_user(test_user_id)
-        results['admin_usuarios_update_user'] = test_admin_usuarios_update_user(test_user_id)
-        results['admin_usuarios_cambiar_plan'] = test_admin_usuarios_cambiar_plan(test_user_id)
-        
-        # Test deactivation and reactivation (only if not admin to avoid issues)
-        # First check if it's not an admin user
-        try:
-            user_response = requests.get(f"{API_BASE}/admin/usuarios/{test_user_id}", timeout=10)
-            if user_response.status_code == 200:
-                user_data = user_response.json()
-                if user_data.get('rol') != 'admin':
-                    results['admin_usuarios_desactivar_user'] = test_admin_usuarios_desactivar_user(test_user_id)
-                    results['admin_usuarios_reactivar_user'] = test_admin_usuarios_reactivar_user(test_user_id)
-                else:
-                    print("⚠️  Skipping deactivation tests - test user is admin")
-                    results['admin_usuarios_desactivar_user'] = True  # Don't fail the test suite
-                    results['admin_usuarios_reactivar_user'] = True
-            else:
-                results['admin_usuarios_desactivar_user'] = True  # Don't fail the test suite
-                results['admin_usuarios_reactivar_user'] = True
-        except:
-            results['admin_usuarios_desactivar_user'] = True  # Don't fail the test suite
-            results['admin_usuarios_reactivar_user'] = True
-    else:
-        print("⚠️  Skipping individual user tests - no test user ID available")
-        results['admin_usuarios_get_user'] = True  # Don't fail the test suite
-        results['admin_usuarios_update_user'] = True
-        results['admin_usuarios_cambiar_plan'] = True
-        results['admin_usuarios_desactivar_user'] = True
-        results['admin_usuarios_reactivar_user'] = True
-    
-    # Test validation endpoints
-    results['admin_usuarios_update_invalid_role'] = test_admin_usuarios_update_invalid_role(test_user_id or "test-id")
-    results['admin_usuarios_cambiar_plan_invalid'] = test_admin_usuarios_cambiar_plan_invalid()
-    results['admin_usuarios_get_nonexistent'] = test_admin_usuarios_get_nonexistent()
+    # Try to get a user_id for any additional tests (if needed)
+    user_id = login_user(ADMIN_EMAIL, ADMIN_PASSWORD)
+    if not user_id:
+        user_id = login_user(CLIENT_EMAIL, CLIENT_PASSWORD)
     
     # Summary
     print("\n" + "=" * 80)

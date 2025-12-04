@@ -45,6 +45,162 @@ def login_user(email, password):
         return None
 
 
+def test_admin_login():
+    """Test 1: Login Admin - Validate admin@clarisa.com credentials"""
+    print("\n🧪 Test 1: Testing Admin Login (admin@clarisa.com)...")
+    
+    try:
+        response = requests.post(
+            f"{API_BASE}/auth/login",
+            json={"email": ADMIN_EMAIL, "password": ADMIN_PASSWORD},
+            headers={"Content-Type": "application/json"},
+            timeout=30
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        # Validation 1: Status code should be 200
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: Status code 200")
+        
+        # Validation 2: Response should contain session_token (access_token equivalent)
+        if 'session_token' not in data:
+            print(f"❌ FAILED: Missing 'session_token' (access_token) in response")
+            return False
+        print(f"✅ SUCCESS: Contains session_token (access_token)")
+        
+        # Validation 3: Response should contain user with rol: "admin"
+        if 'user' not in data:
+            print(f"❌ FAILED: Missing 'user' in response")
+            return False
+        
+        user = data['user']
+        if user.get('rol') != 'admin':
+            print(f"❌ FAILED: Expected rol 'admin', got '{user.get('rol')}'")
+            return False
+        print(f"✅ SUCCESS: User rol is 'admin'")
+        
+        # Validation 4: Response should contain correct email
+        if user.get('email') != ADMIN_EMAIL:
+            print(f"❌ FAILED: Expected email '{ADMIN_EMAIL}', got '{user.get('email')}'")
+            return False
+        print(f"✅ SUCCESS: Email matches '{ADMIN_EMAIL}'")
+        
+        print(f"🎉 ADMIN LOGIN TEST PASSED")
+        print(f"   📧 Email: {user['email']}")
+        print(f"   🏷️  Role: {user['rol']}")
+        print(f"   🔑 Session Token: {data['session_token'][:20]}...")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_client_login():
+    """Test 2: Login Cliente - Validate cliente@test.com credentials"""
+    print("\n🧪 Test 2: Testing Client Login (cliente@test.com)...")
+    
+    try:
+        response = requests.post(
+            f"{API_BASE}/auth/login",
+            json={"email": CLIENT_EMAIL, "password": CLIENT_PASSWORD},
+            headers={"Content-Type": "application/json"},
+            timeout=30
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        # Validation 1: Status code should be 200
+        if response.status_code != 200:
+            print(f"❌ FAILED: Expected status 200, got {response.status_code}")
+            print(f"Response: {response.text}")
+            return False
+        
+        data = response.json()
+        print(f"✅ SUCCESS: Status code 200")
+        
+        # Validation 2: Response should contain session_token (access_token equivalent)
+        if 'session_token' not in data:
+            print(f"❌ FAILED: Missing 'session_token' (access_token) in response")
+            return False
+        print(f"✅ SUCCESS: Contains session_token (access_token)")
+        
+        # Validation 3: Response should contain user with rol: "cliente_gratuito"
+        if 'user' not in data:
+            print(f"❌ FAILED: Missing 'user' in response")
+            return False
+        
+        user = data['user']
+        if user.get('rol') != 'cliente_gratuito':
+            print(f"❌ FAILED: Expected rol 'cliente_gratuito', got '{user.get('rol')}'")
+            return False
+        print(f"✅ SUCCESS: User rol is 'cliente_gratuito'")
+        
+        # Validation 4: Response should contain correct email
+        if user.get('email') != CLIENT_EMAIL:
+            print(f"❌ FAILED: Expected email '{CLIENT_EMAIL}', got '{user.get('email')}'")
+            return False
+        print(f"✅ SUCCESS: Email matches '{CLIENT_EMAIL}'")
+        
+        print(f"🎉 CLIENT LOGIN TEST PASSED")
+        print(f"   📧 Email: {user['email']}")
+        print(f"   🏷️  Role: {user['rol']}")
+        print(f"   🔑 Session Token: {data['session_token'][:20]}...")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
+def test_invalid_credentials():
+    """Test 3: Login with Invalid Credentials - Should return 401"""
+    print("\n🧪 Test 3: Testing Invalid Credentials (admin@clarisa.com with wrong password)...")
+    
+    try:
+        response = requests.post(
+            f"{API_BASE}/auth/login",
+            json={"email": ADMIN_EMAIL, "password": "wrongpassword"},
+            headers={"Content-Type": "application/json"},
+            timeout=30
+        )
+        
+        print(f"Status Code: {response.status_code}")
+        
+        # Validation 1: Status code should be 401 (Unauthorized)
+        if response.status_code != 401:
+            print(f"❌ FAILED: Expected status 401 (Unauthorized), got {response.status_code}")
+            return False
+        
+        print(f"✅ SUCCESS: Status code 401 (Unauthorized)")
+        
+        # Validation 2: Should have appropriate error message
+        try:
+            data = response.json()
+            if 'detail' in data:
+                print(f"✅ SUCCESS: Error message present: {data['detail']}")
+            else:
+                print(f"ℹ️  No error message in response (acceptable)")
+        except:
+            print(f"ℹ️  Response is not JSON (acceptable for error)")
+        
+        print(f"🎉 INVALID CREDENTIALS TEST PASSED")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ FAILED: {str(e)}")
+        return False
+
+
 def test_notificaciones_stats(user_id):
     """Test GET /api/notificaciones/stats"""
     print("\n🧪 Testing GET /api/notificaciones/stats...")

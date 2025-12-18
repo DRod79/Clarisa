@@ -59,8 +59,15 @@ async def get_user_by_email(email: str) -> Optional[dict]:
             return users[0] if users else None
         return None
     except Exception as e:
-        print(f"Error getting user: {e}")
-        return None
+        print(f"⚠️  Supabase error: {e}")
+        print(f"🔄 Attempting fallback authentication...")
+        # Try fallback authentication
+        try:
+            from auth_fallback import get_user_by_email_fallback
+            return await get_user_by_email_fallback(email)
+        except Exception as fallback_error:
+            print(f"❌ Fallback also failed: {fallback_error}")
+            return None
 
 async def get_user_by_id(user_id: str) -> Optional[dict]:
     """Get user from Supabase by ID"""

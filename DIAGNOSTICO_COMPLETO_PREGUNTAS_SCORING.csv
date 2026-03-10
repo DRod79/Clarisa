@@ -1,0 +1,138 @@
+SECCIÓN,PREGUNTA #,PREGUNTA,TIPO,OPCIONES DE RESPUESTA,PUNTOS,DIMENSIÓN,NOTAS
+CONTACTO,C1,Nombre,Texto libre,,N/A,N/A,Validación: 2-25 caracteres solo letras
+CONTACTO,C2,Apellidos,Texto libre,,N/A,N/A,Validación: 2-35 caracteres solo letras
+CONTACTO,C3,Email,Email corporativo,,N/A,N/A,Validación: No permite gmail hotmail yahoo outlook
+CONTACTO,C4,País del teléfono,Selección única,,N/A,N/A,Lista de países
+CONTACTO,C5,Teléfono,Texto libre,,N/A,N/A,Formato: ####-####
+CONTACTO,C6,Organización,Texto libre,,N/A,N/A,Mínimo 2 caracteres
+CONTACTO,C7,Puesto,Texto libre,,N/A,N/A,Mínimo 2 caracteres
+CONTACTO,C8,País,Selección única,,N/A,N/A,Lista de países
+CONTACTO,C9,Departamento,Selección única,,N/A,N/A,Lista de departamentos
+CONTACTO,C10,Años de experiencia,Selección única,,N/A,N/A,Rangos de años
+CONTEXTO,P1,¿En qué sector opera tu organización?,Selección única,Servicios financieros (bancos aseguradoras cooperativas),N/A,N/A,
+CONTEXTO,P1,¿En qué sector opera tu organización?,Selección única,Manufactura y producción industrial,N/A,N/A,
+CONTEXTO,P1,¿En qué sector opera tu organización?,Selección única,Energía y servicios públicos,N/A,N/A,
+CONTEXTO,P1,¿En qué sector opera tu organización?,Selección única,Comercio y retail,N/A,N/A,
+CONTEXTO,P1,¿En qué sector opera tu organización?,Selección única,Tecnología y telecomunicaciones,N/A,N/A,
+CONTEXTO,P1,¿En qué sector opera tu organización?,Selección única,Construcción e inmobiliario,N/A,N/A,
+CONTEXTO,P1,¿En qué sector opera tu organización?,Selección única,Agroindustria y alimentos,N/A,N/A,
+CONTEXTO,P1,¿En qué sector opera tu organización?,Selección única,Turismo y hospitalidad,N/A,N/A,
+CONTEXTO,P1,¿En qué sector opera tu organización?,Selección única,Transporte y logística,N/A,N/A,
+CONTEXTO,P1,¿En qué sector opera tu organización?,Selección única,Otro (especificar),N/A,N/A,Campo de texto si selecciona Otro
+CONTEXTO,P2,¿Cuál es el tamaño de tu organización?,Selección única,50-200 empleados | Ingresos anuales <$10M USD,N/A,N/A,
+CONTEXTO,P2,¿Cuál es el tamaño de tu organización?,Selección única,200-500 empleados | Ingresos $10M-$50M USD,N/A,N/A,
+CONTEXTO,P2,¿Cuál es el tamaño de tu organización?,Selección única,500-1000 empleados | Ingresos $50M-$200M USD,N/A,N/A,
+CONTEXTO,P2,¿Cuál es el tamaño de tu organización?,Selección única,Más de 1000 empleados | Ingresos >$200M USD,N/A,N/A,
+CONTEXTO,P3,¿Cuál es tu principal motivación para implementar NIIF S1 y S2?,Selección única,Requerimiento regulatorio actual o próximo,30,URGENCIA,
+CONTEXTO,P3,¿Cuál es tu principal motivación para implementar NIIF S1 y S2?,Selección única,Presión de inversionistas accionistas o casa matriz,25,URGENCIA,
+CONTEXTO,P3,¿Cuál es tu principal motivación para implementar NIIF S1 y S2?,Selección única,Acceso a financiamiento sostenible o verde,20,URGENCIA,
+CONTEXTO,P3,¿Cuál es tu principal motivación para implementar NIIF S1 y S2?,Selección única,Ventaja competitiva y reputación corporativa,15,URGENCIA,
+CONTEXTO,P3,¿Cuál es tu principal motivación para implementar NIIF S1 y S2?,Selección única,Cadena de suministro lo está solicitando,20,URGENCIA,
+CONTEXTO,P3,¿Cuál es tu principal motivación para implementar NIIF S1 y S2?,Selección única,Convicción propia de la dirección,10,URGENCIA,
+CONTEXTO,P3,¿Cuál es tu principal motivación para implementar NIIF S1 y S2?,Selección única,Aún estamos explorando,0,URGENCIA,
+CONTEXTO,P4,¿Cuándo necesitas publicar tu primer informe NIIF S1/S2?,Selección única,Ya deberíamos haberlo publicado (estamos retrasados),40,URGENCIA,
+CONTEXTO,P4,¿Cuándo necesitas publicar tu primer informe NIIF S1/S2?,Selección única,Próximos 3-6 meses,35,URGENCIA,
+CONTEXTO,P4,¿Cuándo necesitas publicar tu primer informe NIIF S1/S2?,Selección única,6-12 meses,20,URGENCIA,
+CONTEXTO,P4,¿Cuándo necesitas publicar tu primer informe NIIF S1/S2?,Selección única,Más de 12 meses,10,URGENCIA,
+CONTEXTO,P4,¿Cuándo necesitas publicar tu primer informe NIIF S1/S2?,Selección única,Aún no tenemos plazo definido,0,URGENCIA,
+MADUREZ,P5,¿Tu organización publica actualmente información de sostenibilidad?,Selección única,Sí tenemos informe integrado o de sostenibilidad publicado anualmente,25,MADUREZ,
+MADUREZ,P5,¿Tu organización publica actualmente información de sostenibilidad?,Selección única,Sí pero solo internamente o para grupos de interés específicos,20,MADUREZ,
+MADUREZ,P5,¿Tu organización publica actualmente información de sostenibilidad?,Selección única,Reportamos parcialmente (solo temas ambientales o sociales),15,MADUREZ,
+MADUREZ,P5,¿Tu organización publica actualmente información de sostenibilidad?,Selección única,No este será nuestro primer informe,5,MADUREZ,
+MADUREZ,P5,¿Tu organización publica actualmente información de sostenibilidad?,Selección única,No lo sé,0,MADUREZ,
+MADUREZ,P6,¿Han realizado un análisis de materialidad (doble) de temas ESG?,Selección única,Sí tenemos materialidad definida documentada y aprobada,25,MADUREZ,
+MADUREZ,P6,¿Han realizado un análisis de materialidad (doble) de temas ESG?,Selección única,Lo hicimos hace más de 2 años (necesita actualización),15,MADUREZ,
+MADUREZ,P6,¿Han realizado un análisis de materialidad (doble) de temas ESG?,Selección única,Estamos en proceso de realizarlo,10,MADUREZ,
+MADUREZ,P6,¿Han realizado un análisis de materialidad (doble) de temas ESG?,Selección única,No no sabemos cómo hacerlo,0,MADUREZ,
+MADUREZ,P6,¿Han realizado un análisis de materialidad (doble) de temas ESG?,Selección única,¿Qué es el análisis de materialidad?,0,MADUREZ,
+MADUREZ,P7,¿Qué tan familiarizado está tu equipo con NIIF S1 y S2?,Selección única,Alto: Hemos tomado cursos y entendemos los requisitos,20,MADUREZ,
+MADUREZ,P7,¿Qué tan familiarizado está tu equipo con NIIF S1 y S2?,Selección única,Medio: Hemos leído las normas pero tenemos dudas,15,MADUREZ,
+MADUREZ,P7,¿Qué tan familiarizado está tu equipo con NIIF S1 y S2?,Selección única,Bajo: Solo conocemos lo básico por artículos o menciones,5,MADUREZ,
+MADUREZ,P7,¿Qué tan familiarizado está tu equipo con NIIF S1 y S2?,Selección única,Nulo: Estamos empezando desde cero,0,MADUREZ,
+MADUREZ,P8,¿Tienen identificados sus riesgos y oportunidades relacionados con el clima?,Selección única,Sí tenemos registro detallado y cuantificado,20,MADUREZ,
+MADUREZ,P8,¿Tienen identificados sus riesgos y oportunidades relacionados con el clima?,Selección única,Parcialmente pero no están cuantificados ni priorizados,10,MADUREZ,
+MADUREZ,P8,¿Tienen identificados sus riesgos y oportunidades relacionados con el clima?,Selección única,No aún no los hemos identificado de manera sistemática,0,MADUREZ,
+MADUREZ,P8,¿Tienen identificados sus riesgos y oportunidades relacionados con el clima?,Selección única,No aplica a nuestro sector,0,MADUREZ,
+MADUREZ,P9,¿Calculan su huella de carbono (emisiones GEI)?,Selección única,Sí los 3 alcances con verificación externa,20,MADUREZ,
+MADUREZ,P9,¿Calculan su huella de carbono (emisiones GEI)?,Selección única,Sí pero solo Alcance 1 y 2,15,MADUREZ,
+MADUREZ,P9,¿Calculan su huella de carbono (emisiones GEI)?,Selección única,Hemos medido alguna vez pero no de forma continua,10,MADUREZ,
+MADUREZ,P9,¿Calculan su huella de carbono (emisiones GEI)?,Selección única,No pero sabemos cómo calcularlo,5,MADUREZ,
+MADUREZ,P9,¿Calculan su huella de carbono (emisiones GEI)?,Selección única,No necesitamos ayuda para empezar,0,MADUREZ,
+GOBERNANZA,P10,¿Quién lidera los temas de sostenibilidad en tu organización?,Selección única,Dirección General o Gerencia General directamente,15,CAPACIDAD,
+GOBERNANZA,P10,¿Quién lidera los temas de sostenibilidad en tu organización?,Selección única,Área específica de Sostenibilidad o Responsabilidad Social,15,CAPACIDAD,
+GOBERNANZA,P10,¿Quién lidera los temas de sostenibilidad en tu organización?,Selección única,Área de Riesgos Cumplimiento o Legal,10,CAPACIDAD,
+GOBERNANZA,P10,¿Quién lidera los temas de sostenibilidad en tu organización?,Selección única,Área Financiera o Contable,10,CAPACIDAD,
+GOBERNANZA,P10,¿Quién lidera los temas de sostenibilidad en tu organización?,Selección única,Múltiples áreas sin claridad de responsabilidad,5,CAPACIDAD,
+GOBERNANZA,P10,¿Quién lidera los temas de sostenibilidad en tu organización?,Selección única,Nadie formalmente asignado,0,CAPACIDAD,
+GOBERNANZA,P11,¿La junta directiva o máximo órgano de gobierno supervisa estos temas?,Selección única,Sí hay comité específico y reportes regulares,15,CAPACIDAD,
+GOBERNANZA,P11,¿La junta directiva o máximo órgano de gobierno supervisa estos temas?,Selección única,Sí se reporta ocasionalmente en sesiones,10,CAPACIDAD,
+GOBERNANZA,P11,¿La junta directiva o máximo órgano de gobierno supervisa estos temas?,Selección única,No pero están solicitando información,5,CAPACIDAD,
+GOBERNANZA,P11,¿La junta directiva o máximo órgano de gobierno supervisa estos temas?,Selección única,No no es prioridad aún para el nivel directivo,0,CAPACIDAD,
+GOBERNANZA,P12,¿Cuántas personas trabajan en temas de sostenibilidad en tu organización?,Selección única,3 o más personas con dedicación completa,15,CAPACIDAD,
+GOBERNANZA,P12,¿Cuántas personas trabajan en temas de sostenibilidad en tu organización?,Selección única,1-2 personas con dedicación completa,10,CAPACIDAD,
+GOBERNANZA,P12,¿Cuántas personas trabajan en temas de sostenibilidad en tu organización?,Selección única,Tiempo parcial de varias personas (menos del 50% de su tiempo),5,CAPACIDAD,
+GOBERNANZA,P12,¿Cuántas personas trabajan en temas de sostenibilidad en tu organización?,Selección única,Nadie dedicado (0 personas asignadas),0,CAPACIDAD,
+GOBERNANZA,P13,¿Tienen presupuesto asignado para el proyecto de implementación NIIF S1/S2?,Selección única,Sí presupuesto aprobado mayor a $50000,15,CAPACIDAD,
+GOBERNANZA,P13,¿Tienen presupuesto asignado para el proyecto de implementación NIIF S1/S2?,Selección única,Sí presupuesto aprobado menor a $50000,10,CAPACIDAD,
+GOBERNANZA,P13,¿Tienen presupuesto asignado para el proyecto de implementación NIIF S1/S2?,Selección única,En proceso de aprobación o negociación,5,CAPACIDAD,
+GOBERNANZA,P13,¿Tienen presupuesto asignado para el proyecto de implementación NIIF S1/S2?,Selección única,No aún no hemos presupuestado nada,0,CAPACIDAD,
+DATOS,P14,¿Cómo recopilan actualmente sus datos de sostenibilidad?,Selección única,Sistema integrado de gestión o plataforma especializada,10,CAPACIDAD,
+DATOS,P14,¿Cómo recopilan actualmente sus datos de sostenibilidad?,Selección única,Hojas de cálculo centralizadas con proceso definido,8,CAPACIDAD,
+DATOS,P14,¿Cómo recopilan actualmente sus datos de sostenibilidad?,Selección única,Hojas de cálculo descentralizadas sin proceso estándar,3,CAPACIDAD,
+DATOS,P14,¿Cómo recopilan actualmente sus datos de sostenibilidad?,Selección única,No recopilamos de manera sistemática,0,CAPACIDAD,
+DATOS,P14,¿Cómo recopilan actualmente sus datos de sostenibilidad?,Selección única,No lo sé,0,CAPACIDAD,
+DATOS,P15,¿Tienen controles internos sobre los datos de sostenibilidad?,Selección única,Sí con controles y revisiones establecidas similares a datos financieros,10,CAPACIDAD,
+DATOS,P15,¿Tienen controles internos sobre los datos de sostenibilidad?,Selección única,Parcialmente estamos desarrollándolos,5,CAPACIDAD,
+DATOS,P15,¿Tienen controles internos sobre los datos de sostenibilidad?,Selección única,No solo tenemos controles para datos financieros,0,CAPACIDAD,
+DATOS,P15,¿Tienen controles internos sobre los datos de sostenibilidad?,Selección única,No lo sé o no estoy seguro,0,CAPACIDAD,
+DATOS,P16,¿Sus datos de sostenibilidad están listos para ser auditados externamente?,Selección única,Sí ya tenemos verificación externa de nuestros datos,10,CAPACIDAD,
+DATOS,P16,¿Sus datos de sostenibilidad están listos para ser auditados externamente?,Selección única,Casi necesitamos mejoras menores en documentación,7,CAPACIDAD,
+DATOS,P16,¿Sus datos de sostenibilidad están listos para ser auditados externamente?,Selección única,No necesitamos trabajo significativo en calidad y trazabilidad de datos,3,CAPACIDAD,
+DATOS,P16,¿Sus datos de sostenibilidad están listos para ser auditados externamente?,Selección única,No lo sé o no hemos evaluado esto,0,CAPACIDAD,
+DATOS,P17,¿Qué tan fácil es rastrear el impacto financiero de temas de sostenibilidad?,Selección única,Tenemos sistemas que lo permiten con relativa facilidad,10,CAPACIDAD,
+DATOS,P17,¿Qué tan fácil es rastrear el impacto financiero de temas de sostenibilidad?,Selección única,Es posible pero requiere trabajo manual significativo,5,CAPACIDAD,
+DATOS,P17,¿Qué tan fácil es rastrear el impacto financiero de temas de sostenibilidad?,Selección única,Muy difícil no tenemos esa granularidad de información,0,CAPACIDAD,
+DATOS,P17,¿Qué tan fácil es rastrear el impacto financiero de temas de sostenibilidad?,Selección única,No lo hemos intentado o no sabemos cómo hacerlo,0,CAPACIDAD,
+NECESIDADES,P18,¿Cuál es tu mayor obstáculo para implementar NIIF S1 y S2?,Selección única,No sabemos por dónde empezar o cómo priorizar,30,URGENCIA,
+NECESIDADES,P18,¿Cuál es tu mayor obstáculo para implementar NIIF S1 y S2?,Selección única,Falta de recursos humanos o presupuesto,20,URGENCIA,
+NECESIDADES,P18,¿Cuál es tu mayor obstáculo para implementar NIIF S1 y S2?,Selección única,Complejidad técnica de las normas,25,URGENCIA,
+NECESIDADES,P18,¿Cuál es tu mayor obstáculo para implementar NIIF S1 y S2?,Selección única,Falta de datos sistemas o herramientas,20,URGENCIA,
+NECESIDADES,P18,¿Cuál es tu mayor obstáculo para implementar NIIF S1 y S2?,Selección única,Falta de compromiso interno o prioridad de la dirección,5,URGENCIA,
+NECESIDADES,P18,¿Cuál es tu mayor obstáculo para implementar NIIF S1 y S2?,Selección única,Falta de conocimiento técnico en el equipo,25,URGENCIA,
+NECESIDADES,P19,¿Qué tipo de apoyo consideras más valioso? (Selecciona hasta 2),Selección múltiple (máx 2),Asesoría técnica especializada (consultores expertos),N/A,N/A,No suma puntos - solo para entender necesidades
+NECESIDADES,P19,¿Qué tipo de apoyo consideras más valioso? (Selecciona hasta 2),Selección múltiple (máx 2),Capacitación y formación de tu equipo interno,N/A,N/A,No suma puntos - solo para entender necesidades
+NECESIDADES,P19,¿Qué tipo de apoyo consideras más valioso? (Selecciona hasta 2),Selección múltiple (máx 2),Plataforma de software o herramientas digitales,N/A,N/A,No suma puntos - solo para entender necesidades
+NECESIDADES,P19,¿Qué tipo de apoyo consideras más valioso? (Selecciona hasta 2),Selección múltiple (máx 2),Templates y marcos de trabajo predefinidos,N/A,N/A,No suma puntos - solo para entender necesidades
+NECESIDADES,P19,¿Qué tipo de apoyo consideras más valioso? (Selecciona hasta 2),Selección múltiple (máx 2),Servicio completo de implementación (outsourcing),N/A,N/A,No suma puntos - solo para entender necesidades
+NECESIDADES,P19,¿Qué tipo de apoyo consideras más valioso? (Selecciona hasta 2),Selección múltiple (máx 2),Análisis de materialidad y diagnóstico detallado,N/A,N/A,No suma puntos - solo para entender necesidades
+NECESIDADES,P20,¿Cuánto estaría tu organización dispuesta a invertir en este proyecto?,Selección única,Menos de $10000 USD,N/A,N/A,No suma puntos - solo para entender presupuesto
+NECESIDADES,P20,¿Cuánto estaría tu organización dispuesta a invertir en este proyecto?,Selección única,$10000 - $30000 USD,N/A,N/A,No suma puntos - solo para entender presupuesto
+NECESIDADES,P20,¿Cuánto estaría tu organización dispuesta a invertir en este proyecto?,Selección única,$30000 - $75000 USD,N/A,N/A,No suma puntos - solo para entender presupuesto
+NECESIDADES,P20,¿Cuánto estaría tu organización dispuesta a invertir en este proyecto?,Selección única,Más de $75000 USD,N/A,N/A,No suma puntos - solo para entender presupuesto
+NECESIDADES,P20,¿Cuánto estaría tu organización dispuesta a invertir en este proyecto?,Selección única,Aún no lo hemos evaluado,N/A,N/A,No suma puntos - solo para entender presupuesto
+
+RESUMEN DE SCORING
+DIMENSIÓN,PREGUNTAS INVOLUCRADAS,PUNTOS MÁXIMOS,PUNTOS MÍNIMOS,CÁLCULO,INTERPRETACIÓN
+URGENCIA,P3 + P4 + P18,100,0,Suma directa de puntos,ALTO (≥80) = CRISIS | MEDIO (50-79) = PLANIFICACIÓN ACTIVA | BAJO (<50) = EXPLORACIÓN
+MADUREZ,P5 + P6 + P7 + P8 + P9,100,0,"Suma: máx 110 normalizado a 100: (suma/110)*100",ALTO (≥80) = AVANZADO | MEDIO (50-79) = INTERMEDIO | BAJO (<50) = PRINCIPIANTE
+CAPACIDAD,P10 + P11 + P12 + P13 + P14 + P15 + P16 + P17,100,0,Suma directa de puntos,ALTO (≥80) = LISTOS PARA EJECUTAR | MEDIO (50-79) = EN CONSTRUCCIÓN | BAJO (<50) = NECESITA FORTALECIMIENTO
+
+ARQUETIPO (Matriz basada en Urgencia y Madurez)
+URGENCIA,MADUREZ,CÓDIGO,NOMBRE,DESCRIPCIÓN,RECOMENDACIÓN
+ALTA,ALTA,VM,Vanguardia Madura,Ya tienen experiencia y además tienen urgencia inmediata,Enfoque de ejecución rápida y sofisticada
+ALTA,MEDIA,EP,Ejecución Presionada,Tienen urgencia pero capacidades intermedias,Necesitan acelerar desarrollo de capacidades
+ALTA,BAJA,CI,Crisis Inminente,Urgencia crítica sin preparación,Requieren acompañamiento intensivo e inmediato
+MEDIA,ALTA,PP,Planificación Proactiva,Tienen capacidad pero sin presión inmediata,Optimizar y anticipar regulación
+MEDIA,MEDIA,DB,Desarrollo Balanceado,Desarrollo progresivo en tiempos y capacidades,Roadmap estructurado de mediano plazo
+MEDIA,BAJA,EI,Exploración Inicial,Empezando sin presión inmediata,Educación y construcción de bases
+BAJA,ALTA,OA,Oportunista Avanzado,Alta capacidad técnica sin presión regulatoria,Ventaja competitiva y reporting voluntario avanzado
+BAJA,MEDIA,GP,Gestión Preventiva,Capacidades moderadas sin urgencia,Preparación gradual y formación
+BAJA,BAJA,OB,Observador Básico,Sin urgencia y sin preparación,Educación básica y sensibilización
+
+TOTAL DE PREGUNTAS
+TIPO,CANTIDAD,CAMPO
+Información de contacto,10,No suman puntos - datos personales/organizacionales
+Preguntas de diagnóstico,20,P1-P20
+Total campos formulario,30,
+Preguntas que suman puntos,13,"P3 P4 P5 P6 P7 P8 P9 P10 P11 P12 P13 P14 P15 P16 P17 P18"
+Preguntas informativas,7,"P1 P2 P19 P20 + 10 campos de contacto"

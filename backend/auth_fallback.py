@@ -23,9 +23,9 @@ FALLBACK_USERS = {
         'pais': 'Colombia',
         'puesto': 'Administrador'
     },
-    'cliente@test.com': {
+    'cliente@clarisa.com': {
         'id': 'cliente-fallback-001',
-        'email': 'cliente@test.com',
+        'email': 'cliente@clarisa.com',
         'nombre_completo': 'Usuario Test',
         'organizacion': 'Empresa Test',
         'rol': 'cliente_gratuito',

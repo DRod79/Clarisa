@@ -19,7 +19,7 @@ FALLBACK_USERS = {
         'rol': 'admin',
         'plan_actual': 'admin',
         'suscripcion_activa': True,
-        'password_hash': hash_password('admin123'),
+        'password_hash': hash_password('TodoEsProbar2026*'),
         'pais': 'Colombia',
         'puesto': 'Administrador'
     },
@@ -31,7 +31,7 @@ FALLBACK_USERS = {
         'rol': 'cliente_gratuito',
         'plan_actual': 'gratuito',
         'suscripcion_activa': True,
-        'password_hash': hash_password('pass123'),
+        'password_hash': hash_password('TodoEsCuestion2026*'),
         'pais': 'Colombia',
         'puesto': 'Usuario'
     }

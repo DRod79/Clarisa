@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLayout from '@/layouts/AdminLayout';
 import { Button } from '@/components/ui/button';
-import { FileText, Users, BarChart3 } from 'lucide-react';
+import { FileText, BarChart3, ClipboardList } from 'lucide-react';
 
 const AdminHome = () => {
   const navigate = useNavigate();
@@ -31,14 +31,18 @@ const AdminHome = () => {
           </Button>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6 opacity-50">
-          <Users className="w-12 h-12 text-gray-400 mb-4" />
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Usuarios</h3>
+        <div 
+          onClick={() => navigate('/admin/diagnosticos')}
+          className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer"
+          data-testid="admin-card-diagnosticos"
+        >
+          <ClipboardList className="w-12 h-12 text-[#4CAF50] mb-4" />
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">Diagnósticos</h3>
           <p className="text-gray-600 mb-4">
-            Gestiona usuarios y suscripciones
+            Leads que completaron el diagnóstico NIIF S1/S2
           </p>
-          <Button disabled className="w-full">
-            Próximamente
+          <Button className="w-full bg-[#4CAF50] hover:bg-[#45a049] text-white">
+            Ver diagnósticos
           </Button>
         </div>
 

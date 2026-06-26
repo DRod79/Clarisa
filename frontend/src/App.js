@@ -34,6 +34,7 @@ import EditarRecursoPage from "@/pages/admin/EditarRecursoPage";
 import DashboardEstadisticas from "@/pages/admin/DashboardEstadisticas";
 import UsuariosAdminPage from "@/pages/admin/UsuariosAdminPage";
 import ReportesAvanzadosPage from "@/pages/admin/ReportesAvanzadosPage";
+import DiagnosticosAdminPage from "@/pages/admin/DiagnosticosAdminPage";
 
 import { Toaster } from "@/components/ui/sonner";
 
@@ -209,6 +210,16 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <ReportesAvanzadosPage />
+                </ProtectedRoute>
+              } 
+            />
+
+            {/* Admin - Diagnósticos */}
+            <Route 
+              path="/admin/diagnosticos" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <DiagnosticosAdminPage />
                 </ProtectedRoute>
               } 
             />

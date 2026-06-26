@@ -14,6 +14,7 @@ import {
   BarChart3,
   Package,
   Download,
+  ClipboardList,
 } from 'lucide-react';
 
 const AdminLayout = ({ children }) => {
@@ -33,6 +34,7 @@ const AdminLayout = ({ children }) => {
 
   const navigation = [
     { name: 'Dashboard', href: '/admin/home', icon: LayoutDashboard },
+    { name: 'Diagnósticos', href: '/admin/diagnosticos', icon: ClipboardList },
     { name: 'Ventas', href: '/admin/ventas', icon: BarChart3 },
     { name: 'Usuarios', href: '/admin/usuarios', icon: Users },
     { name: 'Recursos', href: '/admin/recursos', icon: FileText },

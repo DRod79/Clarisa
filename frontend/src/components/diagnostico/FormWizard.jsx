@@ -135,50 +135,13 @@ const FormWizard = () => {
     },
   });
 
-  const { handleSubmit, watch, trigger } = form;
+  const { handleSubmit, trigger } = form;
 
-  // Save to localStorage on change (con timestamp)
+  // Empezar SIEMPRE con el formulario limpio en cada visita al diagnóstico.
+  // No se reutilizan datos de un usuario anterior.
   useEffect(() => {
-    const subscription = watch((data) => {
-      const dataWithTimestamp = {
-        ...data,
-        _savedAt: new Date().toISOString()
-      };
-      localStorage.setItem('clarisa_diagnostico_draft', JSON.stringify(dataWithTimestamp));
-    });
-    return () => subscription.unsubscribe();
-  }, [watch]);
-
-  // Load from localStorage on mount (solo si no hay datos previos)
-  useEffect(() => {
-    const saved = localStorage.getItem('clarisa_diagnostico_draft');
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        // Solo cargar si es de la sesión actual (menos de 1 hora)
-        const savedTime = new Date(data._savedAt || 0);
-        const now = new Date();
-        const hoursDiff = (now - savedTime) / (1000 * 60 * 60);
-        
-        if (hoursDiff < 1) {
-          Object.keys(data).forEach((key) => {
-            if (key !== '_savedAt') {
-              form.setValue(key, data[key]);
-            }
-          });
-        } else {
-          // Si es muy viejo, limpiar
-          localStorage.removeItem('clarisa_diagnostico_draft');
-        }
-      } catch (e) {
-        console.error('Error loading saved data', e);
-        localStorage.removeItem('clarisa_diagnostico_draft');
-      }
-    }
-    
-    // SIEMPRE limpiar campos específicos que causan problemas
-    form.setValue('pais', '');
-    form.setValue('pais_telefono', '');
+    localStorage.removeItem('clarisa_diagnostico_draft');
+    form.reset();
   }, [form]);
 
   const getStepFields = (step) => {

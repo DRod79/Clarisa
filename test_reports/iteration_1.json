@@ -1,0 +1,52 @@
+{
+  "summary": "End-to-end validation of Clarisa diagnostico bug-fix (Supabase -> /api/diagnostico) and question changes (P2 sin Ingresos, P13 con 3 opciones, P20 eliminada). All backend pytest tests passed and the full 6-step wizard submits successfully without the 'Error al enviar el diagnóstico' toast, landing on the ConfirmationPage with scoring/arquetipo (A3 'Cerca del Objetivo'). Record persists in MongoDB and is returned by GET /api/diagnosticos.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_diagnostico.py",
+    "/app/test_reports/pytest/diagnostico_results.xml"
+  ],
+  "tests_executed": {
+    "backend_pytest": {
+      "test_api_root": "PASS",
+      "test_submit_diagnostico_persists_and_listed": "PASS (POST 200, GET single 200 sin _id ni p20_inversion, GET list contiene email)",
+      "test_submit_rejects_missing_required": "PASS (422 al faltar p2_tamano)",
+      "test_submit_ignores_extra_p20_field": "PASS (Pydantic ignora p20_inversion extra)"
+    },
+    "frontend_playwright": {
+      "wizard_6_steps_anonymous_submission": "PASS - llega a ConfirmationPage con arquetipo A3, sin toast de error",
+      "P2_options_validation": "PASS - 4 opciones exactas: '50-200', '200-500', '500-1000', 'Más de 1000 empleados'. Sin texto 'Ingresos' ni '|'",
+      "P13_options_validation": "PASS - exactamente 3 opciones, sin '$50,000'. Textos: aprobado para año calendario / en proceso / no hemos presupuestado",
+      "P20_removed": "PASS - paso 6 solo tiene P18 y P19; no aparece '20.' ni 'dispuesto a invertir'",
+      "backend_persistence_after_submit": "PASS - email qa<ts>@empresademo.com encontrado en GET /api/diagnosticos (12 registros)"
+    }
+  },
+  "action_items": [],
+  "critical_code_review_comments": [
+    "server.py supera 600 líneas y mezcla diagnostico+auth+sales+progreso; considerar dividir en routers separados para mantener archivos <500 líneas.",
+    "FormWizard.jsx (~500 líneas) tiene render de duplicateMessage que nunca se activa con el flujo actual (showDuplicateMessage no se setea en ningún sitio): código muerto a remover o conectar.",
+    "POST /api/diagnostico envuelve toda la lógica en try/except y devuelve 500 genérico; los ValidationError de Pydantic ya se manejan, pero los errores internos de get_user_by_id/crear_oportunidad_desde_diagnostico podrían loguearse con stacktrace (logger.exception) para mejor RCA.",
+    "El campo nombre_completo del wizard se construye como `${nombre} ${apellidos}` pero la regex permite solo 2-25 / 2-35 chars sin tildes específicas — está OK; sin embargo el toast genérico 'Por favor completa todos los campos requeridos' no indica qué campo falla.",
+    "AuthContextNew se importa siempre aunque el diagnóstico sea anónimo; si AuthContext lanza durante render, rompería el wizard. Confirmado: en esta corrida no falló."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_diagnostico.py (nuevo)"
+  ],
+  "success_rate": {
+    "backend": "100% (4/4)",
+    "frontend": "100% (5/5 validaciones)"
+  },
+  "test_credentials": "No requirió login (diagnóstico anónimo). Email de prueba: qa<timestamp>@empresademo.com",
+  "seed_data_creation": "Se crearon registros TEST_ prefijados en db.diagnosticos durante pytest y un registro vía UI (qa1782438205@empresademo.com). No se hizo cleanup explícito (no hay endpoint DELETE de diagnostico expuesto).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "El flujo de diagnóstico ahora envía a POST /api/diagnostico (MongoDB) en lugar de Supabase. P2 (4 opciones, sin Ingresos), P13 (3 opciones, sin $50,000), P20 eliminada. Para próximas pruebas: usar email NO en gmail/yahoo/hotmail/outlook/live/aol/icloud y teléfono ####-####. Selects de país usan shadcn Select (click trigger -> click option via get_by_role('option')). Si se vuelve a tocar el wizard, validar que el submit-button sigue siendo data-testid='submit-button' y que onClick valida todos los campos antes de POST.",
+  "rca of the issue": "Bug original: el frontend posteaba a Supabase cuyo DNS estaba caído -> toast 'Error al enviar el diagnóstico'. Fix verificado: FormWizard.onSubmit hace axios.post(`${REACT_APP_BACKEND_URL}/api/diagnostico`, payload). Backend POST /api/diagnostico guarda en db.diagnosticos (Mongo) y retorna 200 con scoring. Reproducción del éxito: completar wizard -> click submit-button -> console muestra 'Diagnóstico guardado en backend: {id: ...}' y aparece ConfirmationPage. Persistencia confirmada vía GET /api/diagnosticos."
+}

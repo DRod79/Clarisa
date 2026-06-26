@@ -89,10 +89,9 @@ class DiagnosticoSubmission(BaseModel):
     p16_datos_auditables: str
     p17_rastreo_impacto: str
     
-    # Necesidades (P18-P20)
+    # Necesidades (P18-P19)
     p18_obstaculo: str
     p19_apoyo_valioso: List[str]
-    p20_inversion: str
     
     # Scoring (calculado en frontend)
     scoring: Scoring

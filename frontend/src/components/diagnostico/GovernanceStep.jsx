@@ -42,8 +42,7 @@ const GovernanceStep = ({ form }) => {
       id: 'p13_presupuesto',
       question: '13. ¿Tienen presupuesto asignado para la implementación de reporteo de sostenibilidad?',
       options: [
-        'Sí, presupuesto aprobado mayor a $50,000',
-        'Sí, presupuesto aprobado menor a $50,000',
+        'Sí, presupuesto aprobado para año calendario',
         'En proceso de aprobación o negociación',
         'No, aún no hemos presupuestado nada',
       ],

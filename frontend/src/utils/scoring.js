@@ -148,8 +148,7 @@ export function calcularCapacidad(respuestas) {
   };
 
   const puntosP13 = {
-    'Sí, presupuesto aprobado mayor a $50,000': 15,
-    'Sí, presupuesto aprobado menor a $50,000': 10,
+    'Sí, presupuesto aprobado para año calendario': 15,
     'En proceso de aprobación o negociación': 5,
     'No, aún no hemos presupuestado nada': 0,
   };

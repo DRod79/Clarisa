@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/contexts/AuthContextNew';
 import StepIndicator from './StepIndicator';
 import ContactStep from './ContactStep';
@@ -86,7 +85,6 @@ const formSchema = z.object({
   // Necesidades
   p18_obstaculo: z.string().min(1, 'Respuesta requerida'),
   p19_apoyo_valioso: z.array(z.string()).min(1, 'Selecciona al menos una opción').max(2, 'Máximo 2 opciones'),
-  p20_inversion: z.string().min(1, 'Respuesta requerida'),
 });
 
 const FormWizard = () => {
@@ -134,7 +132,6 @@ const FormWizard = () => {
       p17_rastreo_impacto: '',
       p18_obstaculo: '',
       p19_apoyo_valioso: [],
-      p20_inversion: '',
     },
   });
 
@@ -197,7 +194,7 @@ const FormWizard = () => {
       case 5:
         return ['p14_recopilacion', 'p15_control_interno', 'p16_datos_auditables', 'p17_rastreo_impacto'];
       case 6:
-        return ['p18_obstaculo', 'p19_apoyo_valioso', 'p20_inversion'];
+        return ['p18_obstaculo', 'p19_apoyo_valioso'];
       default:
         return [];
     }
@@ -242,15 +239,13 @@ const FormWizard = () => {
         console.log('User is NOT authenticated (anonymous diagnostico)');
       }
       
-      console.log('Step 1: Preparing respuestas object...');
-      
-      // Preparar respuestas
-      const respuestas = {
-        nombre: data.nombre,
-        apellidos: data.apellidos,
+      console.log('Preparando payload para el backend...');
+
+      // Construir payload para el backend (se guarda en MongoDB)
+      const payload = {
+        nombre_completo: `${data.nombre} ${data.apellidos}`,
         email: data.email,
         telefono: data.telefono,
-        pais_telefono: data.pais_telefono,
         organizacion: data.organizacion,
         puesto: data.puesto,
         pais: data.pais,
@@ -275,86 +270,16 @@ const FormWizard = () => {
         p17_rastreo_impacto: data.p17_rastreo_impacto,
         p18_obstaculo: data.p18_obstaculo,
         p19_apoyo_valioso: data.p19_apoyo_valioso,
-        p20_inversion: data.p20_inversion,
-      };
-
-      console.log('Step 2: Respuestas prepared successfully');
-      console.log('Step 3: Preparing diagnosticoData object...');
-
-      // Guardar en Supabase
-      const diagnosticoData = {
-        user_id: user?.id || null,
-        respuestas: respuestas,
         scoring: scoring,
-        arquetipo: scoring.arquetipo.codigo,
-        urgencia_puntos: scoring.urgencia.puntos,
-        madurez_puntos: scoring.madurez.puntos,
-        capacidad_puntos: scoring.capacidad.puntos,
       };
 
-      console.log('Step 4: DiagnosticoData prepared successfully');
-      console.log('DiagnosticoData:', diagnosticoData);
-      console.log('Step 5: Saving to Supabase using REST API...');
-      
-      // Use direct REST API (same method as successful test)
-      const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-      const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
-      
-      const response = await fetch(`${supabaseUrl}/rest/v1/diagnosticos`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Prefer': 'return=representation'
-        },
-        body: JSON.stringify(diagnosticoData)
-      });
+      // Guardar en el backend (MongoDB). user_id como query param si está autenticado
+      const url = user?.id
+        ? `${API}/diagnostico?user_id=${encodeURIComponent(user.id)}`
+        : `${API}/diagnostico`;
 
-      console.log('Response status:', response.status);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Response error:', errorText);
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
-      }
-
-      const savedDiag = await response.json();
-      console.log('Step 6: Diagnostico saved successfully!');
-      console.log('Saved data:', savedDiag);
-
-      // Si el usuario está autenticado, actualizar su información
-      if (user) {
-        console.log('Step 7: Updating user information...');
-        
-        const updateData = {
-          nombre_completo: `${data.nombre} ${data.apellidos}`,
-          organizacion: data.organizacion,
-          puesto: data.puesto,
-          pais: data.pais,
-          departamento: data.departamento,
-          telefono: data.telefono,
-          pais_telefono: data.pais_telefono,
-          anios_experiencia: data.anios_experiencia,
-        };
-
-        const updateResponse = await fetch(`${supabaseUrl}/rest/v1/users?id=eq.${user.id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
-            'Prefer': 'return=representation'
-          },
-          body: JSON.stringify(updateData)
-        });
-
-        if (updateResponse.ok) {
-          console.log('User information updated successfully');
-        } else {
-          console.error('Error updating user:', await updateResponse.text());
-        }
-      }
+      const { data: savedDiag } = await axios.post(url, payload);
+      console.log('Diagnóstico guardado en backend:', savedDiag);
 
       // LIMPIAR localStorage
       localStorage.removeItem('clarisa_diagnostico_draft');

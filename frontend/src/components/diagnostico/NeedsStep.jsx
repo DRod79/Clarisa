@@ -24,14 +24,6 @@ const NeedsStep = ({ form }) => {
     'Plataforma digital que facilite el proceso completo',
   ];
 
-  const inversiones = [
-    '$5,000 - $15,000',
-    '$15,000 - $30,000',
-    '$30,000 - $50,000',
-    'Más de $50,000',
-    'Prefiero no responder o necesito más información',
-  ];
-
   const selectedApoyos = watch('p19_apoyo_valioso') || [];
 
   const handleApoyoChange = (value, checked) => {
@@ -114,35 +106,6 @@ const NeedsStep = ({ form }) => {
         </p>
         {errors.p19_apoyo_valioso && (
           <p className="text-red-500 text-sm mt-1">{errors.p19_apoyo_valioso.message}</p>
-        )}
-      </div>
-
-      {/* P20: Inversión */}
-      <div>
-        <Label className="text-base font-semibold text-gray-900 mb-3 block">
-          20. ¿Cuánto estarías dispuesto a invertir en implementar NIIF S1 y S2?
-          <span className="text-red-500">*</span>
-        </Label>
-        <RadioGroup
-          value={watch('p20_inversion')}
-          onValueChange={(value) => setValue('p20_inversion', value, { shouldValidate: true })}
-          className="space-y-2"
-        >
-          {inversiones.map((inversion, index) => (
-            <div key={index} className="flex items-center space-x-2">
-              <RadioGroupItem
-                value={inversion}
-                id={`inversion-${index}`}
-                data-testid={`inversion-option-${index}`}
-              />
-              <Label htmlFor={`inversion-${index}`} className="font-normal cursor-pointer">
-                {inversion}
-              </Label>
-            </div>
-          ))}
-        </RadioGroup>
-        {errors.p20_inversion && (
-          <p className="text-red-500 text-sm mt-1">{errors.p20_inversion.message}</p>
         )}
       </div>
     </div>

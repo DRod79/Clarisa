@@ -21,10 +21,10 @@ const ContextStep = ({ form }) => {
   ];
 
   const tamanos = [
-    '50-200 empleados | Ingresos anuales <$10M USD',
-    '200-500 empleados | Ingresos $10M-$50M USD',
-    '500-1000 empleados | Ingresos $50M-$200M USD',
-    'Más de 1000 empleados | Ingresos >$200M USD'
+    '50-200 empleados',
+    '200-500 empleados',
+    '500-1000 empleados',
+    'Más de 1000 empleados'
   ];
 
   const motivaciones = [

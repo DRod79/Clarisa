@@ -15,6 +15,16 @@ Objetivo clave del usuario: 100% disponibilidad para demos/presentaciones.
 
 ## Estado actual (Junio 2026)
 - **MODO PRESENTACIÓN / MOCK ACTIVO**: `backend/auth_fallback.py` provee login mock
+  porque el DNS a `*.supabase.co` falla. Cuentas: admin@clarisa.com / TodoEsProbar2026*,
+  cliente@clarisa.com / TodoEsCuestion2026*.
+- **Diagnóstico**: el envío ya NO va a Supabase; ahora `FormWizard.onSubmit` hace
+  `axios.post(${API}/diagnostico)` y se guarda en **MongoDB** (colección `diagnosticos`,
+  endpoint `POST /api/diagnostico`, listado `GET /api/diagnosticos`). Persistente.
+- **Preguntas del diagnóstico actualizadas**: P2 sin texto de ingresos (solo rangos de
+  empleados); P13 con 3 opciones (renombrada "Sí, presupuesto aprobado para año calendario");
+  P20 eliminada por completo (UI, schema, scoring y modelo backend).
+- Hero del landing rediseñado: sin imagen, fondo decorativo centrado en el texto.
+- Tests de regresión: `/app/backend/tests/test_diagnostico.py`.: `backend/auth_fallback.py` provee login mock
   porque el DNS a `*.supabase.co` falla (`[Errno -2]`). Decisión del usuario: NO tocar
   arquitectura por ahora, solo dejar la app estable para demo.
 - Credenciales mock activas (ver `/app/memory/test_credentials.md`):

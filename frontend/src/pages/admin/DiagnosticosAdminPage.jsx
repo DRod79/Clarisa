@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import AdminLayout from '@/layouts/AdminLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Download, Search, Eye, ClipboardList, RefreshCw } from 'lucide-react';
+import { Download, Search, Eye, ClipboardList, RefreshCw, FileText, FileType } from 'lucide-react';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -150,6 +152,186 @@ const DiagnosticosAdminPage = () => {
     toast.success(`${filtrados.length} diagnóstico(s) exportado(s)`);
   };
 
+  // ---- Exportar lista a PDF ----
+  const exportarPDF = () => {
+    if (filtrados.length === 0) {
+      toast.error('No hay diagnósticos para exportar');
+      return;
+    }
+    const doc = new jsPDF({ orientation: 'landscape' });
+    doc.setFontSize(15);
+    doc.setTextColor(45, 95, 63);
+    doc.text('Diagnósticos NIIF S1/S2 — Clarisa', 14, 15);
+    doc.setFontSize(9);
+    doc.setTextColor(100);
+    doc.text(`Generado: ${new Date().toLocaleString('es')}  ·  ${filtrados.length} registro(s)`, 14, 21);
+    autoTable(doc, {
+      startY: 26,
+      head: [['Fecha', 'Nombre', 'Empresa', 'Email', 'Teléfono', 'Arquetipo', 'U', 'M', 'C']],
+      body: filtrados.map((d) => [
+        fmtFecha(d.timestamp),
+        d.nombre_completo || '',
+        d.organizacion || '',
+        d.email || '',
+        d.telefono || '',
+        `${d.scoring?.arquetipo?.codigo || '?'} ${d.scoring?.arquetipo?.nombre || ''}`,
+        d.scoring?.urgencia?.puntos ?? '-',
+        d.scoring?.madurez?.puntos ?? '-',
+        d.scoring?.capacidad?.puntos ?? '-',
+      ]),
+      styles: { fontSize: 8, cellPadding: 2 },
+      headStyles: { fillColor: [45, 95, 63], textColor: 255 },
+      alternateRowStyles: { fillColor: [245, 248, 245] },
+    });
+    doc.save(`diagnosticos_clarisa_${new Date().toISOString().slice(0, 10)}.pdf`);
+    toast.success(`${filtrados.length} diagnóstico(s) exportado(s) a PDF`);
+  };
+
+  // ---- Construir HTML de la lista para Word ----
+  const buildListaHTML = () => {
+    const filasHTML = filtrados
+      .map(
+        (d) => `<tr>
+          <td>${fmtFecha(d.timestamp)}</td>
+          <td>${d.nombre_completo || ''}</td>
+          <td>${d.organizacion || ''}</td>
+          <td>${d.email || ''}</td>
+          <td>${d.telefono || ''}</td>
+          <td>${(d.scoring?.arquetipo?.codigo || '?') + ' ' + (d.scoring?.arquetipo?.nombre || '')}</td>
+          <td>${d.scoring?.urgencia?.puntos ?? '-'} / ${d.scoring?.madurez?.puntos ?? '-'} / ${d.scoring?.capacidad?.puntos ?? '-'}</td>
+        </tr>`
+      )
+      .join('');
+    return `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head><meta charset='utf-8'><title>Diagnósticos Clarisa</title></head>
+      <body>
+        <h2 style="color:#2D5F3F;">Diagnósticos NIIF S1/S2 — Clarisa</h2>
+        <p>Generado: ${new Date().toLocaleString('es')} · ${filtrados.length} registro(s)</p>
+        <table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;font-family:Calibri,Arial;font-size:11px;">
+          <thead><tr style="background:#2D5F3F;color:#fff;">
+            <th>Fecha</th><th>Nombre</th><th>Empresa</th><th>Email</th><th>Teléfono</th><th>Arquetipo</th><th>U/M/C</th>
+          </tr></thead>
+          <tbody>${filasHTML}</tbody>
+        </table>
+      </body></html>`;
+  };
+
+  const descargarWord = (html, filename) => {
+    const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportarWord = () => {
+    if (filtrados.length === 0) {
+      toast.error('No hay diagnósticos para exportar');
+      return;
+    }
+    descargarWord(buildListaHTML(), `diagnosticos_clarisa_${new Date().toISOString().slice(0, 10)}.doc`);
+    toast.success(`${filtrados.length} diagnóstico(s) exportado(s) a Word`);
+  };
+
+  // ---- Reporte individual ----
+  const nombreArchivo = (d, ext) =>
+    `diagnostico_${(d.organizacion || d.nombre_completo || 'lead').replace(/[^a-zA-Z0-9]/g, '_').slice(0, 30)}.${ext}`;
+
+  const reportePDF = (d) => {
+    const doc = new jsPDF();
+    let y = 18;
+    doc.setFontSize(16);
+    doc.setTextColor(45, 95, 63);
+    doc.text('Diagnóstico NIIF S1/S2', 14, y);
+    y += 8;
+    doc.setFontSize(11);
+    doc.setTextColor(0);
+    doc.text(`${d.nombre_completo || ''} — ${d.organizacion || ''}`, 14, y);
+    y += 7;
+    doc.setFontSize(9);
+    doc.setTextColor(90);
+    [
+      `Email: ${d.email || ''}    Teléfono: ${d.telefono || ''}`,
+      `Puesto: ${d.puesto || ''}    País: ${d.pais || ''}    Depto: ${d.departamento || ''}`,
+      `Fecha: ${fmtFecha(d.timestamp)}`,
+    ].forEach((line) => {
+      doc.text(line, 14, y);
+      y += 5;
+    });
+    y += 3;
+    doc.setFontSize(11);
+    doc.setTextColor(45, 95, 63);
+    doc.text(
+      `Arquetipo ${d.scoring?.arquetipo?.codigo || ''}: ${d.scoring?.arquetipo?.nombre || ''}`,
+      14,
+      y
+    );
+    y += 6;
+    doc.setFontSize(9);
+    doc.setTextColor(0);
+    doc.text(
+      `Recomendación: ${d.scoring?.arquetipo?.recomendacion || ''}`,
+      14,
+      y
+    );
+    y += 5;
+    doc.text(
+      `Urgencia: ${d.scoring?.urgencia?.puntos ?? '-'} (${d.scoring?.urgencia?.nivel || ''})   ` +
+        `Madurez: ${d.scoring?.madurez?.puntos ?? '-'} (${d.scoring?.madurez?.nivel || ''})   ` +
+        `Capacidad: ${d.scoring?.capacidad?.puntos ?? '-'} (${d.scoring?.capacidad?.nivel || ''})`,
+      14,
+      y
+    );
+    y += 6;
+    autoTable(doc, {
+      startY: y,
+      head: [['Pregunta', 'Respuesta']],
+      body: Object.entries(PREGUNTAS).map(([k, label]) => [
+        label,
+        Array.isArray(d[k]) ? d[k].join(', ') : d[k] || '—',
+      ]),
+      styles: { fontSize: 8, cellPadding: 2 },
+      headStyles: { fillColor: [76, 175, 80], textColor: 255 },
+      columnStyles: { 0: { cellWidth: 70 } },
+    });
+    doc.save(nombreArchivo(d, 'pdf'));
+    toast.success('Reporte PDF descargado');
+  };
+
+  const reporteWord = (d) => {
+    const respuestasHTML = Object.entries(PREGUNTAS)
+      .map(
+        ([k, label]) =>
+          `<tr><td style="background:#f5f8f5;width:45%;"><b>${label}</b></td><td>${
+            Array.isArray(d[k]) ? d[k].join(', ') : d[k] || '—'
+          }</td></tr>`
+      )
+      .join('');
+    const html = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head><meta charset='utf-8'><title>Diagnóstico</title></head>
+      <body style="font-family:Calibri,Arial;font-size:12px;">
+        <h2 style="color:#2D5F3F;margin-bottom:0;">Diagnóstico NIIF S1/S2 — Clarisa</h2>
+        <h3 style="margin-top:4px;">${d.nombre_completo || ''} — ${d.organizacion || ''}</h3>
+        <p>Email: ${d.email || ''} &nbsp; Teléfono: ${d.telefono || ''}<br/>
+        Puesto: ${d.puesto || ''} &nbsp; País: ${d.pais || ''} &nbsp; Depto: ${d.departamento || ''}<br/>
+        Fecha: ${fmtFecha(d.timestamp)}</p>
+        <div style="background:#eef6ee;border:1px solid #cfe6cf;padding:10px;">
+          <b style="color:#2D5F3F;">Arquetipo ${d.scoring?.arquetipo?.codigo || ''}: ${d.scoring?.arquetipo?.nombre || ''}</b><br/>
+          ${d.scoring?.arquetipo?.descripcion || ''}<br/>
+          <b>Recomendación:</b> ${d.scoring?.arquetipo?.recomendacion || ''}<br/>
+          Urgencia: <b>${d.scoring?.urgencia?.puntos ?? '-'}</b> (${d.scoring?.urgencia?.nivel || ''}) &nbsp;
+          Madurez: <b>${d.scoring?.madurez?.puntos ?? '-'}</b> (${d.scoring?.madurez?.nivel || ''}) &nbsp;
+          Capacidad: <b>${d.scoring?.capacidad?.puntos ?? '-'}</b> (${d.scoring?.capacidad?.nivel || ''})
+        </div>
+        <h3>Respuestas</h3>
+        <table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse;width:100%;">${respuestasHTML}</table>
+      </body></html>`;
+    descargarWord(html, nombreArchivo(d, 'doc'));
+    toast.success('Reporte Word descargado');
+  };
+
   return (
     <AdminLayout>
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4" data-testid="diagnosticos-admin-page">
@@ -162,7 +344,7 @@ const DiagnosticosAdminPage = () => {
             Leads que completaron el diagnóstico NIIF S1/S2 — {diagnosticos.length} en total
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
             onClick={cargar}
@@ -173,12 +355,30 @@ const DiagnosticosAdminPage = () => {
             Actualizar
           </Button>
           <Button
+            variant="outline"
             onClick={exportarCSV}
             data-testid="export-csv-button"
-            className="bg-[#4CAF50] hover:bg-[#45a049] text-white flex items-center gap-2"
+            className="flex items-center gap-2"
           >
             <Download className="w-4 h-4" />
-            Exportar CSV
+            CSV
+          </Button>
+          <Button
+            variant="outline"
+            onClick={exportarWord}
+            data-testid="export-word-button"
+            className="flex items-center gap-2"
+          >
+            <FileText className="w-4 h-4" />
+            Word
+          </Button>
+          <Button
+            onClick={exportarPDF}
+            data-testid="export-pdf-button"
+            className="bg-[#4CAF50] hover:bg-[#45a049] text-white flex items-center gap-2"
+          >
+            <FileType className="w-4 h-4" />
+            PDF
           </Button>
         </div>
       </div>
@@ -258,7 +458,27 @@ const DiagnosticosAdminPage = () => {
             <DialogTitle>Diagnóstico — {selected?.nombre_completo}</DialogTitle>
           </DialogHeader>
           {selected && (
-            <div className="space-y-5 text-sm">
+            <>
+              <div className="flex flex-wrap gap-2 pb-2 border-b">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => reporteWord(selected)}
+                  data-testid="detail-export-word-button"
+                  className="flex items-center gap-2"
+                >
+                  <FileText className="w-4 h-4" /> Descargar Word
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => reportePDF(selected)}
+                  data-testid="detail-export-pdf-button"
+                  className="bg-[#4CAF50] hover:bg-[#45a049] text-white flex items-center gap-2"
+                >
+                  <FileType className="w-4 h-4" /> Descargar PDF
+                </Button>
+              </div>
+              <div className="space-y-5 text-sm">
               {/* Contacto */}
               <div className="grid grid-cols-2 gap-3">
                 <div><span className="text-gray-500">Email:</span> {selected.email}</div>
@@ -297,6 +517,7 @@ const DiagnosticosAdminPage = () => {
                 ))}
               </div>
             </div>
+            </>
           )}
         </DialogContent>
       </Dialog>

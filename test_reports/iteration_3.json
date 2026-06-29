@@ -1,0 +1,48 @@
+{
+  "summary": "Validación end-to-end de los dos cambios del review_request en iteration_3: (1) la sección 'Hoja de Ruta personalizada' aparece en ConfirmationPage tras completar el wizard de 6 pasos anónimamente, con los 3 cards (Punto de partida / Ritmo / Nivel de apoyo), las 5 fases (testids hoja-ruta-fase-1..5), la fase de inicio marcada con badge 'Empieza aquí', y el botón 'Crear cuenta para guardar mi Hoja de Ruta' (testid crear-cuenta-hoja-ruta-btn) que navega a /acceso. Los textos antiguos ('En 48 horas recibirás', 'descarga recursos gratuitos', 'Plantillas Esenciales', 'Únete a la Comunidad') ya NO aparecen. (2) Login como cliente@clarisa.com confirma sidebar muestra 'Hoja de Ruta' (no 'Roadmap') y la página /app/roadmap muestra título '🗺️ Tu Hoja de Ruta NIIF'. Todas las verificaciones pasaron.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/progreso/{user_id}", "issue": "Tras login como cliente@clarisa.com y abrir /app/roadmap se observa toast 'Error al cargar progreso' y dos requests 404 en consola (GET /api/progreso/...). Es pre-existente y no relacionado con este cambio, pero ensucia la UI inmediatamente al entrar a la nueva sección renombrada."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "validations_executed": {
+    "wizard_6_steps_anonymous_submission": "PASS - Llegó a [data-testid=confirmation-page]. Backend respondió id=ffb48196-94dc-4c3b-93c1-8890282036c2 y toast '¡Diagnóstico NIIF S1 y S2 enviado exitosamente!'",
+    "hoja_de_ruta_section_present": "PASS - [data-testid=hoja-de-ruta-section] visible con encabezado 'Tu Hoja de Ruta personalizada' e intro 'Según tu perfil \"Estás Muy Cerca de Lograrlo\", esta es la hoja de ruta sugerida para tu organización:'",
+    "three_summary_cards": "PASS - Cards 'Punto de partida' (Fase 4: Medición y Cálculo), 'Ritmo acelerado' y 'Nivel de apoyo' renderizadas correctamente con textos personalizados según scoring (madurez ALTO / urgencia ALTO / capacidad ALTO en esta corrida).",
+    "five_fases_rendered": "PASS - [data-testid=hoja-ruta-fase-1..5] todas presentes (Diagnóstico Inicial, Análisis de Materialidad, Identificación de Riesgos, Medición y Cálculo, Reporte y Divulgación) con sus duraciones.",
+    "empieza_aqui_badge": "PASS - Badge 'Empieza aquí' renderizado en Fase 4 (coherente con madurez ALTO -> faseInicioNumero=4 en scoring.js).",
+    "puedes_avanzar_rapido_badges": "PASS - Fases 1-3 marcadas con badge 'Puedes avanzar rápido' (lógica previa<faseInicio).",
+    "old_texts_removed": "PASS - 'En 48 horas recibirás'=False, 'descarga recursos gratuitos'=False, 'Plantillas Esenciales'=False, 'Únete a la Comunidad'=False (los bloques viejos están comentados en ConfirmationPage.jsx líneas 192-199).",
+    "cta_button_text_and_navigation": "PASS - Botón texto exacto 'Crear cuenta para guardar mi Hoja de Ruta'. Click navegó a https://recursos-sandbox.preview.emergentagent.com/acceso.",
+    "sidebar_rename_hoja_de_ruta": "PASS - Tras login como cliente@clarisa.com, sidebar item para href=/app/roadmap muestra texto 'Hoja de Ruta'. Cadena 'Roadmap' no aparece en el body del dashboard.",
+    "roadmap_page_title_rename": "PASS - /app/roadmap muestra heading '🗺️ Tu Hoja de Ruta NIIF'. 'Tu Roadmap NIIF' no aparece en la página."
+  },
+  "test_report_links": [
+    "/app/test_reports/iteration_3.json"
+  ],
+  "action_items": [
+    "Pre-existente (fuera del scope de este cambio): el endpoint GET /api/progreso/{user_id} responde 404 para cliente@clarisa.com (mock) y dispara toast.error('Error al cargar progreso') al entrar a /app/roadmap. Considerar (a) crear progreso por defecto al hacer login del cliente mock, o (b) que RoadmapPage interprete 404 como 'sin progreso' (estado inicial) en lugar de mostrar toast de error."
+  ],
+  "critical_code_review_comments": [
+    "ConfirmationPage.jsx: la sección 'Hoja de Ruta personalizada' está bien estructurada (testids consistentes, FASES importadas desde fuente única utils/fases.js, generarHojaDeRuta separa lógica de presentación). El bloque viejo está comentado con un disclaimer claro de cómo restaurarlo — buena práctica.",
+    "ConfirmationPage.jsx: el grid del bloque 'Tu Hoja de Ruta personalizada' usa max-w-4xl para los 3 cards y max-w-3xl para las fases, lo cual luce alineado en desktop. No se probó viewport mobile; recomendable verificar visualmente en 390x844.",
+    "RoadmapPage.jsx: el título usa emoji '🗺️' antes de 'Tu Hoja de Ruta NIIF' — correcto. Sin embargo, al cargar la página por primera vez el toast 'Error al cargar progreso' aparece inmediatamente porque GET /api/progreso/{user_id} devuelve 404 (pre-existente). Sugerencia: tratar 404 como estado vacío inicial sin toast.",
+    "ClientLayout.jsx línea 41: el navigation item 'Hoja de Ruta' usa el icono Map de lucide-react — coherente y bien renombrado. No queda ninguna referencia a 'Roadmap' como label visible.",
+    "utils/fases.js: buena extracción como fuente única usada por RoadmapPage y por la Hoja de Ruta del diagnóstico. Esto evita inconsistencias de copy entre ambas vistas.",
+    "scoring.js generarHojaDeRuta(): la función deriva faseInicio según madurez (ALTO=4, MEDIO=2, BAJO=1) y ritmo según urgencia. Los textos personalizados son claros. Considerar exponer en el objeto retornado también la 'duración total estimada' (suma de duraciones de fases ≥ faseInicio) para un futuro card adicional, pero no es bloqueante."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (no se solicitó)", "frontend": "100% (10/10 verificaciones)"},
+  "test_credentials": "Cliente usado para verificación de renombrado: cliente@clarisa.com / TodoEsCuestion2026*. Diagnóstico anónimo con email dummy qa1782696278@empresademo.com.",
+  "seed_data_creation": "Se creó 1 diagnóstico en MongoDB vía POST /api/diagnostico (id ffb48196-94dc-4c3b-93c1-8890282036c2) durante la validación del wizard.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Wizard se completa rápido seleccionando opción 0 en todas las preguntas (sector-option-0, tamano-option-0, motivacion-option-0, plazo-option-0, p5..p17-option-0, obstaculo-option-0, apoyo-option-0). Para los selects shadcn de país usar role=option después de click en SelectTrigger. Email NO debe ser gmail/yahoo/hotmail/outlook/etc. Teléfono formato ####-####. Con todas las opciones=0 el scoring resultante en esta corrida fue urgencia ALTO/madurez ALTO/capacidad ALTO -> arquetipo A3 -> faseInicio=4 con badge 'Empieza aquí' en Medición y Cálculo. Si se quiere validar otro arquetipo/faseInicio, ajustar las opciones según puntajes en scoring.js. Login del cliente mock redirige a /dashboard (no /app/dashboard); para validar el área cliente navegar directamente a /app/roadmap.",
+  "rca of the issue": "N/A — esta no fue una corrección de bug sino la validación de dos cambios funcionales: (1) reemplazo de bloques de 48h/recursos por 'Hoja de Ruta personalizada' en ConfirmationPage, y (2) renombrado 'Roadmap' -> 'Hoja de Ruta' en sidebar y título de RoadmapPage. Ambos cambios verificados en runtime sin necesidad de fixes."
+}

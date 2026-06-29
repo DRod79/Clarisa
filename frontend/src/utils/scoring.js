@@ -321,3 +321,61 @@ export function getTextoExplicativo(dimension, nivel) {
 
   return textos[dimension]?.[nivel] || '';
 }
+
+// HOJA DE RUTA PERSONALIZADA (basada en las 5 fases de implementación)
+// Personaliza: fase de inicio (madurez), ritmo (urgencia) y nivel de apoyo (capacidad).
+export function generarHojaDeRuta(scoring) {
+  const madurez = scoring?.madurez?.nivel;
+  const urgencia = scoring?.urgencia?.nivel;
+  const capacidad = scoring?.capacidad?.nivel;
+  const arquetipo = scoring?.arquetipo;
+
+  // Fase de inicio sugerida según MADUREZ
+  let faseInicioNumero, faseInicioMensaje;
+  if (madurez === 'ALTO') {
+    faseInicioNumero = 4;
+    faseInicioMensaje = 'Tu madurez es alta: puedes avanzar rápido por las primeras fases y enfocarte en Medición, Reporte y Divulgación.';
+  } else if (madurez === 'MEDIO') {
+    faseInicioNumero = 2;
+    faseInicioMensaje = 'Tienes bases intermedias: refuerza Materialidad y Riesgos antes de pasar a la medición.';
+  } else {
+    faseInicioNumero = 1;
+    faseInicioMensaje = 'Comienza desde el principio para construir bases sólidas paso a paso.';
+  }
+
+  // Ritmo sugerido según URGENCIA
+  let ritmoTitulo, ritmoDetalle;
+  if (urgencia === 'ALTO') {
+    ritmoTitulo = 'Ritmo acelerado';
+    ritmoDetalle = 'Tu plazo es corto: te conviene condensar la implementación en aproximadamente 3-4 meses con acompañamiento cercano.';
+  } else if (urgencia === 'MEDIO') {
+    ritmoTitulo = 'Ritmo estándar';
+    ritmoDetalle = 'Tienes un plazo definido: un horizonte de aproximadamente 6 meses es realista y sostenible.';
+  } else {
+    ritmoTitulo = 'Ritmo planificado';
+    ritmoDetalle = 'No tienes presión de tiempo: puedes avanzar con calma y construir cada fase con solidez.';
+  }
+
+  // Nivel de apoyo según CAPACIDAD
+  let apoyoTexto;
+  if (capacidad === 'ALTO') {
+    apoyoTexto = 'Tienes capacidad para ejecutar con autonomía. Busca una validación experta al final para confirmar el rumbo.';
+  } else if (capacidad === 'MEDIO') {
+    apoyoTexto = 'Cuentas con algunos recursos: apóyate en orientación experta puntual en las fases clave.';
+  } else {
+    apoyoTexto = 'Te conviene acompañamiento experto cercano y constante durante todas las fases.';
+  }
+
+  const intro = arquetipo
+    ? `Según tu perfil "${arquetipo.nombre}", esta es la hoja de ruta sugerida para tu organización:`
+    : 'Esta es la hoja de ruta sugerida para tu organización:';
+
+  return {
+    intro,
+    faseInicioNumero,
+    faseInicioMensaje,
+    ritmoTitulo,
+    ritmoDetalle,
+    apoyoTexto,
+  };
+}

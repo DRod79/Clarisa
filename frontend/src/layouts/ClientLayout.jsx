@@ -38,7 +38,7 @@ const ClientLayout = ({ children }) => {
   const navigation = [
     { name: 'Dashboard', href: '/app/dashboard', icon: Home },
     { name: 'Mi Progreso', href: '/app/mi-progreso', icon: TrendingUp },
-    { name: 'Roadmap', href: '/app/roadmap', icon: Map },
+    { name: 'Hoja de Ruta', href: '/app/roadmap', icon: Map },
     { name: 'Recursos', href: '/app/recursos', icon: BookOpen },
     { name: 'Ayuda', href: '/app/ayuda', icon: HelpCircle },
     { name: 'Soporte', href: '/app/soporte', icon: MessageSquare },
